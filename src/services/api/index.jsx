@@ -15,12 +15,15 @@ const AccountService = {
     }
   },
 
-  register: async ({ name, email, password }) => {
+  register: async ({ name, email, password, userImg, phone, cpf }) => {
     try {
       const response = await api.post("/auth/register", {
         name,
         email,
         password,
+        userImg,
+        phone,
+        cpf,
       });
       return response;
     } catch (error) {

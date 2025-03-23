@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const SignInLayer = ({ handleAuthenticate, loading }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   console.log("email", email);
 
   return (
