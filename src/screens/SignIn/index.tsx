@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, ButtonLarge, Input,} from "../../components";
+import { Button, ButtonLarge, Input, } from "../../components";
 
-import {default as hideIcon, default as showIcon} from "../../assets/icons/Hide1x.png";
+import React from "react";
+import { default as hideIcon, default as showIcon } from "../../assets/icons/Hide1x.png";
 import logoLarge from "../../assets/logo/pagmusmain.png";
 import Account from "../../services/api/index";
-import {AskLabel, CheckBox, CheckBoxContainer, Container, Content, CreateAccountContainer, FormContainer, GradientBackground, ImageBackground, Logo, LogoSignIn,RememberPasswordContainer,RememberPasswordLabel, ResetPasswordLabel,SignInContainer,Title} from "./styles";
+import { AskLabel, CheckBox, CheckBoxContainer, Container, Content, CreateAccountContainer, FormContainer, GradientBackground, Logo, RememberPasswordContainer, RememberPasswordLabel, ResetPasswordLabel, SignInContainer, Title } from "./styles";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");

@@ -1,4 +1,6 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
+import AffiliatesSolicitation from "../components/AffialtesSolictation";
 import {
   Clients,
   Financial,
@@ -7,14 +9,13 @@ import {
   Product,
   Reports,
 } from "../screens";
+import Affiliates from "../screens/Affiliates";
 import MyProducts from "../screens/ImportProducts";
+import Integration from "../screens/Integration";
 import RecoverPassword from "../screens/RecoverPassword";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
-import Integration from "../screens/Integration";
 import Store from "../screens/Store";
-import Affiliates from "../screens/Affiliates";
-import AffiliatesSolicitation from "../components/AffialtesSolictation";
 
 const Router = () => {
   return (
