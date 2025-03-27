@@ -12,9 +12,9 @@ const PurchaseAndSales = () => {
           <div className='d-flex align-items-center flex-wrap gap-2 justify-content-between'>
             <h6 className='mb-2 fw-bold text-lg mb-0'>Faturamento & Saque</h6>
             <select className='form-select form-select-sm w-auto bg-base text-secondary-light'>
-              <option>This Month</option>
-              <option>This Week</option>
-              <option>This Year</option>
+              <option>Mês</option>
+              <option>Semana</option>
+              <option>Ano</option>
             </select>
           </div>
         </div>

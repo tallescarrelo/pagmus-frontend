@@ -16,7 +16,7 @@ const UnitCountSeven = () => {
                     <h6 className='fw-semibold mb-1'>R$ 640,000</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-primary-100 text-primary-600'>
-                    <i className='ri-shopping-cart-fill' />
+                      <i className="ri-money-dollar-circle-line"></i>
                   </span>
                 </div>
                 <p className='text-sm mb-0'>
@@ -37,7 +37,7 @@ const UnitCountSeven = () => {
                     <h6 className='fw-semibold mb-1'>R$ 135,000</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-lilac-200 text-lilac-600'>
-                    <i className='ri-handbag-fill' />
+                  <i className="ri-money-dollar-circle-line"></i>
                   </span>
                 </div>
                 <p className='text-sm mb-0'>
@@ -58,7 +58,7 @@ const UnitCountSeven = () => {
                     <h6 className='fw-semibold mb-1'>R$ 330,000</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-success-200 text-success-600'>
-                    <i className='ri-shopping-cart-fill' />
+                  <i className="ri-money-dollar-circle-line"></i>
                   </span>
                 </div>
                 <p className='text-sm mb-0'>
@@ -79,7 +79,7 @@ const UnitCountSeven = () => {
                     <h6 className='fw-semibold mb-1'>R$ 67,000</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-warning-focus text-warning-600'>
-                    <i className='ri-shopping-cart-fill' />
+                    <i className="ri-money-dollar-circle-line"></i>
                   </span>
                 </div>
                 <p className='text-sm mb-0'>

@@ -36,14 +36,14 @@ const UsersChart = () => {
                     to='#'
                     className='text-primary-600 hover-text-primary d-flex align-items-center gap-1'
                   >
-                    Talles Albuquerque (tallescar@gmail.com)
+                    Thiago Martins
                   
                   </Link>
                   </span>
                 </div>
               </div>
               <span className='text-warning-main fw-medium text-md'>
-                Pending
+                Pendente
               </span>
             </div>
             <div className='d-flex align-items-center justify-content-between gap-3'>
@@ -54,18 +54,18 @@ const UsersChart = () => {
                   className='w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden'
                 />
                 <div className='flex-grow-1'>
-                  <h6 className='text-md mb-0'>Produto 02</h6>
+                  <h6 className='text-md mb-0'>Gota Angolana</h6>
                   <Link
                     to='#'
                     className='text-primary-600 hover-text-primary d-flex align-items-center gap-1'
                   >
-                    Talles Albuquerque (tallescar@gmail.com)
+                    Manoel Rique
                   
                   </Link>
                 </div>
               </div>
               <span className='text-success-main fw-medium text-md'>
-                Active
+                Aprovado
               </span>
             </div>
             <div className='d-flex align-items-center justify-content-between gap-3'>
@@ -76,18 +76,17 @@ const UsersChart = () => {
                   className='w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden'
                 />
                 <div className='flex-grow-1'>
-                  <h6 className='text-md mb-0'>Produto 03</h6>
+                  <h6 className='text-md mb-0'>Gota Angolana</h6>
                   <Link
                     to='#'
                     className='text-primary-600 hover-text-primary d-flex align-items-center gap-1'
                   >
-                    Talles Albuquerque (tallescar@gmail.com)
-                  
+                    Ricardo Paulo
                   </Link>
                 </div>
               </div>
               <span className='text-success-main fw-medium text-md'>
-                Active
+               Aprovado
               </span>
             </div>
             <div className='d-flex align-items-center justify-content-between gap-3'>
@@ -98,40 +97,40 @@ const UsersChart = () => {
                   className='w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden'
                 />
                 <div className='flex-grow-1'>
-                  <h6 className='text-md mb-0'>Produto 04</h6>
+                  <h6 className='text-md mb-0'>Gota Angolana</h6>
                   <Link
                     to='#'
                     className='text-primary-600 hover-text-primary d-flex align-items-center gap-1'
                   >
-                    Talles Albuquerque (tallescar@gmail.com)
+                   Maicon Ramon
                   
                   </Link>
                 </div>
               </div>
               <span className='text-success-main fw-medium text-md'>
-                Active
+                Aprovado
               </span>
             </div>
             <div className='d-flex align-items-center justify-content-between gap-3'>
               <div className='d-flex align-items-center'>
                 <img
-                  src='assets/images/user-grid/user-grid-img1.png'
+                  src='assets/images/user-grid/user-grid-img5.png'
                   alt=''
                   className='w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden'
                 />
                 <div className='flex-grow-1'>
-                  <h6 className='text-md mb-0'>Produto 05 </h6>
+                  <h6 className='text-md mb-0'>Gota Angolana</h6>
                   <Link
                     to='#'
                     className='text-primary-600 hover-text-primary d-flex align-items-center gap-1'
                   >
-                    Talles Albuquerque (tallescar@gmail.com)
+                    Manoela Ataíde
                   
                   </Link>
                 </div>
               </div>
               <span className='text-success-main fw-medium text-md'>
-                Active
+                Aprovado
               </span>
             </div>
           </div>

@@ -12,7 +12,7 @@ const TopCustomer = () => {
               to='#'
               className='text-primary-600 hover-text-primary d-flex align-items-center gap-1'
             >
-              View All
+              Ver todos
               <iconify-icon
                 icon='solar:alt-arrow-right-linear'
                 className='icon'

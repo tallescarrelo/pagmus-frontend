@@ -92,10 +92,17 @@ import VideoGeneratorPage from "./pages/VideoGeneratorPage";
 import VideosPage from "./pages/VideosPage";
 import ViewDetailsPage from "./pages/ViewDetailsPage";
 import ViewProfilePage from "./pages/ViewProfilePage";
+
 import VoiceGeneratorPage from "./pages/VoiceGeneratorPage";
 import WalletPage from "./pages/WalletPage";
 import WidgetsPage from "./pages/WidgetsPage";
 import WizardPage from "./pages/WizardPage";
+
+/* DEFINITIVO */
+import AffiliatesOfMyProductsPage from "./pages/affiliate/AffiliatesOfMyProductsPage";
+import MyAffiliateProductsPage from "./pages/affiliate/MyAffiliateProductsPage";
+
+
 
 function App() {
   return (
@@ -222,6 +229,13 @@ function App() {
         <Route exact path="/wizard" element={<WizardPage />} />
 
         <Route exact path="*" element={<ErrorPage />} />
+
+
+        {/* DEFINITIVO */}
+        <Route exact path="/affiliate/affiliates-of-my-products" element={<AffiliatesOfMyProductsPage />}/>
+        <Route exact path="/affiliate/my-affiliate-products" element={<MyAffiliateProductsPage />}/>
+
+
       </Routes>
     </BrowserRouter>
   );
