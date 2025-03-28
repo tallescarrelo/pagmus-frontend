@@ -6,7 +6,6 @@ const SignInLayer = ({ handleAuthenticate, loading }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [showPassword, setShowPassword] = useState(false);
-  console.log("email", email);
 
   return (
     <section className="auth bg-base d-flex flex-wrap">

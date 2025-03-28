@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SignUpLayer from "../components/SignUpLayer";
-import AccountService from "../services/api";
+import AccountService from "../services/api/auth";
 
 const SignUpPage = () => {
   const [loading, setLoading] = useState(false);

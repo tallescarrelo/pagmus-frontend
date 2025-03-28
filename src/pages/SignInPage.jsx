@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SignInLayer from "../components/SignInLayer";
-import AccountService from "../services/api";
+import AccountService from "../services/api/auth";
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -12,7 +12,11 @@ const SignInPage = () => {
     setLoading(true);
     try {
       const response = await AccountService.login(credentials);
-      console.log(response);
+
+      if (response?.access_token) {
+        localStorage.setItem("token", response.access_token);
+      }
+
       navigate("/Dashboard");
       setLoading(false);
     } catch (error) {
@@ -20,6 +24,7 @@ const SignInPage = () => {
       console.error(error);
     }
   };
+
   return (
     <>
       {/* SignInLayer */}

@@ -1,36 +1,40 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "https://syspay-production.up.railway.app",
-});
+class ApiService {
+  constructor() {
+    this.api = axios.create({
+      baseURL: "https://syspay-production.up.railway.app",
+    });
 
-const AccountService = {
-  login: async (credentials) => {
-    try {
-      const response = await api.post("/auth/login", credentials);
-      return response.data;
-    } catch (error) {
-      console.error("Error in Account.login:", error);
-      throw error;
-    }
-  },
+    this.api.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+  }
 
-  register: async ({ name, email, password, userImg, phone, cpf }) => {
-    try {
-      const response = await api.post("/auth/register", {
-        name,
-        email,
-        password,
-        userImg,
-        phone,
-        cpf,
-      });
-      return response;
-    } catch (error) {
-      console.error("Error during user registration:", error);
-      throw error;
-    }
-  },
-};
+  get(url, config = {}) {
+    return this.api.get(url, config);
+  }
 
-export default AccountService;
+  post(url, data, config = {}) {
+    return this.api.post(url, data, config);
+  }
+
+  put(url, data, config = {}) {
+    return this.api.put(url, data, config);
+  }
+
+  delete(url, config = {}) {
+    return this.api.delete(url, config);
+  }
+}
+
+
+const apiService = new ApiService();
+export default apiService;
