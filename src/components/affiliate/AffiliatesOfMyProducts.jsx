@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const AffiliatesOfMyProducts = ({ affiliates }) => {
-  console.log("affiliates", affiliates);
   return (
     <div className="card">
       <div className="card-header d-flex flex-wrap align-items-center justify-content-between">
