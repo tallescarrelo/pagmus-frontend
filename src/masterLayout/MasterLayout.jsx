@@ -137,11 +137,11 @@ const MasterLayout = ({ children }) => {
 
             <li>
               <NavLink
-                to='/pedidos'
+                to='#'
                 className={(navData) => (navData.isActive ? 'active-page' : '')}
               >
                 <Icon icon='mdi:clipboard-text-clock-outline' className='menu-icon' />
-                <span>Pedidos</span>
+                <span>Vendas</span>
               </NavLink>
             </li>
 
@@ -183,7 +183,7 @@ const MasterLayout = ({ children }) => {
 
             <li>
               <NavLink
-                to='/loja'
+                to='/store/store-products'
                 className={(navData) => (navData.isActive ? 'active-page' : '')}
               >
                 <Icon icon='mdi:store-outline' className='menu-icon' />
