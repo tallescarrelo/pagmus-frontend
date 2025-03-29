@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const AffiliatesOfMyProducts = ({ affiliates }) => {
+  console.log("affiliates", affiliates);
   return (
     <div className="card">
       <div className="card-header d-flex flex-wrap align-items-center justify-content-between">
@@ -115,12 +116,13 @@ const AffiliatesOfMyProducts = ({ affiliates }) => {
                   <Link to="/view-profile" className="text-primary-600">
                     <div className="d-flex align-items-center">
                       <img
-                        src="/assets/images/product/product-img3.png"
-                        alt=""
+                        src={affiliates.product.image_url}
+                        alt={affiliates.product.name}
                         className="flex-shrink-0 me-12 radius-8"
+                        style={{ width: 24, height: 24 }}
                       />
                       <h6 className="text-md mb-0 fw-medium flex-grow-1">
-                        Gota Angolana
+                        {affiliates.product.name}
                       </h6>
                     </div>
                   </Link>
