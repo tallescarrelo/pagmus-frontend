@@ -5,7 +5,11 @@ import { Link } from "react-router-dom";
 const SignInLayer = ({ handleAuthenticate, loading }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const showHidePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <section className="auth bg-base d-flex flex-wrap">
@@ -44,7 +48,7 @@ const SignInLayer = ({ handleAuthenticate, loading }) => {
                   <Icon icon="solar:lock-password-outline" />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   className="form-control h-56-px bg-neutral-50 radius-12"
                   id="your-password"
                   placeholder="Password"
@@ -52,10 +56,16 @@ const SignInLayer = ({ handleAuthenticate, loading }) => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <span
-                className="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
-                data-toggle="#your-password"
-              />
+              <button
+                type="submit"
+                onClick={() => showHidePassword()}
+                className="position-absolute end-0 top-50 translate-middle-y border-0 bg-transparent p-0"
+              >
+                <span
+                  className="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
+                  data-toggle="#your-password"
+                />
+              </button>
             </div>
             <div className="">
               <div className="d-flex justify-content-between gap-2">

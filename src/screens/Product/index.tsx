@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { PageIndicate } from "../../components";
 import CardProduct from "../../components/CardProduct";
+import Modal from "../../components/Modal";
+import StepFour from "../../components/RegisterProductModal/StepFour";
+import StepOne from "../../components/RegisterProductModal/StepOne";
+import StepThree from "../../components/RegisterProductModal/StepThree";
+import StepTwo from "../../components/RegisterProductModal/StepTwo";
 import { BaseTemplate } from "../../Container";
 import { ButtonWrapper, PageIndicateContainer, RowContainer, StyledButton } from "./styles";
-import Modal from "../../components/Modal";
-import StepOne from "../../components/RegisterProductModal/StepOne";
-import StepTwo from "../../components/RegisterProductModal/StepTwo";
-import StepThree from "../../components/RegisterProductModal/StepThree";
-import StepFour from "../../components/RegisterProductModal/StepFour";
 
 const Product: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);

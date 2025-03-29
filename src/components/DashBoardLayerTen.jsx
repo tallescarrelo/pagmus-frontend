@@ -1,17 +1,35 @@
-import React from "react";
-import UnitCountSeven from "./child/UnitCountSeven";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ProductsServices from "../services/api/products";
+import { selectProducts, setProducts } from "../services/reducers/products";
 import IncomeVsExpense from "./child/IncomeVsExpense";
-import UsersChart from "./child/UsersChart";
-import TopSuppliers from "./child/TopSuppliers";
-import TopCustomer from "./child/TopCustomer";
 import OverallReport from "./child/OverallReport";
 import PurchaseAndSales from "./child/PurchaseAndSales";
 import RecentTransactions from "./child/RecentTransactions";
+import TopCustomer from "./child/TopCustomer";
+import TopSuppliers from "./child/TopSuppliers";
+import UnitCountSeven from "./child/UnitCountSeven";
+import UsersChart from "./child/UsersChart";
 
 const DashBoardLayerTen = () => {
+  const dispatch = useDispatch();
+  const myProducts = useSelector(selectProducts);
+
+  const getProducts = useCallback(async () => {
+    try {
+      const response = await ProductsServices.getProducts();
+      dispatch(setProducts(response));
+    } catch (error) {
+      console.error("Error in getProducts:", error);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    getProducts();
+  }, [getProducts]);
+
   return (
-    <div className='row gy-4'>
-      { UnitCountSeven }
+    <div className="row gy-4">
       <UnitCountSeven />
 
       {/* IncomeVsExpense */}
@@ -21,7 +39,7 @@ const DashBoardLayerTen = () => {
       <UsersChart />
 
       {/* TopSuppliers */}
-      <TopSuppliers />
+      <TopSuppliers myProducts={myProducts} />
 
       {/* TopCustomer */}
       <TopCustomer />

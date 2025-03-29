@@ -7,7 +7,6 @@ const SignInPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  // TODO: SALVAR TOKEN PÓS LOGIN
   const handleAuthenticate = async (credentials) => {
     setLoading(true);
     try {
