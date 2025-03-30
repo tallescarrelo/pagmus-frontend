@@ -101,8 +101,10 @@ import WizardPage from "./pages/WizardPage";
 /* DEFINITIVO */
 import AffiliatesOfMyProductsPage from "./pages/affiliate/AffiliatesOfMyProductsPage";
 import MyAffiliateProductsPage from "./pages/affiliate/MyAffiliateProductsPage";
-import MyProductsPage from "./pages/products/MyProductsPage";
+
 import ProductGridPage from "./pages/store/ProductGridPage";
+import MyProductsPage from "./pages/products/MyProductsPage";
+import ViewProductPage from "./pages/products/ViewProductPage";
 
 
 function App() {
@@ -237,7 +239,7 @@ function App() {
         <Route exact path="/affiliate/my-affiliate-products" element={<MyAffiliateProductsPage />}/>
         <Route exact path="/store/store-products" element={<ProductGridPage />}/>
         <Route exact path="/products/products" element={<MyProductsPage />}/>
-
+        <Route exact path="/products/view-product" element={<ViewProductPage />}/>
 
       </Routes>
     </BrowserRouter>
