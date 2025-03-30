@@ -161,7 +161,7 @@ const MasterLayout = ({ children }) => {
                 </li>
                 <li>
                   <NavLink
-                    to='/produtos/meus'
+                    to='/products/products'
                     className={(navData) => (navData.isActive ? 'active-page' : '')}
                   >
                     <i className='ri-circle-fill circle-icon text-warning-main w-auto' />
