@@ -15,9 +15,12 @@ const DashBoardLayerTen = () => {
   const dispatch = useDispatch();
   const myProducts = useSelector(selectProducts);
 
+  console.log("myProducts do dash", myProducts);
+
   const getProducts = useCallback(async () => {
     try {
       const response = await ProductsServices.getProducts();
+      console.log("response", response);
       dispatch(setProducts(response));
     } catch (error) {
       console.error("Error in getProducts:", error);
