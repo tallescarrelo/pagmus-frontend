@@ -5,7 +5,7 @@ import { Button, ButtonLarge, Input, } from "../../components";
 import React from "react";
 import { default as hideIcon, default as showIcon } from "../../assets/icons/Hide1x.png";
 import logoLarge from "../../assets/logo/pagmusmain.png";
-import Account from "../../services/api/index";
+import AccountService from "../../services/api/auth";
 import { AskLabel, CheckBox, CheckBoxContainer, Container, Content, CreateAccountContainer, FormContainer, GradientBackground, Logo, RememberPasswordContainer, RememberPasswordLabel, ResetPasswordLabel, SignInContainer, Title } from "./styles";
 
 const SignIn = () => {
@@ -33,10 +33,9 @@ const handleSuccess = async (data) => {
 
   const handleSubmit = async () => {
     const credentials = { email, password };
-    console.log("clicou", credentials);
 
     try {
-      const data = await Account.login(credentials);
+      const data = await AccountService.login(credentials);
       await handleSuccess(data);
       navigate("/Home");
     } catch (error) {
