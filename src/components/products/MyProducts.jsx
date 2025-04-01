@@ -1,8 +1,14 @@
 import { Icon } from "@iconify/react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const MyProducts = ({ myProducts }) => {
+  const navigate = useNavigate();
+
+  const handleClick = (product) => {
+    navigate("/products/view-product", { state: { product } });
+  };
+
   return (
     <div className="card h-100 p-0 radius-12">
       <div className="card-body p-24">
@@ -26,8 +32,8 @@ const MyProducts = ({ myProducts }) => {
                     Código: {product?.category}
                   </span>
 
-                  <Link
-                    to="#"
+                  <button
+                    onClick={() => handleClick(product)}
                     className="bg-primary-50 text-primary-600 bg-hover-primary-600 hover-text-white p-10 text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center justify-content-center mt-16 fw-medium gap-2 w-100"
                   >
                     Mais Informações
@@ -35,7 +41,7 @@ const MyProducts = ({ myProducts }) => {
                       icon="solar:alt-arrow-right-linear"
                       className="icon text-xl line-height-1"
                     />
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>

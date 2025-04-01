@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AffiliatesServices from "../services/api/affiliates";
 import ProductsServices from "../services/api/products";
 import { selectProducts, setProducts } from "../services/reducers/products";
 import IncomeVsExpense from "./child/IncomeVsExpense";
@@ -15,12 +16,11 @@ const DashBoardLayerTen = () => {
   const dispatch = useDispatch();
   const myProducts = useSelector(selectProducts);
 
-  console.log("myProducts do dash", myProducts);
+  const [affiliates, setAffiliates] = useState();
 
   const getProducts = useCallback(async () => {
     try {
       const response = await ProductsServices.getProducts();
-      console.log("response", response);
       dispatch(setProducts(response));
     } catch (error) {
       console.error("Error in getProducts:", error);
@@ -29,7 +29,17 @@ const DashBoardLayerTen = () => {
 
   useEffect(() => {
     getProducts();
+    getAllAfilliates();
   }, [getProducts]);
+
+  const getAllAfilliates = async () => {
+    try {
+      const response = await AffiliatesServices.getAffiliatesProducts();
+      setAffiliates(response);
+    } catch (error) {
+      console.error("Error in getAllAfilliates:", error);
+    }
+  };
 
   return (
     <div className="row gy-4">
@@ -45,7 +55,7 @@ const DashBoardLayerTen = () => {
       <TopSuppliers myProducts={myProducts} />
 
       {/* TopCustomer */}
-      <TopCustomer />
+      <TopCustomer affiliates={affiliates} />
 
       {/* OverallReport */}
       <OverallReport />
