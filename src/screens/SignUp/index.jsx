@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import backgroundLogo from "../../assets/icons/login_background.png";
 import logoLarge from "../../assets/logo/pagmusmain.png";
 import { Button, ButtonLarge, Input } from "../../components";
-import Account from "../../services/api/index";
+import AccountService from "../../services/api/auth";
 import {
   CheckBox,
   CheckBoxContainer,
@@ -11,15 +10,14 @@ import {
   Content,
   CreateAccountButton,
   FormContainer,
-  ImageBackground,
+  GradientBackground,
   Logo,
   SignInLink,
   SignUpContainer,
   Title,
-  GradientBackground
 } from "./styles";
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -37,7 +35,7 @@ const SignUp: React.FC = () => {
     };
 
     try {
-      const response = await Account.register(userDetails);
+      const response = await AccountService.register(userDetails);
 
       if (response.status === 201) {
         console.log("User registered successfully");
@@ -121,14 +119,16 @@ const SignUp: React.FC = () => {
                   href="/terms"
                   style={{ textDecoration: "underline", color: "#44ADD4" }}
                 >
-                  {" "} Termos de uso {" "}
+                  {" "}
+                  Termos de uso{" "}
                 </a>
                 e a
                 <a
                   href="/privacy"
                   style={{ textDecoration: "underline", color: "#44ADD4" }}
                 >
-                  {" "} Política de Privacidade.
+                  {" "}
+                  Política de Privacidade.
                 </a>
                 .
               </CheckBoxLabel>
@@ -153,8 +153,7 @@ const SignUp: React.FC = () => {
             </SignInLink>
           </FormContainer>
         </SignUpContainer>
-        <GradientBackground>
-        </GradientBackground>
+        <GradientBackground></GradientBackground>
       </Content>
     </Container>
   );
