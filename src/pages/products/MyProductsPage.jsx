@@ -1,13 +1,14 @@
 import React from "react";
-import MasterLayout from "../../masterLayout/MasterLayout";
+import { useSelector } from "react-redux";
 import Breadcrumb from "../../components/Breadcrumb";
 import MyProducts from "../../components/products/MyProducts";
-
+import MasterLayout from "../../masterLayout/MasterLayout";
+import { selectProducts } from "../../services/reducers/products";
 
 const MyProductsPage = () => {
+  const myProducts = useSelector(selectProducts);
   return (
     <>
-
       {/* MasterLayout */}
       <MasterLayout>
 
@@ -15,10 +16,8 @@ const MyProductsPage = () => {
         <Breadcrumb title="Loja" />
 
         {/* MyProducts */}
-        <MyProducts />
-
+        <MyProducts myProducts={myProducts} />
       </MasterLayout>
-
     </>
   );
 };

@@ -6,7 +6,7 @@ const ProductsServices = {
       const response = await apiService.get("/product");
       return response.data;
     } catch (error) {
-      console.error("Error in getAffiliates:", error);
+      console.error("Error in getProducts:", error);
       throw error;
     }
   },
