@@ -103,6 +103,8 @@ import AffiliatesOfMyProductsPage from "./pages/affiliate/AffiliatesOfMyProducts
 import MyAffiliateProductsPage from "./pages/affiliate/MyAffiliateProductsPage";
 
 import ProductGridPage from "./pages/store/ProductGridPage";
+import MyProductsPage from "./pages/products/MyProductsPage";
+import ViewProductPage from "./pages/products/ViewProductPage";
 
 
 function App() {
@@ -236,7 +238,8 @@ function App() {
         <Route exact path="/affiliate/affiliates-of-my-products" element={<AffiliatesOfMyProductsPage />}/>
         <Route exact path="/affiliate/my-affiliate-products" element={<MyAffiliateProductsPage />}/>
         <Route exact path="/store/store-products" element={<ProductGridPage />}/>
-
+        <Route exact path="/products/products" element={<MyProductsPage />}/>
+        <Route exact path="/products/view-product" element={<ViewProductPage />}/>
 
       </Routes>
     </BrowserRouter>
