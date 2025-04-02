@@ -11,6 +11,7 @@ const MyProductsPage = () => {
     <>
       {/* MasterLayout */}
       <MasterLayout>
+
         {/* Breadcrumb */}
         <Breadcrumb title="Loja" />
 
@@ -21,4 +22,4 @@ const MyProductsPage = () => {
   );
 };
 
-export default MyProductsPage;
+export default MyProductsPage; 
