@@ -1,12 +1,25 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import MyProducts from "../../components/products/MyProducts";
 import MasterLayout from "../../masterLayout/MasterLayout";
-import { selectProducts } from "../../services/reducers/products";
+import ProductsServices from "../../services/api/products";
 
 const MyProductsPage = () => {
-  const myProducts = useSelector(selectProducts);
+  const [myProducts, setMyProducts] = useState([]);
+
+  const getProducts = useCallback(async () => {
+    try {
+      const response = await ProductsServices.getProducts();
+      setMyProducts(response);
+    } catch (error) {
+      console.error("Error in getProducts:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    getProducts();
+  });
+
   return (
     <>
       {/* MasterLayout */}
