@@ -11,6 +11,11 @@ const SignInLayer = ({ handleAuthenticate, loading }) => {
     setShowPassword(!showPassword);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleAuthenticate({ email, password });
+  };
+
   return (
     <section className="auth bg-base d-flex flex-wrap">
       <div className="auth-left d-lg-block d-none">
@@ -88,7 +93,7 @@ const SignInLayer = ({ handleAuthenticate, loading }) => {
             <button
               type="submit"
               className="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32"
-              onClick={() => handleAuthenticate({ email, password })}
+              onClick={handleSubmit}
             >
               {loading ? "Carregando..." : "Acessar"}
             </button>
