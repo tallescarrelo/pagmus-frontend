@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import RouteScrollToTop from "./helper/RouteScrollToTop";
 import AccessDeniedPage from "./pages/AccessDeniedPage";
 import AddBlogPage from "./pages/AddBlogPage";
@@ -109,7 +109,7 @@ import ProductGridPage from "./pages/store/ProductGridPage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter future={{ v7_relativeSplatPath: true }}>
       <RouteScrollToTop />
       <Routes>
         <Route exact path="/Dashboard" element={<HomePageOne />} />
@@ -261,7 +261,7 @@ function App() {
           element={<ViewProductPage />}
         />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
