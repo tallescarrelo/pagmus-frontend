@@ -10,6 +10,15 @@ const ProductsServices = {
       throw error;
     }
   },
+
+  registerProduct: async (payload) => {
+    try {
+      await apiService.post("/product", payload);
+    } catch (error) {
+      console.error("Error in registerProduct:", error);
+      throw error;
+    }
+  },
 };
 
 export default ProductsServices;
