@@ -102,10 +102,10 @@ import WizardPage from "./pages/WizardPage";
 import AffiliatesOfMyProductsPage from "./pages/affiliate/AffiliatesOfMyProductsPage";
 import MyAffiliateProductsPage from "./pages/affiliate/MyAffiliateProductsPage";
 
-import ProductGridPage from "./pages/store/ProductGridPage";
 import MyProductsPage from "./pages/products/MyProductsPage";
+import RegisterProductPage from "./pages/products/RegisterProduct";
 import ViewProductPage from "./pages/products/ViewProductPage";
-
+import ProductGridPage from "./pages/store/ProductGridPage";
 
 function App() {
   return (
@@ -233,14 +233,33 @@ function App() {
 
         <Route exact path="*" element={<ErrorPage />} />
 
-
         {/* DEFINITIVO */}
-        <Route exact path="/affiliate/affiliates-of-my-products" element={<AffiliatesOfMyProductsPage />}/>
-        <Route exact path="/affiliate/my-affiliate-products" element={<MyAffiliateProductsPage />}/>
-        <Route exact path="/store/store-products" element={<ProductGridPage />}/>
-        <Route exact path="/products/products" element={<MyProductsPage />}/>
-        <Route exact path="/products/view-product" element={<ViewProductPage />}/>
-
+        <Route
+          exact
+          path="/affiliate/affiliates-of-my-products"
+          element={<AffiliatesOfMyProductsPage />}
+        />
+        <Route
+          exact
+          path="/affiliate/my-affiliate-products"
+          element={<MyAffiliateProductsPage />}
+        />
+        <Route
+          exact
+          path="/store/store-products"
+          element={<ProductGridPage />}
+        />
+        <Route exact path="/products/products" element={<MyProductsPage />} />
+        <Route
+          exact
+          path="/products/register"
+          element={<RegisterProductPage />}
+        />
+        <Route
+          exact
+          path="/products/view-product"
+          element={<ViewProductPage />}
+        />
       </Routes>
     </BrowserRouter>
   );
