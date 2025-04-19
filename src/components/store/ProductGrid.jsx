@@ -7,8 +7,6 @@ import { selectProducts } from "../../services/reducers/products";
 const ProductGrid = () => {
   const products = useSelector(selectProducts);
 
-  console.log("products", products);
-
   const ProgressWithCircle = ({ watts }) => {
     const percent = Math.min((watts / 150) * 100, 100);
 

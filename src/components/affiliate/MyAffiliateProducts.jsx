@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { formatDateBR } from "../../helper/formattedDate";
 
 const MyAffiliateProducts = ({ affiliates, handleAccceptAffiliate }) => {
-  console.log("affiliates", affiliates);
   return (
     <div className="card">
       <div className="card-header d-flex flex-wrap align-items-center justify-content-between">
@@ -68,7 +67,7 @@ const MyAffiliateProducts = ({ affiliates, handleAccceptAffiliate }) => {
             </tr>
           </thead>
           <tbody>
-            {affiliates.map((affiliate, index) => (
+            {affiliates?.map((affiliate, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>

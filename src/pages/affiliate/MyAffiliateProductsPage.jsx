@@ -10,7 +10,6 @@ const MyAffiliateProductsPage = () => {
   const getAffiliatesPending = async () => {
     try {
       const response = await AffiliatesServices.getAffiliatesPending();
-      console.log("response", JSON.stringify(response, null, 2));
       setAffiliates(response);
     } catch (error) {
       console.error("Error in getAffiliates:", error);
@@ -21,7 +20,6 @@ const MyAffiliateProductsPage = () => {
   const handleAccceptAffiliate = async (affiliateId) => {
     try {
       const response = await AffiliatesServices.acceptAffiliate(affiliateId);
-      console.log("response", response);
     } catch (error) {
       console.error("Error in handleAccceptAffiliate:", error);
     }

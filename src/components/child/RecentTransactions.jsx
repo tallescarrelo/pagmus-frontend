@@ -35,7 +35,7 @@ const RecentTransactions = ({ recentSales }) => {
                 </tr>
               </thead>
               <tbody>
-                {recentSales.map((sales) => (
+                {recentSales?.map((sales) => (
                   <tr key={sales.id}>
                     <td>
                       <span className="text-secondary-light">{sales.id}</span>

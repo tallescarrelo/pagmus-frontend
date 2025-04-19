@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const TopCustomer = ({ affiliates }) => {
-  console.log("afiliats", affiliates);
   return (
     <div className="col-xxl-4 col-md-6">
       <div className="card h-100">

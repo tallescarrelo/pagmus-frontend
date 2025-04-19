@@ -93,7 +93,7 @@ const AffiliatesOfMyProducts = ({ affiliates }) => {
             </tr>
           </thead>
           <tbody>
-            {affiliates.map((affiliates) => (
+            {affiliates?.map((affiliates) => (
               <tr key={affiliates.id}>
                 <td>{affiliates.id}</td>
                 <td>

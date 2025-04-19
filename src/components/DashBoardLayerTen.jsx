@@ -33,7 +33,6 @@ const DashBoardLayerTen = () => {
   const getAffiliatesPending = async () => {
     try {
       const response = await AffiliatesServices.getAffiliatesPending();
-      console.log("response", JSON.stringify(response, null, 2));
       setAffiliatesPending(response);
     } catch (error) {
       console.error("Error in getAffiliates:", error);
