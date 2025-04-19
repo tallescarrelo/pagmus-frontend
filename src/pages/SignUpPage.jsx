@@ -9,7 +9,6 @@ const SignUpPage = () => {
     setLoading(true);
     try {
       const response = await AccountService.register(credentials);
-      console.log("response", response);
       setLoading(false);
     } catch (error) {
       setLoading(false);

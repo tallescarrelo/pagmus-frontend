@@ -55,11 +55,12 @@ const ProgressWithCircle = ({ watts }) => {
   );
 };
 
-const ViewProduct = () => {
+const Viewproduct = () => {
   const location = useLocation();
   const product = location.state?.product;
+  const affiliate = location.state?.affiliate;
 
-  if (!product) {
+  if (!product && !affiliate) {
     return <p>Produto não encontrado</p>;
   }
   return (
@@ -68,7 +69,7 @@ const ViewProduct = () => {
         <div className="user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100">
           <div className="text-center border-bottom p-3">
             <img
-              src={product.image_url}
+              src={product?.image_url || affiliate?.product?.image_url}
               alt=""
               className="border br-white border-width-2-px rounded object-fit-cover"
               style={{
@@ -76,11 +77,13 @@ const ViewProduct = () => {
                 maxHeight: "300px",
                 width: "100%",
                 height: "auto",
-              }} // <- Mantém proporção e limita altura
+              }}
             />
-            <h4 className="mb-0 mt-3">{product.name}</h4>
+            <h4 className="mb-0 mt-3">
+              {product?.name || affiliate?.product?.name}
+            </h4>
             <span className="text-secondary-light mb-2 d-block small">
-              ID: {product.id}
+              ID: {product?.id || affiliate?.product?.id}
             </span>
           </div>
 
@@ -88,7 +91,10 @@ const ViewProduct = () => {
             <h6 className="text-lg mb-16">Dados do Produto</h6>
             <ul>
               {[
-                { label: "Categoria", value: product.category },
+                {
+                  label: "Categoria",
+                  value: product?.category || affiliate.product?.category,
+                },
                 {
                   label: "Página de Venda",
                   value: (
@@ -97,7 +103,12 @@ const ViewProduct = () => {
                     </a>
                   ),
                 },
-                { label: "Tipo de Comissão", value: product.comission_type },
+                {
+                  label: "Tipo de Comissão",
+                  value:
+                    product?.comission_type ||
+                    affiliate.product?.comission_type,
+                },
                 { label: "Preço", value: "R$ 97 até R$ 197" },
                 { label: "Comissão", value: "até R$ 100" },
               ].map((item, idx) => (
@@ -207,8 +218,12 @@ const ViewProduct = () => {
                   <tbody>
                     <tr>
                       <td>Kit 1</td>
-                      <td>R$ {product.price}</td>
-                      <td>R$ {product.comission_value}</td>
+                      <td>R$ {product?.price || affiliate.product?.price}</td>
+                      <td>
+                        R${" "}
+                        {product?.comission_value ||
+                          affiliate.product?.comission_value}
+                      </td>
                     </tr>
                     <tr>
                       <td>Kit 2</td>
@@ -277,4 +292,4 @@ const ViewProduct = () => {
   );
 };
 
-export default ViewProduct;
+export default Viewproduct;

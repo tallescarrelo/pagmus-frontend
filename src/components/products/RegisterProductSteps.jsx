@@ -89,10 +89,8 @@ const RegisterProductSteps = () => {
         thanks_page_url: productData.thanksPageUrl,
         complaint_url: productData.complaintUrl,
       };
-      console.log("payload enviado", payload);
 
       const response = await ProductsServices.registerProduct(payload);
-      console.log("cadastrou, carai", response);
     } catch (error) {
       console.error(
         "Erro ao registrar produto:",
