@@ -17,6 +17,7 @@ const DashBoardLayerTen = () => {
   const myProducts = useSelector(selectProducts);
 
   const [affiliates, setAffiliates] = useState();
+  const [affiliatesPending, setAffiliatesPending] = useState();
 
   const getProducts = useCallback(async () => {
     try {
@@ -27,9 +28,21 @@ const DashBoardLayerTen = () => {
     }
   }, [dispatch]);
 
+  const getAffiliatesPending = async () => {
+    try {
+      const response = await AffiliatesServices.getAffiliatesPending();
+      console.log("response", JSON.stringify(response, null, 2));
+      setAffiliatesPending(response);
+    } catch (error) {
+      console.error("Error in getAffiliates:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     getProducts();
     getAllAfilliates();
+    getAffiliatesPending();
   }, [getProducts]);
 
   const getAllAfilliates = async () => {
@@ -49,7 +62,7 @@ const DashBoardLayerTen = () => {
       <IncomeVsExpense />
 
       {/* UsersChart */}
-      <UsersChart />
+      <UsersChart affiliatesPending={affiliatesPending} />
 
       {/* TopSuppliers */}
       <TopSuppliers myProducts={myProducts} />
