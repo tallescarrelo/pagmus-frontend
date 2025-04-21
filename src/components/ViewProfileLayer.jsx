@@ -1,12 +1,48 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { setUser } from "../redux/reducers/userReducer";
+import UserServices from "../services/api/user";
 
 const ViewProfileLayer = ({ user }) => {
+  const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState(
-    "assets/images/user-grid/user-grid-img13.png"
+    user?.user_img || "assets/images/user-grid/user-grid-img13.png"
   );
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    department: "Design",
+    designation: "UI UX Designer",
+    language: "English",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await UserServices.updateUser(formData);
+      console.log("response do update", response);
+      dispatch(setUser(response));
+      toast.success("Perfil atualizado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao atualizar perfil");
+      console.error(error);
+    }
+  };
 
   // Toggle function for password field
   const togglePasswordVisibility = () => {
@@ -215,7 +251,7 @@ const ViewProfileLayer = ({ user }) => {
                   </div>
                 </div>
                 {/* Upload Image End */}
-                <form action="#">
+                <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-sm-6">
                       <div className="mb-20">
@@ -230,6 +266,9 @@ const ViewProfileLayer = ({ user }) => {
                           type="text"
                           className="form-control radius-8"
                           id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
                           placeholder="Enter Full Name"
                         />
                       </div>
@@ -246,6 +285,9 @@ const ViewProfileLayer = ({ user }) => {
                           type="email"
                           className="form-control radius-8"
                           id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
                           placeholder="Enter email address"
                         />
                       </div>
@@ -253,15 +295,18 @@ const ViewProfileLayer = ({ user }) => {
                     <div className="col-sm-6">
                       <div className="mb-20">
                         <label
-                          htmlFor="number"
+                          htmlFor="phone"
                           className="form-label fw-semibold text-primary-light text-sm mb-8"
                         >
                           Phone
                         </label>
                         <input
-                          type="email"
+                          type="text"
                           className="form-control radius-8"
-                          id="number"
+                          id="phone"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
                           placeholder="Enter phone number"
                         />
                       </div>
@@ -278,6 +323,9 @@ const ViewProfileLayer = ({ user }) => {
                         <select
                           className="form-control radius-8 form-select"
                           id="depart"
+                          name="department"
+                          value={formData.department}
+                          onChange={handleInputChange}
                           defaultValue="Select Event Title"
                         >
                           <option value="Select Event Title" disabled>
@@ -307,6 +355,9 @@ const ViewProfileLayer = ({ user }) => {
                         <select
                           className="form-control radius-8 form-select"
                           id="desig"
+                          name="designation"
+                          value={formData.designation}
+                          onChange={handleInputChange}
                           defaultValue="Select Designation Title"
                         >
                           <option value="Select Designation Title" disabled>
@@ -336,6 +387,9 @@ const ViewProfileLayer = ({ user }) => {
                         <select
                           className="form-control radius-8 form-select"
                           id="Language"
+                          name="language"
+                          value={formData.language}
+                          onChange={handleInputChange}
                           defaultValue="Select Language"
                         >
                           <option value="Select Language" disabled>
@@ -360,8 +414,10 @@ const ViewProfileLayer = ({ user }) => {
                           name="#0"
                           className="form-control radius-8"
                           id="desc"
+                          name="description"
+                          value={formData.description}
+                          onChange={handleInputChange}
                           placeholder="Write description..."
-                          defaultValue={""}
                         />
                       </div>
                     </div>
@@ -374,7 +430,7 @@ const ViewProfileLayer = ({ user }) => {
                       Cancel
                     </button>
                     <button
-                      type="button"
+                      type="submit"
                       className="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8"
                     >
                       Save
