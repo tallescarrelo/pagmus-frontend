@@ -1,12 +1,16 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
+import { logout } from "../redux/reducers/userReducer";
 
 const MasterLayout = ({ children }) => {
   let [sidebarActive, seSidebarActive] = useState(false);
   let [mobileMenu, setMobileMenu] = useState(false);
-  const location = useLocation(); // Hook to get the current route
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleDropdownClick = (event) => {
@@ -18,7 +22,6 @@ const MasterLayout = ({ children }) => {
 
       const isActive = clickedDropdown.classList.contains("open");
 
-      // Close all dropdowns
       const allDropdowns = document.querySelectorAll(".sidebar-menu .dropdown");
       allDropdowns.forEach((dropdown) => {
         dropdown.classList.remove("open");
@@ -85,6 +88,12 @@ const MasterLayout = ({ children }) => {
     setMobileMenu(!mobileMenu);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(logout());
+    navigate("/");
+  };
+
   return (
     <section className={mobileMenu ? "overlay active" : "overlay "}>
       {/* sidebar */}
@@ -127,7 +136,7 @@ const MasterLayout = ({ children }) => {
           <ul className="sidebar-menu" id="sidebar-menu">
             <li>
               <NavLink
-                to="/index-10"
+                to="/Dashboard"
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
                 <Icon
@@ -699,7 +708,7 @@ const MasterLayout = ({ children }) => {
                               Kathryn Murphy
                             </h6>
                             <p className="mb-0 text-sm text-secondary-light text-w-100-px">
-                              hey! there i’m...
+                              hey! there i'm...
                             </p>
                           </div>
                         </div>
@@ -729,7 +738,7 @@ const MasterLayout = ({ children }) => {
                               Kathryn Murphy
                             </h6>
                             <p className="mb-0 text-sm text-secondary-light text-w-100-px">
-                              hey! there i’m...
+                              hey! there i'm...
                             </p>
                           </div>
                         </div>
@@ -759,7 +768,7 @@ const MasterLayout = ({ children }) => {
                               Kathryn Murphy
                             </h6>
                             <p className="mb-0 text-sm text-secondary-light text-w-100-px">
-                              hey! there i’m...
+                              hey! there i'm...
                             </p>
                           </div>
                         </div>
@@ -789,7 +798,7 @@ const MasterLayout = ({ children }) => {
                               Kathryn Murphy
                             </h6>
                             <p className="mb-0 text-sm text-secondary-light text-w-100-px">
-                              hey! there i’m...
+                              hey! there i'm...
                             </p>
                           </div>
                         </div>
@@ -819,7 +828,7 @@ const MasterLayout = ({ children }) => {
                               Kathryn Murphy
                             </h6>
                             <p className="mb-0 text-sm text-secondary-light text-w-100-px">
-                              hey! there i’m...
+                              hey! there i'm...
                             </p>
                           </div>
                         </div>
@@ -1064,6 +1073,7 @@ const MasterLayout = ({ children }) => {
                         <Link
                           className="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3"
                           to="#"
+                          onClick={handleLogout}
                         >
                           <Icon icon="lucide:power" className="icon text-xl" />{" "}
                           Log Out

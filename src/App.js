@@ -1,4 +1,5 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
 import RouteScrollToTop from "./helper/RouteScrollToTop";
 import AccessDeniedPage from "./pages/AccessDeniedPage";
 import AddBlogPage from "./pages/AddBlogPage";
@@ -41,7 +42,6 @@ import HomePageEleven from "./pages/HomePageEleven";
 import HomePageFive from "./pages/HomePageFive";
 import HomePageFour from "./pages/HomePageFour";
 import HomePageNine from "./pages/HomePageNine";
-import HomePageOne from "./pages/HomePageOne";
 import HomePageSeven from "./pages/HomePageSeven";
 import HomePageSix from "./pages/HomePageSix";
 import HomePageTen from "./pages/HomePageTen";
@@ -98,7 +98,6 @@ import WalletPage from "./pages/WalletPage";
 import WidgetsPage from "./pages/WidgetsPage";
 import WizardPage from "./pages/WizardPage";
 
-/* DEFINITIVO */
 import AffiliatesOfMyProductsPage from "./pages/affiliate/AffiliatesOfMyProductsPage";
 import MyAffiliateProductsPage from "./pages/affiliate/MyAffiliateProductsPage";
 
@@ -113,7 +112,7 @@ function App() {
     <HashRouter future={{ v7_relativeSplatPath: true }}>
       <RouteScrollToTop />
       <Routes>
-        <Route exact path="/Dashboard" element={<HomePageOne />} />
+        {/* Rotas Públicas */}
         <Route exact path="/index-2" element={<HomePageTwo />} />
         <Route exact path="/index-3" element={<HomePageThree />} />
         <Route exact path="/index-4" element={<HomePageFour />} />
@@ -231,41 +230,99 @@ function App() {
         <Route exact path="/wallet" element={<WalletPage />} />
         <Route exact path="/widgets" element={<WidgetsPage />} />
         <Route exact path="/wizard" element={<WizardPage />} />
+        <Route exact path="/" element={<SignInPage />} />
+        <Route exact path="/sign-up" element={<SignUpPage />} />
+        <Route exact path="/forgot-password" element={<ForgotPasswordPage />} />
 
-        <Route exact path="*" element={<ErrorPage />} />
-
-        {/* DEFINITIVO */}
+        {/* Rotas Privadas */}
         <Route
           exact
-          path="/affiliate/affiliates-of-my-products"
-          element={<AffiliatesOfMyProductsPage />}
+          path="/Dashboard"
+          element={
+            <PrivateRoute>
+              <HomePageTen />
+            </PrivateRoute>
+          }
         />
         <Route
           exact
-          path="/affiliate/my-affiliate-products"
-          element={<MyAffiliateProductsPage />}
+          path="/view-profile"
+          element={
+            <PrivateRoute>
+              <ViewProfilePage />
+            </PrivateRoute>
+          }
         />
         <Route
           exact
-          path="/store/store-products"
-          element={<ProductGridPage />}
-        />
-        <Route exact path="/products/products" element={<MyProductsPage />} />
-        <Route
-          exact
-          path="/products/affiliates"
-          element={<ProductsAffiliates />}
+          path="/products/products"
+          element={
+            <PrivateRoute>
+              <MyProductsPage />
+            </PrivateRoute>
+          }
         />
         <Route
           exact
           path="/products/register"
-          element={<RegisterProductPage />}
+          element={
+            <PrivateRoute>
+              <RegisterProductPage />
+            </PrivateRoute>
+          }
         />
         <Route
           exact
           path="/products/view-product"
-          element={<ViewProductPage />}
+          element={
+            <PrivateRoute>
+              <ViewProductPage />
+            </PrivateRoute>
+          }
         />
+        <Route
+          exact
+          path="/store/store-products"
+          element={
+            <PrivateRoute>
+              <ProductGridPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/affiliate/my-affiliate-products"
+          element={
+            <PrivateRoute>
+              <MyAffiliateProductsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/affiliate/affiliates-of-my-products"
+          element={
+            <PrivateRoute>
+              <AffiliatesOfMyProductsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/products/affiliates"
+          element={
+            <PrivateRoute>
+              <ProductsAffiliates />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Outras rotas públicas */}
+        <Route exact path="/error" element={<ErrorPage />} />
+        <Route exact path="/access-denied" element={<AccessDeniedPage />} />
+        <Route exact path="/maintenance" element={<MaintenancePage />} />
+        <Route exact path="/coming-soon" element={<ComingSoonPage />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </HashRouter>
   );

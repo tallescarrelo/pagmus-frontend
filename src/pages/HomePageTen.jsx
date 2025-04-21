@@ -1,7 +1,7 @@
 import React from "react";
-import MasterLayout from "../masterLayout/MasterLayout";
 import Breadcrumb from "../components/Breadcrumb";
 import DashBoardLayerTen from "../components/DashBoardLayerTen";
+import MasterLayout from "../masterLayout/MasterLayout";
 
 const HomePageTen = () => {
   return (
@@ -9,7 +9,7 @@ const HomePageTen = () => {
       {/* MasterLayout */}
       <MasterLayout>
         {/* Breadcrumb */}
-        <Breadcrumb title='Início' />
+        <Breadcrumb title="Início" />
 
         {/* DashBoardLayerTen */}
         <DashBoardLayerTen />
