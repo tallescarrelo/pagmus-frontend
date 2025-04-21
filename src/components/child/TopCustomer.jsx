@@ -27,7 +27,7 @@ const TopCustomer = ({ affiliates }) => {
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Produto </th>
-                  <th scope="col">Comissssão</th>
+                  <th scope="col">Comissão</th>
                 </tr>
               </thead>
               <tbody>
