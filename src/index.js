@@ -7,8 +7,8 @@ import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
+import { store } from "./redux/store";
 import reportWebVitals from "./reportWebVitals";
-import store from "./services";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
