@@ -2,6 +2,26 @@ import { Icon } from "@iconify/react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 
+const formatCurrency = (value) => {
+  const numericValue = Number(value);
+  if (isNaN(numericValue)) return "R$ 0,00";
+  return numericValue.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+};
+
+const getCommissionTypeLabel = (type) => {
+  if (type === "percentage") return "Porcentagem";
+  if (type === "fixed") return "Valor fixo";
+  return "Desconhecido";
+};
+
+const formatCommissionValue = (value, type) => {
+  if (type === "percentage") return `${value}%`;
+  return formatCurrency(value);
+};
+
 const ProgressWithCircle = ({ watts }) => {
   const percent = Math.min((watts / 150) * 100, 100);
 
@@ -105,12 +125,23 @@ const Viewproduct = () => {
                 },
                 {
                   label: "Tipo de Comissão",
-                  value:
-                    product?.comission_type ||
-                    affiliate.product?.comission_type,
+                  value: getCommissionTypeLabel(
+                    product?.comission_type || affiliate.product?.comission_type
+                  ),
                 },
-                { label: "Preço", value: "R$ 97 até R$ 197" },
-                { label: "Comissão", value: "até R$ 100" },
+                {
+                  label: "Preço",
+                  value: formatCurrency(
+                    product?.price || affiliate.product?.price
+                  ),
+                },
+                {
+                  label: "Comissão",
+                  value: formatCommissionValue(
+                    product?.comission_value || affiliate.product?.comission_value,
+                    product?.comission_type || affiliate.product?.comission_type
+                  ),
+                },
               ].map((item, idx) => (
                 <li
                   key={idx}
