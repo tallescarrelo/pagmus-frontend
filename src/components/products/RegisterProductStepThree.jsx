@@ -1,131 +1,148 @@
+import { useState } from "react";
+import { Upload } from "lucide-react";
+
 const RegisterProductStepThree = ({ onBack, onNext, data, updateData }) => {
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     updateData({ [name]: value });
   };
 
-  const handleToggle = (field) => {
-    updateData({ [field]: !data[field] });
+  const validateFields = () => {
+    const newErrors = {};
+    if (!data.originZipCode) newErrors.originZipCode = true;
+    if (!data.shippingType) newErrors.shippingType = true;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (validateFields()) onNext();
   };
 
   return (
-    <div className="max-w-[600px] mx-auto bg-white p-8 rounded-2xl shadow-sm space-y-8">
-      {/* Título e status */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-[#030229]">
-            Cadastro de Produto
-          </h1>
-          <div className="bg-[#ECFDF3] inline-block px-2 py-1 mt-1 rounded-md">
-            <span className="text-[#008B52] text-xs font-medium">Ativo</span>
+    <div className="col-md-12">
+      <div className="card">
+        <div className="card-header d-flex justify-content-between align-items-start">
+          <div>
+            <h5 className="card-title mb-0">Cadastro de Produto</h5>
           </div>
         </div>
-        <span className="text-[#44ADD4] text-sm font-bold self-end">
-          Etapa 2/4
-        </span>
-      </div>
 
-      {/* CEP */}
-      <div className="flex flex-col w-full mt-8">
-        <label className="text-[#344054] text-[14px] font-medium mb-1">
-          CEP de origem *
-        </label>
-        <input
-          name="originZipCode"
-          value={data.originZipCode}
-          onChange={handleChange}
-          placeholder="Digite o CEP de origem"
-          className="form-control h-56-px bg-neutral-50 radius-12"
-        />
-        <p className="text-[#B2B2B2] text-[12px] leading-6 mt-1">
-          Digite o CEP de onde o produto será enviado
-        </p>
-      </div>
+        <div className="card-body">
+          {/* Barra de progresso */}
+          <div className="mb-5">
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-primary text-sm fw-semibold">Frete e envio</span>
+              <span className="text-primary text-sm fw-semibold">Etapa 3/4</span>
+            </div>
+            <div className="progress" style={{ height: "6px" }}>
+              <div className="progress-bar bg-primary" style={{ width: "75%" }}></div>
+            </div>
+          </div>
 
-      {/* Tipo de frete */}
-      <div className="flex flex-col w-full mt-8">
-        <label className="text-[#344054] text-[14px] font-medium mb-1">
-          Tipo de frete *
-        </label>
-        <select
-          name="shippingType"
-          value={data.shippingType}
-          onChange={handleChange}
-          className="form-select form-select-sm flex bg-base text-secondary-light"
-        >
-          <option value="">Selecione o tipo de frete</option>
-          <option value="fixed">Frete fixo</option>
-          <option value="variable">Frete variável ou grátis</option>
-        </select>
-      </div>
+          {/* CEP de origem */}
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label col-sm-3 mb-0">CEP de origem *</label>
+            <div className="col-sm-9">
+              <input
+                name="originZipCode"
+                value={data.originZipCode}
+                onChange={handleChange}
+                placeholder="Digite o CEP de origem"
+                className={`form-control ${errors.originZipCode ? "is-invalid" : ""}`}
+              />
+              <small className="text-muted">Digite o CEP de onde o produto será enviado</small>
+            </div>
+          </div>
 
-      {/* PAC Grátis */}
+          {/* Tipo de frete */}
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label col-sm-3 mb-0">Tipo de frete *</label>
+            <div className="col-sm-9">
+              <select
+                name="shippingType"
+                value={data.shippingType}
+                onChange={handleChange}
+                className={`form-select ${errors.shippingType ? "is-invalid" : ""}`}
+              >
+                <option value="">Selecione o tipo de frete</option>
+                <option value="fixed">Frete fixo</option>
+                <option value="variable">Frete variável ou grátis</option>
+              </select>
+            </div>
+          </div>
 
-      <div className="flex flex-col w-full mt-8">
-        <label className="text-[#344054] text-[14px] font-medium mb-1">
-          PAC Grátis
-        </label>
-        <select
-          name="freePac"
-          value={data.freePac}
-          onChange={handleChange}
-          className="form-select form-select-sm flex bg-base text-secondary-light"
-        >
-          <option value="">Pac Grátis?</option>
-          <option value="fixed">Sim</option>
-          <option value="variable">Não</option>
-        </select>
-      </div>
+          {/* PAC Grátis */}
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label col-sm-3 mb-0">PAC Grátis</label>
+            <div className="col-sm-9">
+              <select
+                name="freePac"
+                value={data.freePac}
+                onChange={handleChange}
+                className="form-select"
+              >
+                <option value="">Pac Grátis?</option>
+                <option value="fixed">Sim</option>
+                <option value="variable">Não</option>
+              </select>
+            </div>
+          </div>
 
-      {/* Aceita Sedex */}
-      <div className="flex flex-col w-full mt-8">
-        <label className="text-[#344054] text-[14px] font-medium mb-1">
-          Aceita sedex?
-        </label>
-        <select
-          name="acceptsSedex"
-          value={data.acceptsSedex}
-          onChange={handleChange}
-          className="form-select form-select-sm flex bg-base text-secondary-light"
-        >
-          <option value="">Aceita sedex?</option>
-          <option value="fixed">Sim</option>
-          <option value="variable">Não</option>
-        </select>
-      </div>
+          {/* Aceita Sedex */}
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label col-sm-3 mb-0">Aceita Sedex?</label>
+            <div className="col-sm-9">
+              <select
+                name="acceptsSedex"
+                value={data.acceptsSedex}
+                onChange={handleChange}
+                className="form-select"
+              >
+                <option value="">Aceita sedex?</option>
+                <option value="fixed">Sim</option>
+                <option value="variable">Não</option>
+              </select>
+            </div>
+          </div>
 
-      {/* Valor padrão */}
-      <div className="flex flex-col w-full mt-8">
-        <label className="text-[#344054] text-[14px] font-medium mb-1">
-          Valor padrão do frete
-        </label>
-        <input
-          name="defaultShippingValue"
-          value={data.defaultShippingValue}
-          onChange={handleChange}
-          placeholder="Digite o valor padrão do frete"
-          className="form-control h-56-px bg-neutral-50 radius-12"
-        />
-        <p className="text-[#B2B2B2] text-[12px] leading-6 mt-1">
-          Para evitar perder vendas quando o cálculo de frete dos Correios
-          falhar, defina um valor padrão para essas situações.
-        </p>
-      </div>
+          {/* Valor padrão do frete */}
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label col-sm-3 mb-0">Valor padrão do frete</label>
+            <div className="col-sm-9">
+              <input
+                name="defaultShippingValue"
+                value={data.defaultShippingValue}
+                onChange={handleChange}
+                placeholder="Digite o valor padrão do frete"
+                className="form-control"
+              />
+              <small className="text-muted">
+                Para evitar perder vendas quando o cálculo de frete dos Correios falhar, defina um valor padrão.
+              </small>
+            </div>
+          </div>
 
-      {/* Botões */}
-      <div className="flex justify-between mt-64">
-        <button
-          onClick={onBack}
-          className="border border-[#D0D5DD] rounded-fulltext-primary-600 bg-hover-primary-600 hover-text-white p-10 text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center justify-content-center mt-16 fw-medium gap-2 w-100"
-        >
-          Voltar
-        </button>
-        <button
-          onClick={onNext}
-          className="bg-primary-50 text-primary-600 bg-hover-primary-600 hover-text-white p-10 text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center justify-content-center mt-16 fw-medium gap-2 w-100"
-        >
-          Continuar
-        </button>
+          {/* Botões */}
+          <div className="d-flex justify-content-end gap-3 mt-4">
+            <button
+              onClick={onBack}
+              className="btn btn-outline-secondary"
+              type="button"
+            >
+              Voltar
+            </button>
+            <button
+              onClick={handleNext}
+              className="btn btn-primary-600"
+              type="button"
+            >
+              Continuar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
