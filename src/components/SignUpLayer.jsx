@@ -9,7 +9,6 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
   const [cpf, setCpf] = useState("");
   const [image, setImage] = useState("teste");
   const [password, setPassword] = useState("");
-  // const [acceptTerms, setAcceptTerms] = useState(false);
 
   return (
     <section className="auth bg-base d-flex flex-wrap">
@@ -22,14 +21,17 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
         <div className="max-w-464-px mx-auto w-100">
           <div>
             <Link to="/" className="mb-40 max-w-290-px">
-              <img src="assets/images/logo.png" alt="" />
+              <img src="assets/images/logo.png" alt="Logo" />
             </Link>
-            <h4 className="mb-12">Sign Up to your Account</h4>
+            <h4 className="mb-12">Crie sua conta</h4>
             <p className="mb-32 text-secondary-light text-lg">
-              Welcome back! please enter your detail
+              Bem-vindo! Preencha seus dados para se cadastrar.
             </p>
           </div>
-          <form action="#">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            handleSignUp({ name, email, password, image, phone, cpf });
+          }}>
             <div className="icon-field mb-16">
               <span className="icon top-50 translate-middle-y">
                 <Icon icon="f7:person" />
@@ -37,11 +39,12 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
               <input
                 type="text"
                 className="form-control h-56-px bg-neutral-50 radius-12"
-                placeholder="Username"
+                placeholder="Nome completo"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
             <div className="icon-field mb-16">
               <span className="icon top-50 translate-middle-y">
                 <Icon icon="mage:email" />
@@ -49,7 +52,7 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
               <input
                 type="email"
                 className="form-control h-56-px bg-neutral-50 radius-12"
-                placeholder="Email"
+                placeholder="E-mail"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -62,7 +65,7 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
               <input
                 type="text"
                 className="form-control h-56-px bg-neutral-50 radius-12"
-                placeholder="Phone"
+                placeholder="Telefone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
@@ -75,14 +78,14 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
               <input
                 type="text"
                 className="form-control h-56-px bg-neutral-50 radius-12"
-                placeholder="Cpf ou Cnpj"
+                placeholder="CPF ou CNPJ"
                 value={cpf}
                 onChange={(e) => setCpf(e.target.value)}
               />
             </div>
 
             <div className="mb-20">
-              <div className="position-relative ">
+              <div className="position-relative">
                 <div className="icon-field">
                   <span className="icon top-50 translate-middle-y">
                     <Icon icon="solar:lock-password-outline" />
@@ -91,7 +94,7 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
                     type="password"
                     className="form-control h-56-px bg-neutral-50 radius-12"
                     id="your-password"
-                    placeholder="Password"
+                    placeholder="Senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -102,74 +105,45 @@ const SignUpLayer = ({ handleSignUp, loading }) => {
                 />
               </div>
               <span className="mt-12 text-sm text-secondary-light">
-                Your password must have at least 8 characters
+                Sua senha deve conter pelo menos 8 caracteres.
               </span>
             </div>
-            <div className="">
-              <div className="d-flex justify-content-between gap-2">
-                <div className="form-check style-check d-flex align-items-start">
-                  <input
-                    className="form-check-input border border-neutral-300 mt-4"
-                    type="checkbox"
-                    defaultValue=""
-                    id="condition"
-                  />
-                  <label
-                    className="form-check-label text-sm"
-                    htmlFor="condition"
-                  >
-                    By creating an account means you agree to the
-                    <Link to="#" className="text-primary-600 fw-semibold">
-                      Terms &amp; Conditions
-                    </Link>{" "}
-                    and our
-                    <Link to="#" className="text-primary-600 fw-semibold">
-                      Privacy Policy
-                    </Link>
-                  </label>
-                </div>
+
+            <div className="d-flex justify-content-between gap-2">
+              <div className="form-check style-check d-flex align-items-start">
+                <input
+                  className="form-check-input border border-neutral-300 mt-4"
+                  type="checkbox"
+                  id="condition"
+                />
+                <label
+                  className="form-check-label text-sm"
+                  htmlFor="condition"
+                >
+                  Ao criar uma conta, você concorda com os{" "}
+                  <Link to="#" className="text-primary-600 fw-semibold">
+                    Termos e Condições
+                  </Link>{" "}
+                  e com nossa{" "}
+                  <Link to="#" className="text-primary-600 fw-semibold">
+                    Política de Privacidade
+                  </Link>.
+                </label>
               </div>
             </div>
+
             <button
               type="submit"
               className="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32"
-              onClick={() =>
-                handleSignUp({ name, email, password, image, phone, cpf })
-              }
             >
-              {" "}
-              {loading ? "Carregando..." : "Cadastre-se"}
+              {loading ? "Carregando..." : "Cadastrar"}
             </button>
-            <div className="mt-32 center-border-horizontal text-center">
-              <span className="bg-base z-1 px-4">Or sign up with</span>
-            </div>
-            <div className="mt-32 d-flex align-items-center gap-3">
-              <button
-                type="button"
-                className="fw-semibold text-primary-light py-16 px-24 w-50 border radius-12 text-md d-flex align-items-center justify-content-center gap-12 line-height-1 bg-hover-primary-50"
-              >
-                <Icon
-                  icon="ic:baseline-facebook"
-                  className="text-primary-600 text-xl line-height-1"
-                />
-                Google
-              </button>
-              <button
-                type="button"
-                className="fw-semibold text-primary-light py-16 px-24 w-50 border radius-12 text-md d-flex align-items-center justify-content-center gap-12 line-height-1 bg-hover-primary-50"
-              >
-                <Icon
-                  icon="logos:google-icon"
-                  className="text-primary-600 text-xl line-height-1"
-                />
-                Google
-              </button>
-            </div>
+
             <div className="mt-32 text-center text-sm">
               <p className="mb-0">
-                Already have an account?{" "}
-                <Link to="/sign-in" className="text-primary-600 fw-semibold">
-                  Sign In
+                Já possui uma conta?{" "}
+                <Link to="/" className="text-primary-600 fw-semibold">
+                  Entrar
                 </Link>
               </p>
             </div>
