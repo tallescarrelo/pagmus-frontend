@@ -1,10 +1,7 @@
 import React from "react";
-import MasterLayout from "../masterLayout/MasterLayout";
-import Breadcrumb from "../components/Breadcrumb";
-import InvoiceListLayer from "../components/InvoiceListLayer";
-
-
-
+import MasterLayout from "../../masterLayout/MasterLayout";
+import Breadcrumb from "../../components/Breadcrumb";
+import InvoiceListLayer from "../../components/sales/InvoiceListLayer";
 
 const InvoiceListPage = () => {
   return (
@@ -14,7 +11,7 @@ const InvoiceListPage = () => {
       <MasterLayout>
 
         {/* Breadcrumb */}
-        <Breadcrumb title="Invoice - List" />
+        <Breadcrumb title="Vendas" />
 
         {/* InvoiceListLayer */}
         <InvoiceListLayer />

@@ -148,7 +148,7 @@ const MasterLayout = ({ children }) => {
             </li>
 
             <li>
-              <NavLink to="#">
+              <NavLink to="/invoice-list">
                 <Icon
                   icon="mdi:clipboard-text-clock-outline"
                   className="menu-icon"
@@ -251,7 +251,7 @@ const MasterLayout = ({ children }) => {
               <ul className="sidebar-submenu">
                 <li>
                   <NavLink
-                    to="/entregas/pendentes"
+                    to="/delivery-pending"
                     className={(navData) =>
                       navData.isActive ? "active-page" : ""
                     }
@@ -262,7 +262,7 @@ const MasterLayout = ({ children }) => {
                 </li>
                 <li>
                   <NavLink
-                    to="/entregas/encaminhadas"
+                    to="/delivery-forwarded"
                     className={(navData) =>
                       navData.isActive ? "active-page" : ""
                     }
@@ -273,7 +273,7 @@ const MasterLayout = ({ children }) => {
                 </li>
                 <li>
                   <NavLink
-                    to="/entregas/finalizadas"
+                    to="/delivery-completed"
                     className={(navData) =>
                       navData.isActive ? "active-page" : ""
                     }
@@ -285,19 +285,48 @@ const MasterLayout = ({ children }) => {
               </ul>
             </li>
 
-            <li>
-              <NavLink
-                to="/relatorios"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
+            <li className="dropdown">
+              <Link to="#">
                 <Icon icon="mdi:chart-box-outline" className="menu-icon" />
                 <span>Relatórios</span>
-              </NavLink>
+              </Link>
+              <ul className="sidebar-submenu">
+                <li>
+                  <NavLink to="/churn" className={(navData) => (navData.isActive ? "active-page" : "")}>
+                    <i className="ri-circle-fill circle-icon text-primary-600 w-auto" />
+                    Churn Rate
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/abandon" className={(navData) => (navData.isActive ? "active-page" : "")}>
+                    <i className="ri-circle-fill circle-icon text-warning-main w-auto" />
+                    Abandonos
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/performance-affiliates" className={(navData) => (navData.isActive ? "active-page" : "")}>
+                    <i className="ri-circle-fill circle-icon text-success-main w-auto" />
+                    Desempenho afiliados
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/reversal" className={(navData) => (navData.isActive ? "active-page" : "")}>
+                    <i className="ri-circle-fill circle-icon text-danger-main w-auto" />
+                    Estornos
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/indicators" className={(navData) => (navData.isActive ? "active-page" : "")}>
+                    <i className="ri-circle-fill circle-icon text-info-main w-auto" />
+                    Indicadores
+                  </NavLink>
+                </li>
+              </ul>
             </li>
 
             <li>
               <NavLink
-                to="/financeiro"
+                to="/withdrawals"
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
                 <Icon icon="mdi:currency-usd" className="menu-icon" />
@@ -307,7 +336,7 @@ const MasterLayout = ({ children }) => {
 
             <li>
               <NavLink
-                to="/bancos"
+                to="/banks"
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
                 <Icon icon="mdi:bank-outline" className="menu-icon" />
@@ -315,39 +344,24 @@ const MasterLayout = ({ children }) => {
               </NavLink>
             </li>
 
+            <li className="dropdown">
+                <Link to="#">
+                  <Icon icon="mdi:tools" className="menu-icon" />
+                  <span>Ferramentas</span>
+                </Link>
+                <ul className="sidebar-submenu">
+                  <li>
+                    <NavLink to="/api" className={(navData) => (navData.isActive ? "active-page" : "")}>API</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/webhook" className={(navData) => (navData.isActive ? "active-page" : "")}>Postback</NavLink>
+                  </li>
+                  
+                </ul>
+              </li>
             <li>
               <NavLink
-                to="/mensagens"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:message-text-outline" className="menu-icon" />
-                <span>Mensagens</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/ferramentas"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:tools" className="menu-icon" />
-                <span>Ferramentas</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/configuracoes"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:cog-outline" className="menu-icon" />
-                <span>Configurações</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/integracoes"
+                to="/integration"
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
                 <Icon icon="mdi:puzzle-outline" className="menu-icon" />
@@ -357,27 +371,7 @@ const MasterLayout = ({ children }) => {
 
             <li>
               <NavLink
-                to="/crm"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:account-tie-outline" className="menu-icon" />
-                <span>CRM</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/equipe"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:account-group-outline" className="menu-icon" />
-                <span>Equipe</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/fretes"
+                to="/frete"
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
                 <Icon icon="mdi:truck-outline" className="menu-icon" />
@@ -387,31 +381,11 @@ const MasterLayout = ({ children }) => {
 
             <li>
               <NavLink
-                to="/taxas"
+                to="/team"
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
                 <Icon icon="mdi:trophy-outline" className="menu-icon" />
-                <span>Taxas</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/premiacoes"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:trophy-outline" className="menu-icon" />
-                <span>Premiações</span>
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/blog"
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon="mdi:blogger" className="menu-icon" />
-                <span>Blog</span>
+                <span>Funcionários</span>
               </NavLink>
             </li>
           </ul>

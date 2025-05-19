@@ -51,7 +51,6 @@ import ImageGeneratorPage from "./pages/ImageGeneratorPage";
 import ImageUploadPage from "./pages/ImageUploadPage";
 import InvoiceAddPage from "./pages/InvoiceAddPage";
 import InvoiceEditPage from "./pages/InvoiceEditPage";
-import InvoiceListPage from "./pages/InvoiceListPage";
 import InvoicePreviewPage from "./pages/InvoicePreviewPage";
 import KanbanPage from "./pages/KanbanPage";
 import LanguagePage from "./pages/LanguagePage";
@@ -106,6 +105,27 @@ import MyProductsPage from "./pages/products/MyProductsPage";
 import RegisterProductPage from "./pages/products/RegisterProduct";
 import ViewProductPage from "./pages/products/ViewProductPage";
 import ProductGridPage from "./pages/store/ProductGridPage";
+
+import InvoiceListPage from "./pages/sales/InvoiceListPage";
+import ChurnPage from "./pages/sales/ChurnPage";
+import AbandonPage from "./pages/sales/AbandonPage";
+import PerformanceAffiliates from "./pages/affiliate/PerformanceAffiliates";
+import ReversalPage from "./pages/sales/ReversalPage";
+import IndicatorsPage from "./pages/sales/IndicatorsPage";
+
+import IntegrationPage from "./pages/integration/IntegrationPage";
+import FreightPage from "./pages/tools/FreightPage";
+import PostbackPage from "./pages/tools/PostbackPage";
+
+import ApiPage from "./pages/tools/ApiPage";
+
+import PendingPage from "./pages/delivery/Pending";
+import Forwarded from "./pages/delivery/Forwarded";
+import Completed from "./pages/delivery/Completed";
+import BanksPage from "./pages/banks/Banks";
+import Withdrawals from "./pages/banks/Withdrawals";
+import TeamPage from "./pages/tools/TeamPage";
+
 
 function App() {
   return (
@@ -175,7 +195,27 @@ function App() {
         <Route exact path="/image-upload" element={<ImageUploadPage />} />
         <Route exact path="/invoice-add" element={<InvoiceAddPage />} />
         <Route exact path="/invoice-edit" element={<InvoiceEditPage />} />
+
         <Route exact path="/invoice-list" element={<InvoiceListPage />} />
+        <Route exact path="/churn" element={<ChurnPage />} />
+        <Route exact path="/abandon" element={<AbandonPage />} />
+        <Route exact path="/performance-affiliates" element={<PerformanceAffiliates />} />
+        <Route exact path="/reversal" element={<ReversalPage />} />
+        <Route exact path="/indicators" element={<IndicatorsPage />} />
+
+        <Route exact path="/api" element={<ApiPage />} />
+        <Route exact path="/integration" element={<IntegrationPage />} />
+
+        <Route exact path="/delivery-pending" element={<PendingPage />} />
+        <Route exact path="/delivery-forwarded" element={<Forwarded />} />
+        <Route exact path="/delivery-completed" element={<Completed />} />
+
+        <Route exact path="/banks" element={<BanksPage />} />
+        <Route exact path="/withdrawals" element={<Withdrawals />} />
+        <Route exact path="/frete" element={<FreightPage />} />
+        <Route exact path="/webhook" element={<PostbackPage />} />
+        <Route exact path="/team" element={<TeamPage />} />
+                
         <Route exact path="/invoice-preview" element={<InvoicePreviewPage />} />
         <Route exact path="/kanban" element={<KanbanPage />} />
         <Route exact path="/language" element={<LanguagePage />} />

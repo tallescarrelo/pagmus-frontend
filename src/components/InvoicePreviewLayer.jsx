@@ -1,237 +1,212 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import * as XLSX from 'xlsx';
+import SalesServices from '../services/api/sales';
+import { Modal, Button } from 'react-bootstrap';
 
-const InvoicePreviewLayer = () => {
-    return (
+const InvoiceListLayer = () => {
+  const [salesData, setSalesData] = useState([]);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [selectedSale, setSelectedSale] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchSales = async () => {
+      try {
+        const response = await SalesServices.getMySales();
+        setSalesData(response);
+      } catch (error) {
+        console.error('Erro ao buscar vendas:', error);
+      }
+    };
+
+    fetchSales();
+  }, []);
+
+  const handleExportExcel = () => {
+    const dataToExport = salesData.map((sale) => ({
+      Venda: sale.id,
+      Produto: sale.product?.name,
+      Comprador: sale.customer?.name,
+      Forma: sale.payment_type,
+      'Data do pedido': sale.created_at,
+      'Data do pagamento': sale.payment_date,
+      Afiliado: sale.affiliate?.name,
+      Status: sale.status,
+      Comissão: sale.commission,
+      Valor: sale.product?.price
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Vendas');
+    XLSX.writeFile(workbook, 'vendas.xlsx');
+  };
+
+  const handleActionChange = (sale, action) => {
+    setSelectedSale(sale);
+    setSelectedAction(action);
+    setShowModal(true);
+  };
+
+  const renderModalContent = () => {
+    if (!selectedSale) return null;
+
+    if (selectedAction === 'print-invoice') {
+      return (
         <div className="card">
-            <div className="card-header">
-                <div className="d-flex flex-wrap align-items-center justify-content-end gap-2">
-                    <Link
-                        to="#"
-                        className="btn btn-sm btn-primary-600 radius-8 d-inline-flex align-items-center gap-1"
-                    >
-                        <Icon icon="pepicons-pencil:paper-plane" className="text-xl" />
-                        Send Invoice
-                    </Link>
-                    <Link
-                        to="#"
-                        className="btn btn-sm btn-warning radius-8 d-inline-flex align-items-center gap-1"
-                    >
-                        <Icon icon="solar:download-linear" className="text-xl" />
-                        Download
-                    </Link>
-                    <Link
-                        to="#"
-                        className="btn btn-sm btn-success radius-8 d-inline-flex align-items-center gap-1"
-                    >
-                        <Icon icon="uil:edit" className="text-xl" />
-                        Edit
-                    </Link>
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-danger radius-8 d-inline-flex align-items-center gap-1"
-
-                    >
-                        <Icon icon="basil:printer-outline" className="text-xl" />
-                        Print
-                    </button>
-                </div>
-            </div>
-            <div className="card-body py-40">
-                <div className="row justify-content-center" id="invoice">
-                    <div className="col-lg-8">
-                        <div className="shadow-4 border radius-8">
-                            <div className="p-20 d-flex flex-wrap justify-content-between gap-3 border-bottom">
-                                <div>
-                                    <h3 className="text-xl">Invoice #3492</h3>
-                                    <p className="mb-1 text-sm">Date Issued: 25/08/2020</p>
-                                    <p className="mb-0 text-sm">Date Due: 29/08/2020</p>
-                                </div>
-                                <div>
-                                    <img src="assets/images/logo.png" alt="image_icon" className="mb-8" />
-                                    <p className="mb-1 text-sm">
-                                        4517 Washington Ave. Manchester, Kentucky 39495
-                                    </p>
-                                    <p className="mb-0 text-sm">random@gmail.com, +1 543 2198</p>
-                                </div>
-                            </div>
-                            <div className="py-28 px-20">
-                                <div className="d-flex flex-wrap justify-content-between align-items-end gap-3">
-                                    <div>
-                                        <h6 className="text-md">Issus For:</h6>
-                                        <table className="text-sm text-secondary-light">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Name</td>
-                                                    <td className="ps-8">:Will Marthas</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Address</td>
-                                                    <td className="ps-8">:4517 Washington Ave.USA</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Phone number</td>
-                                                    <td className="ps-8">:+1 543 2198</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div>
-                                        <table className="text-sm text-secondary-light">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Issus Date</td>
-                                                    <td className="ps-8">:25 Jan 2024</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Order ID</td>
-                                                    <td className="ps-8">:#653214</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shipment ID</td>
-                                                    <td className="ps-8">:#965215</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div className="mt-24">
-                                    <div className="table-responsive scroll-sm">
-                                        <table className="table bordered-table text-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" className="text-sm">
-                                                        SL.
-                                                    </th>
-                                                    <th scope="col" className="text-sm">
-                                                        Items
-                                                    </th>
-                                                    <th scope="col" className="text-sm">
-                                                        Qty
-                                                    </th>
-                                                    <th scope="col" className="text-sm">
-                                                        Units
-                                                    </th>
-                                                    <th scope="col" className="text-sm">
-                                                        Unit Price
-                                                    </th>
-                                                    <th scope="col" className="text-end text-sm">
-                                                        Price
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>01</td>
-                                                    <td>Apple's Shoes</td>
-                                                    <td>5</td>
-                                                    <td>PC</td>
-                                                    <td>$200</td>
-                                                    <td className="text-end">$1000.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>02</td>
-                                                    <td>Apple's Shoes</td>
-                                                    <td>5</td>
-                                                    <td>PC</td>
-                                                    <td>$200</td>
-                                                    <td className="text-end">$1000.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>03</td>
-                                                    <td>Apple's Shoes</td>
-                                                    <td>5</td>
-                                                    <td>PC</td>
-                                                    <td>$200</td>
-                                                    <td className="text-end">$1000.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>04</td>
-                                                    <td>Apple's Shoes</td>
-                                                    <td>5</td>
-                                                    <td>PC</td>
-                                                    <td>$200</td>
-                                                    <td className="text-end">$1000.00</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="d-flex flex-wrap justify-content-between gap-3">
-                                        <div>
-                                            <p className="text-sm mb-0">
-                                                <span className="text-primary-light fw-semibold">
-                                                    Sales By:
-                                                </span>{" "}
-                                                Jammal
-                                            </p>
-                                            <p className="text-sm mb-0">Thanks for your business</p>
-                                        </div>
-                                        <div>
-                                            <table className="text-sm">
-                                                <tbody>
-                                                    <tr>
-                                                        <td className="pe-64">Subtotal:</td>
-                                                        <td className="pe-16">
-                                                            <span className="text-primary-light fw-semibold">
-                                                                $4000.00
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="pe-64">Discount:</td>
-                                                        <td className="pe-16">
-                                                            <span className="text-primary-light fw-semibold">
-                                                                $0.00
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="pe-64 border-bottom pb-4">Tax:</td>
-                                                        <td className="pe-16 border-bottom pb-4">
-                                                            <span className="text-primary-light fw-semibold">
-                                                                0.00
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="pe-64 pt-4">
-                                                            <span className="text-primary-light fw-semibold">
-                                                                Total:
-                                                            </span>
-                                                        </td>
-                                                        <td className="pe-16 pt-4">
-                                                            <span className="text-primary-light fw-semibold">
-                                                                $1690
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mt-64">
-                                    <p className="text-center text-secondary-light text-sm fw-semibold">
-                                        Thank you for your purchase!
-                                    </p>
-                                </div>
-                                <div className="d-flex flex-wrap justify-content-between align-items-end mt-64">
-                                    <div className="text-sm border-top d-inline-block px-12">
-                                        Signature of Customer
-                                    </div>
-                                    <div className="text-sm border-top d-inline-block px-12">
-                                        Signature of Authorized
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+          <div className="card-body py-40">
+            <div className="row justify-content-center">
+              <div className="col-lg-10">
+                <div className="shadow-4 border radius-8">
+                  <div className="p-20 d-flex flex-wrap justify-content-between gap-3 border-bottom">
+                    <div>
+                      <h3 className="text-xl">Venda #{selectedSale.id}</h3>
+                      <p className="mb-1 text-sm">Data do pedido: {selectedSale.created_at}</p>
+                      <p className="mb-0 text-sm">Data do pagamento: {selectedSale.payment_date}</p>
                     </div>
+                    <div>
+                      <img src="/assets/images/logo.png" alt="logo" className="mb-8" />
+                      <p className="mb-1 text-sm">Endereço do cliente: {selectedSale.customer?.address}</p>
+                      <p className="mb-0 text-sm">{selectedSale.customer?.email}</p>
+                    </div>
+                  </div>
+                  <div className="py-28 px-20">
+                    <div className="d-flex flex-wrap justify-content-between align-items-end gap-3">
+                      <div>
+                        <h6 className="text-md">Comprador:</h6>
+                        <table className="text-sm text-secondary-light">
+                          <tbody>
+                            <tr>
+                              <td>Nome</td>
+                              <td className="ps-8">: {selectedSale.customer?.name}</td>
+                            </tr>
+                            <tr>
+                              <td>Email</td>
+                              <td className="ps-8">: {selectedSale.customer?.email}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <table className="text-sm text-secondary-light">
+                          <tbody>
+                            <tr>
+                              <td>Forma de pagamento</td>
+                              <td className="ps-8">: {selectedSale.payment_type}</td>
+                            </tr>
+                            <tr>
+                              <td>Status</td>
+                              <td className="ps-8">: {selectedSale.status}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div className="mt-24">
+                      <div className="table-responsive scroll-sm">
+                        <table className="table bordered-table text-sm">
+                          <thead>
+                            <tr>
+                              <th>Produto</th>
+                              <th>Quantidade</th>
+                              <th>Valor</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{selectedSale.product?.name}</td>
+                              <td>1</td>
+                              <td>R$ {selectedSale.product?.price}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="text-end mt-4">
+                        <p><strong>Total:</strong> R$ {selectedSale.product?.price}</p>
+                      </div>
+                    </div>
+                    <div className="mt-64">
+                      <p className="text-center text-secondary-light text-sm fw-semibold">
+                        Obrigado pela sua compra!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Outras ações
+    switch (selectedAction) {
+      case 'label':
+        return (
+          <>
+            <p><strong>Endereço para envio:</strong></p>
+            <p>{selectedSale.customer?.name}</p>
+            <p>{selectedSale.customer?.address}</p>
+            <Button variant="primary">Gerar etiqueta PDF</Button>
+          </>
+        );
+      case 'shipped':
+        return <p>Deseja marcar o produto como enviado?</p>;
+      case 'refund':
+        return <p>Deseja solicitar reembolso para esta venda?</p>;
+      case 'resend-email':
+        return <p>Deseja reenviar o e-mail de confirmação ao comprador?</p>;
+      case 'track':
+        return <p>Informações de rastreamento não disponíveis.</p>;
+      case 'view-details':
+        return (
+            <div className="p-3">
+            <h5 className="mb-3">Detalhes da Venda #{selectedSale.id}</h5>
+            <div className="row">
+                <div className="col-md-6">
+                <p><strong>Produto:</strong> {selectedSale.product?.name}</p>
+                <p><strong>Valor:</strong> R$ {selectedSale.product?.price}</p>
+                <p><strong>Comissão:</strong> R$ {selectedSale.commission}</p>
+                <p><strong>Forma de pagamento:</strong> {selectedSale.payment_type}</p>
+                </div>
+                <div className="col-md-6">
+                <p><strong>Comprador:</strong> {selectedSale.customer?.name}</p>
+                <p><strong>Email:</strong> {selectedSale.customer?.email}</p>
+                <p><strong>Endereço:</strong> {selectedSale.customer?.address}</p>
+                <p><strong>Status:</strong> {selectedSale.status}</p>
                 </div>
             </div>
-        </div>
+            <div className="mt-3">
+                <p><strong>Data do pedido:</strong> {selectedSale.created_at}</p>
+                <p><strong>Data do pagamento:</strong> {selectedSale.payment_date}</p>
+                <p><strong>Afiliado:</strong> {selectedSale.affiliate?.name}</p>
+            </div>
+            </div>
+        );
+      default:
+        return null;
+    }
+  };
 
-    );
+  return (
+    <div className="card bg-transparent border-0">
+      {/* ...restante da UI, cards, tabela etc... */}
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Ação: {selectedAction}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{renderModalContent()}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Fechar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 };
 
-export default InvoicePreviewLayer;
+export default InvoiceListLayer;
