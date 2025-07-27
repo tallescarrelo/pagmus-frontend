@@ -30,6 +30,7 @@ const Viewproduct = () => {
 
   const [activeTab, setActiveTab] = useState("dados-gerais");
   const [plansSubMenu, setPlansSubMenu] = useState("todos-planos"); // submenu para planos
+  const [affiliationSubMenu, setAffiliationSubMenu] = useState("configuracoes"); // submenu para afiliação
   const [showNewPlanModal, setShowNewPlanModal] = useState(false);
   const [showNewUpsellModal, setShowNewUpsellModal] = useState(false);
   const [planModalTab, setPlanModalTab] = useState("loja"); // aba ativa do modal novo plano
@@ -50,6 +51,27 @@ const Viewproduct = () => {
   const sampleData = [
     { code: "#platelw1", name: "Plano Teste 2", items: 1, price: "R$ 60,00", visible: "VISÍVEL", status: "ATIVO", sales: 0 },
     { code: "#plav84xr", name: "Plano teste", items: 1, price: "R$ 50,00", visible: "VISÍVEL", status: "ATIVO", sales: 0 },
+  ];
+
+  // Dados fictícios para afiliação
+  const mockAffiliates = [
+    { id: 1, name: "João Silva", email: "joao@email.com", manager: "Carlos Mendes", since: "15/01/2024", sales: 25, commission: "R$ 1.250,00", status: "ATIVO", awards: 3 },
+    { id: 2, name: "Maria Santos", email: "maria@email.com", manager: "Ana Costa", since: "20/02/2024", sales: 18, commission: "R$ 900,00", status: "ATIVO", awards: 1 },
+    { id: 3, name: "Pedro Oliveira", email: "pedro@email.com", manager: "Lucas Lima", since: "10/12/2023", sales: 42, commission: "R$ 2.100,00", status: "ATIVO", awards: 5 },
+    { id: 4, name: "Ana Rodriguez", email: "ana@email.com", manager: "Felipe Rocha", since: "05/03/2024", sales: 8, commission: "R$ 400,00", status: "PENDENTE", awards: 0 },
+  ];
+
+  const mockInvites = [
+    { id: 1, name: "Comissão Padrão", type: "Porcentagem", value: "25%", status: "ATIVO", affiliates: 15 },
+    { id: 2, name: "Comissão Premium", type: "Porcentagem", value: "30%", status: "ATIVO", affiliates: 8 },
+    { id: 3, name: "Comissão Especial", type: "Valor Fixo", value: "R$ 50,00", status: "INATIVO", affiliates: 3 },
+  ];
+
+  const mockGoals = [
+    { id: 1, name: "Meta Bronze", currency: "BRL", commission: "R$ 100,00", salesRequired: 10, affiliates: 25, status: "ATIVO" },
+    { id: 2, name: "Meta Prata", currency: "BRL", commission: "R$ 250,00", salesRequired: 25, affiliates: 12, status: "ATIVO" },
+    { id: 3, name: "Meta Ouro", currency: "BRL", commission: "R$ 500,00", salesRequired: 50, affiliates: 5, status: "ATIVO" },
+    { id: 4, name: "Meta Diamante", currency: "BRL", commission: "R$ 1.000,00", salesRequired: 100, affiliates: 2, status: "INATIVO" },
   ];
 
   if (!product && !affiliate) {
@@ -904,8 +926,8 @@ const Viewproduct = () => {
         <div className="card">
           <div className="card-header d-flex justify-content-between align-items-center">
             <div>
-              <h5 className="card-title mb-0">Planos do Produto</h5>
-              <p className="text-muted mb-0">Gerencie os planos disponíveis para este produto</p>
+              <h5 className="card-title mb-0">Todos os Planos</h5>
+              <p className="text-muted mb-0">Gerencie todos os planos do produto</p>
             </div>
             <Button variant="primary" onClick={() => setShowNewPlanModal(true)}>
               <Icon icon="mdi:plus" className="me-2" />
@@ -917,12 +939,12 @@ const Viewproduct = () => {
               <thead>
                 <tr>
                   <th>Código</th>
-                  <th>Nome</th>
-                  <th>Itens por plano</th>
-                  <th>Valor</th>
-                  <th>Visível</th>
+                  <th>Nome do Plano</th>
+                  <th>Qtd. de Itens</th>
+                  <th>Preço</th>
+                  <th>Visibilidade</th>
                   <th>Status</th>
-                  <th>Vendas Aprovadas</th>
+                  <th>Vendas</th>
                   <th width="120">Ações</th>
                 </tr>
               </thead>
@@ -932,17 +954,17 @@ const Viewproduct = () => {
                     <td><code>{plan.code}</code></td>
                     <td>{plan.name}</td>
                     <td>{plan.items}</td>
-                    <td><span className="badge bg-primary">{plan.price}</span></td>
+                    <td><span className="fw-bold text-success">{plan.price}</span></td>
                     <td><span className="badge bg-success-subtle text-success">{plan.visible}</span></td>
-                    <td><span className="badge bg-success-subtle text-success">{plan.status}</span></td>
-                    <td><span className="badge bg-info-subtle text-info">{plan.sales}</span></td>
+                    <td><span className="badge bg-primary-subtle text-primary">{plan.status}</span></td>
+                    <td>{plan.sales}</td>
                     <td>
                       <div className="btn-group btn-group-sm">
-                        <Button variant="outline-primary" size="sm">
+                        <Button variant="outline-primary" size="sm" title="Editar">
                           <Icon icon="mdi:pencil" />
                         </Button>
-                        <Button variant="outline-secondary" size="sm">
-                          <Icon icon="mdi:link-variant" />
+                        <Button variant="outline-danger" size="sm" title="Excluir">
+                          <Icon icon="mdi:delete" />
                         </Button>
                       </div>
                     </td>
@@ -953,14 +975,13 @@ const Viewproduct = () => {
           </div>
         </div>
       );
-    }
-
-    if (plansSubMenu === "upsell") {
+    } else {
+      // Conteúdo para Upsell
       return (
         <div className="card">
           <div className="card-header d-flex justify-content-between align-items-center">
             <div>
-              <h5 className="card-title mb-0">Planos de Upsell</h5>
+              <h5 className="card-title mb-0">Upsell</h5>
               <p className="text-muted mb-0">Configure ofertas de upsell para aumentar o ticket médio</p>
             </div>
             <Button variant="success" onClick={() => setShowNewUpsellModal(true)}>
@@ -977,58 +998,623 @@ const Viewproduct = () => {
                   <option>25</option>
                   <option>50</option>
                 </select>
-                <span className="text-muted">resultados por página</span>
+                <span className="text-muted">resultados</span>
               </div>
               <div className="input-group" style={{ width: "300px" }}>
                 <span className="input-group-text">
                   <Icon icon="mdi:magnify" />
                 </span>
-                <input type="text" className="form-control" placeholder="Pesquisar" />
+                <input type="text" className="form-control" placeholder="Pesquisar upsells..." />
               </div>
             </div>
 
             <Table responsive className="align-middle">
               <thead>
                 <tr>
-                  <th>Chave</th>
-                  <th>Nome do Plano</th>
-                  <th>Nome do Produto Upsell</th>
-                  <th>Valor</th>
+                  <th>Produto</th>
+                  <th>Plano</th>
+                  <th>Comissão</th>
                   <th>Status</th>
                   <th width="120">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td colSpan="6" className="text-center text-muted py-4">
+                  <td colSpan="5" className="text-center text-muted py-4">
                     <Icon icon="mdi:trending-up" className="fs-1 mb-2" />
                     <br />
-                    Nenhum registro encontrado
+                    Nenhum upsell cadastrado
                   </td>
                 </tr>
               </tbody>
             </Table>
-
-            <div className="d-flex justify-content-between align-items-center mt-3">
-              <small className="text-muted">Mostrando 0 até 0 de 0 registros</small>
-              <nav>
-                <ul className="pagination pagination-sm mb-0">
-                  <li className="page-item disabled">
-                    <span className="page-link">
-                      <Icon icon="mdi:chevron-left" />
-                    </span>
-                  </li>
-                  <li className="page-item disabled">
-                    <span className="page-link">
-                      <Icon icon="mdi:chevron-right" />
-                    </span>
-                  </li>
-                </ul>
-              </nav>
-            </div>
           </div>
         </div>
       );
+    }
+  };
+
+  const renderAffiliationSubmenu = () => (
+    <div className="card mb-3">
+      <div className="card-body py-2">
+        <nav className="nav nav-pills nav-fill">
+          {[
+            { id: "configuracoes", label: "Configurações", icon: "mdi:cog" },
+            { id: "afiliados", label: "Afiliados", icon: "mdi:account-group" },
+            { id: "merchan", label: "Merchan", icon: "mdi:store-marker" },
+            { id: "termos", label: "Termos de uso", icon: "mdi:file-document" },
+            { id: "coproducao", label: "Coprodução/Comissionamento", icon: "mdi:handshake" },
+            { id: "convites", label: "Convites Afiliados", icon: "mdi:email-send" },
+            { id: "metas", label: "Metas de Afiliados", icon: "mdi:target" }
+          ].map((item) => (
+            <button
+              key={item.id}
+              className={`nav-link d-flex align-items-center gap-2 ${
+                affiliationSubMenu === item.id ? "active" : ""
+              }`}
+              onClick={() => setAffiliationSubMenu(item.id)}
+              style={{
+                backgroundColor: affiliationSubMenu === item.id ? "#0d6efd" : "transparent",
+                color: affiliationSubMenu === item.id ? "white" : "#6c757d",
+                border: "1px solid #dee2e6",
+                margin: "2px",
+                borderRadius: "6px",
+                fontSize: "0.875rem"
+              }}
+            >
+              <Icon icon={item.icon} />
+              <span className="d-none d-lg-inline">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+
+  const renderAffiliationContent = () => {
+    switch (affiliationSubMenu) {
+      case "configuracoes":
+        return (
+          <div className="card">
+            <div className="card-header">
+              <h5 className="card-title mb-0">Configurações do Programa de Afiliados</h5>
+              <p className="text-muted mb-0">Configure as regras e condições para o programa de afiliação</p>
+            </div>
+            <div className="card-body">
+              <div className="alert alert-info d-flex align-items-center gap-2 mb-4">
+                <Icon icon="mdi:information" />
+                <span><strong>Atenção!</strong> As configurações só serão aplicadas para novas afiliações. Caso queira modificar as afiliações já existentes acesse a página de afiliados.</span>
+                <Button variant="info" size="sm" className="ms-auto">
+                  <Icon icon="mdi:account-group" className="me-1" />
+                  Ver Afiliados
+                </Button>
+              </div>
+
+              <div className="row g-4">
+                <div className="col-md-6">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-success-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Participar do programa de afiliados?</label>
+                      <small className="text-muted d-block">Permitir que outros usuários se afiliem ao produto</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" defaultChecked style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-info-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Acesso aos dados do comprador?</label>
+                      <small className="text-muted d-block">Afiliados podem ver dados dos compradores</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" defaultChecked style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-warning-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Visível na loja?</label>
+                      <small className="text-muted d-block">Produto aparece na loja de afiliados</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" defaultChecked style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-secondary-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Aprovação automática?</label>
+                      <small className="text-muted d-block">Aprovar solicitações automaticamente</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Tipo de comissionamento:</label>
+                  <select className="form-select">
+                    <option selected>Primeiro Clique</option>
+                    <option>Último Clique</option>
+                    <option>Múltiplos Cliques</option>
+                  </select>
+                </div>
+
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Tempo de duração do cookie:</label>
+                  <div className="input-group">
+                    <select className="form-select">
+                      <option>Outro</option>
+                      <option>30 dias</option>
+                      <option>60 dias</option>
+                      <option>90 dias</option>
+                    </select>
+                    <input type="number" className="form-control" defaultValue="9999" />
+                  </div>
+                  <small className="text-muted">Tempo contabilizado em dias</small>
+                </div>
+
+                <div className="col-12">
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">Tipo de comissão para real brasileiro (R$):</label>
+                      <div className="d-flex gap-3">
+                        <div className="form-check">
+                          <input className="form-check-input" type="radio" name="commissionType" id="percentage" defaultChecked />
+                          <label className="form-check-label" htmlFor="percentage">Porcentagem</label>
+                        </div>
+                        <div className="form-check">
+                          <input className="form-check-input" type="radio" name="commissionType" id="fixed" />
+                          <label className="form-check-label" htmlFor="fixed">Valor fixo</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">Valor da comissão:</label>
+                      <div className="input-group">
+                        <input type="number" className="form-control" defaultValue="25" />
+                        <span className="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-12 text-end">
+                  <Button variant="primary" size="lg">
+                    <Icon icon="mdi:content-save" className="me-2" />
+                    Salvar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "afiliados":
+        return (
+          <div className="card">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <h5 className="card-title mb-0">Afiliados deste produto</h5>
+                <p className="text-muted mb-0">Gerencie os afiliados aprovados para este produto</p>
+              </div>
+              <div className="d-flex gap-2">
+                <Button variant="success" size="sm">
+                  <Icon icon="mdi:file-excel" className="me-1" />
+                  Excel
+                </Button>
+                <Button variant="info" size="sm">
+                  <Icon icon="mdi:filter-variant" className="me-1" />
+                  Filtrar
+                </Button>
+                <Button variant="primary" size="sm">
+                  <Icon icon="mdi:dots-horizontal" className="me-1" />
+                  Mais ações
+                </Button>
+              </div>
+            </div>
+            <div className="card-body">
+              <div className="alert alert-info d-flex align-items-center justify-content-between mb-4">
+                <div className="d-flex align-items-center gap-2">
+                  <Icon icon="mdi:information" />
+                  <span><strong>ATENÇÃO!</strong> Caso você deseja fazer uma exportação com filtros, poderá fazer a exportação na tela de <strong>Solicitação Recebidas</strong>!</span>
+                </div>
+                <Button variant="outline-primary" size="sm">
+                  <Icon icon="mdi:eye" className="me-1" />
+                  Ver
+                </Button>
+              </div>
+
+              <div className="mb-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <span className="text-muted">Link para convidar seus afiliados:</span>
+                  <Button variant="outline-secondary" size="sm">
+                    <Icon icon="mdi:content-copy" className="me-1" />
+                    Copiar
+                  </Button>
+                </div>
+                <div className="input-group mt-2">
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    value="https://ev.braip.com/afiliados/convite/proe73md/use2qf7ey0" 
+                    readOnly 
+                  />
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="d-flex align-items-center gap-3">
+                  <span className="text-muted"><strong>0</strong> selecionados de <strong>4</strong> afiliados.</span>
+                  <div className="d-flex gap-2">
+                    <Button variant="outline-danger" size="sm" disabled>
+                      <Icon icon="mdi:close" className="me-1" />
+                      Reprovar
+                    </Button>
+                    <Button variant="outline-success" size="sm" disabled>
+                      <Icon icon="mdi:check" className="me-1" />
+                      Aprovar
+                    </Button>
+                  </div>
+                </div>
+                <div className="input-group" style={{ width: "250px" }}>
+                  <span className="input-group-text">
+                    <Icon icon="mdi:magnify" />
+                  </span>
+                  <input type="text" className="form-control" placeholder="Pesquisar" />
+                </div>
+              </div>
+
+              <Table responsive className="align-middle">
+                <thead>
+                  <tr>
+                    <th width="30">
+                      <input type="checkbox" className="form-check-input" />
+                    </th>
+                    <th>Nome/Contato</th>
+                    <th>Gerente</th>
+                    <th>Desde</th>
+                    <th>Vendas</th>
+                    <th>Comissão</th>
+                    <th>Status</th>
+                    <th>Premiações</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mockAffiliates.map((affiliate) => (
+                    <tr key={affiliate.id}>
+                      <td>
+                        <input type="checkbox" className="form-check-input" />
+                      </td>
+                      <td>
+                        <div>
+                          <strong>{affiliate.name}</strong>
+                          <br />
+                          <small className="text-muted">{affiliate.email}</small>
+                        </div>
+                      </td>
+                      <td>{affiliate.manager}</td>
+                      <td>{affiliate.since}</td>
+                      <td><span className="badge bg-primary-subtle text-primary">{affiliate.sales}</span></td>
+                      <td><strong className="text-success">{affiliate.commission}</strong></td>
+                      <td>
+                        <span className={`badge ${affiliate.status === 'ATIVO' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`}>
+                          {affiliate.status}
+                        </span>
+                      </td>
+                      <td>
+                        {affiliate.awards > 0 ? (
+                          <span className="badge bg-warning-subtle text-warning">{affiliate.awards}</span>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
+                      </td>
+                      <td>
+                        <div className="btn-group btn-group-sm">
+                          <Button variant="outline-primary" size="sm" title="Editar">
+                            <Icon icon="mdi:pencil" />
+                          </Button>
+                          <Button variant="outline-info" size="sm" title="Ver detalhes">
+                            <Icon icon="mdi:eye" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        );
+
+      case "merchan":
+        return (
+          <div className="card">
+            <div className="card-header">
+              <h5 className="card-title mb-0">Merchan</h5>
+              <p className="text-muted mb-0">Informações que ajudam seus afiliados a realizar mais vendas</p>
+            </div>
+            <div className="card-body">
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Conteúdo:</label>
+                <div className="border rounded p-3" style={{ minHeight: "300px", backgroundColor: "#f8f9fa" }}>
+                  <div className="d-flex gap-2 mb-3 border-bottom pb-2">
+                    <Button variant="outline-secondary" size="sm">Parágrafo</Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-bold" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-italic" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-underline" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:link" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-list-bulleted" />
+                    </Button>
+                  </div>
+                  <div className="text-muted">
+                    <p>Aqui você pode inserir informações que ajudam seus afiliados a realizar mais vendas, como links para imagens, vídeos ou qualquer outra informação que possa auxiliá-los a realizar as vendas para este produto.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex justify-content-between">
+                <Button variant="warning">
+                  <Icon icon="mdi:arrow-left" className="me-2" />
+                  Voltar
+                </Button>
+                <Button variant="primary">
+                  <Icon icon="mdi:content-save" className="me-2" />
+                  Salvar
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "termos":
+        return (
+          <div className="card">
+            <div className="card-header">
+              <h5 className="card-title mb-0">Termos de uso do Afiliado</h5>
+              <p className="text-muted mb-0">Regras e termos que seus afiliados devem seguir</p>
+            </div>
+            <div className="card-body">
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Conteúdo:</label>
+                <div className="border rounded p-3" style={{ minHeight: "300px", backgroundColor: "#f8f9fa" }}>
+                  <div className="d-flex gap-2 mb-3 border-bottom pb-2">
+                    <Button variant="outline-secondary" size="sm">Parágrafo</Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-bold" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-italic" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-underline" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:link" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm">
+                      <Icon icon="mdi:format-list-bulleted" />
+                    </Button>
+                  </div>
+                  <div className="text-muted">
+                    <p>Aqui você pode inserir regras e termos que julga que seus afiliados devam seguir para não perderem a afiliação (as regras e termos definidos devem ser avaliados por você).</p>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex justify-content-between">
+                <Button variant="warning">
+                  <Icon icon="mdi:arrow-left" className="me-2" />
+                  Voltar
+                </Button>
+                <Button variant="primary">
+                  <Icon icon="mdi:content-save" className="me-2" />
+                  Salvar
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "coproducao":
+        return (
+          <div className="card">
+            <div className="card-header">
+              <h5 className="card-title mb-0">Coprodução/Comissionamento</h5>
+              <p className="text-muted mb-0">Configure parcerias e comissionamento especial</p>
+            </div>
+            <div className="card-body">
+              <div className="text-center py-5">
+                <Icon icon="mdi:handshake" className="fs-1 text-muted mb-3" />
+                <h6 className="text-muted">Funcionalidade de Coprodução</h6>
+                <p className="text-muted">Esta funcionalidade estará disponível em breve para configurar parcerias estratégicas.</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "convites":
+        return (
+          <div className="card">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <h5 className="card-title mb-0">Convites Afiliados Cadastrados</h5>
+                <p className="text-muted mb-0">Gerencie os tipos de convites para afiliados</p>
+              </div>
+              <Button variant="primary">
+                <Icon icon="mdi:plus" className="me-2" />
+                Novo Convite
+              </Button>
+            </div>
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <label className="form-label mb-0">Mostrar:</label>
+                  <select className="form-select form-select-sm" style={{ width: "auto" }}>
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                  </select>
+                  <span className="text-muted">resultados por página</span>
+                </div>
+                <div className="input-group" style={{ width: "250px" }}>
+                  <span className="input-group-text">
+                    <Icon icon="mdi:magnify" />
+                  </span>
+                  <input type="text" className="form-control" placeholder="Pesquisar" />
+                </div>
+              </div>
+
+              <Table responsive className="align-middle">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Tipo de Comissão</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Quant. Afiliados</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mockInvites.map((invite) => (
+                    <tr key={invite.id}>
+                      <td><strong>{invite.name}</strong></td>
+                      <td>{invite.type}</td>
+                      <td><span className="text-success fw-bold">{invite.value}</span></td>
+                      <td>
+                        <span className={`badge ${invite.status === 'ATIVO' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}`}>
+                          {invite.status}
+                        </span>
+                      </td>
+                      <td><span className="badge bg-primary-subtle text-primary">{invite.affiliates}</span></td>
+                      <td>
+                        <div className="btn-group btn-group-sm">
+                          <Button variant="outline-primary" size="sm" title="Editar">
+                            <Icon icon="mdi:pencil" />
+                          </Button>
+                          <Button variant="outline-danger" size="sm" title="Excluir">
+                            <Icon icon="mdi:delete" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        );
+
+      case "metas":
+        return (
+          <div className="card">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <h5 className="card-title mb-0">Metas</h5>
+                <p className="text-muted mb-0">Configure metas e recompensas para afiliados</p>
+              </div>
+              <Button variant="primary">
+                <Icon icon="mdi:plus" className="me-2" />
+                Nova meta
+              </Button>
+            </div>
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <label className="form-label mb-0">Mostrar:</label>
+                  <select className="form-select form-select-sm" style={{ width: "auto" }}>
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                  </select>
+                  <span className="text-muted">resultados por página</span>
+                </div>
+                <div className="input-group" style={{ width: "250px" }}>
+                  <span className="input-group-text">
+                    <Icon icon="mdi:magnify" />
+                  </span>
+                  <input type="text" className="form-control" placeholder="Pesquisar" />
+                </div>
+              </div>
+
+              <Table responsive className="align-middle">
+                <thead>
+                  <tr>
+                    <th>Nome da meta</th>
+                    <th>Moeda</th>
+                    <th>Valor da comissão</th>
+                    <th>Vendas aprovadas necessárias</th>
+                    <th>Afiliados</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mockGoals.map((goal) => (
+                    <tr key={goal.id}>
+                      <td>
+                        <div className="d-flex align-items-center gap-2">
+                          <Icon 
+                            icon={
+                              goal.name.includes('Bronze') ? 'mdi:medal-outline' :
+                              goal.name.includes('Prata') ? 'mdi:medal' :
+                              goal.name.includes('Ouro') ? 'mdi:trophy-outline' :
+                              'mdi:diamond-stone'
+                            } 
+                            className={
+                              goal.name.includes('Bronze') ? 'text-warning' :
+                              goal.name.includes('Prata') ? 'text-secondary' :
+                              goal.name.includes('Ouro') ? 'text-warning' :
+                              'text-info'
+                            }
+                          />
+                          <strong>{goal.name}</strong>
+                        </div>
+                      </td>
+                      <td>{goal.currency}</td>
+                      <td><span className="text-success fw-bold">{goal.commission}</span></td>
+                      <td><span className="badge bg-info-subtle text-info">{goal.salesRequired} vendas</span></td>
+                      <td><span className="badge bg-primary-subtle text-primary">{goal.affiliates}</span></td>
+                      <td>
+                        <div className="btn-group btn-group-sm">
+                          <Button variant="outline-primary" size="sm" title="Editar">
+                            <Icon icon="mdi:pencil" />
+                          </Button>
+                          <Button variant="outline-danger" size="sm" title="Excluir">
+                            <Icon icon="mdi:delete" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="text-center p-4">
+            <p className="text-muted">Conteúdo não encontrado</p>
+          </div>
+        );
     }
   };
 
@@ -1357,77 +1943,9 @@ const Viewproduct = () => {
 
       case "afiliacao":
         return (
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title mb-0">Comissionamento / Afiliação</h5>
-              <p className="text-muted mb-0">Configure as regras de comissionamento para afiliados</p>
-            </div>
-            <div className="card-body">
-              <div className="row g-4">
-                <div className="col-md-6">
-                  <div className="card border">
-                    <div className="card-body text-center">
-                      <Icon icon="mdi:percent" className="fs-1 text-primary mb-3" />
-                      <h6>Comissão Atual</h6>
-                      <h4 className="text-primary">
-                        {formatCommissionValue(
-                          product?.comission_value || affiliate?.product?.comission_value, 
-                          product?.comission_type || affiliate?.product?.comission_type
-                        )}
-                      </h4>
-                      <small className="text-muted">
-                        {getCommissionTypeLabel(product?.comission_type || affiliate?.product?.comission_type)}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="card border">
-                    <div className="card-body text-center">
-                      <Icon icon="mdi:account-group" className="fs-1 text-success mb-3" />
-                      <h6>Afiliados Ativos</h6>
-                      <h4 className="text-success">12</h4>
-                      <small className="text-muted">afiliados promovendo</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <hr className="my-4" />
-
-              <form>
-                <div className="row g-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Tipo de Comissão</label>
-                    <select className="form-select">
-                      <option value="percentage">Porcentagem</option>
-                      <option value="fixed">Valor Fixo</option>
-                    </select>
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Valor da Comissão</label>
-                    <div className="input-group">
-                      <input type="number" className="form-control" defaultValue={product?.comission_value} />
-                      <span className="input-group-text">%</span>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="aprovar-auto" />
-                      <label className="form-check-label" htmlFor="aprovar-auto">
-                        Aprovar automaticamente solicitações de afiliação
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-12 text-end">
-                    <Button variant="primary">
-                      <Icon icon="mdi:content-save" className="me-2" />
-                      Salvar Configurações
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </div>
+          <div>
+            {renderAffiliationSubmenu()}
+            {renderAffiliationContent()}
           </div>
         );
 
