@@ -212,6 +212,14 @@ Ao criar um novo modal, verificar:
 - **Switch de comissão** no padrão
 - **Footer estilizado** consistente
 
+### **✅ Modal Checkout:**
+- **6 abas funcionais** com navegação por pills
+- **Configurações completas** (pagamento, pixel, usuário, chat, promoções, personalização)
+- **Header azul** com ícone de carrinho
+- **Switches melhorados** em todas as seções
+- **Footer estilizado** consistente
+- **Acessibilidade garantida** (botões ao invés de links)
+
 ---
 
 ## 🚀 **Benefícios do Padrão**
