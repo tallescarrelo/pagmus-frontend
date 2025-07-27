@@ -151,6 +151,19 @@ rm -rf node_modules/.cache
 | Jan 2025 | v1.8 | **🛒 MODAL CHECKOUT COMPLETO** - Sistema de abas igual ao Braip |
 | Jan 2025 | v1.8.1 | **🔍 LISTAGEM CHECKOUT MODERNIZADA** - Pesquisa e edição funcional |
 | Jan 2025 | v1.9 | **🤝 SISTEMA AFILIAÇÃO COMPLETO** - 7 seções com dados fictícios igual ao Braip |
+| Jan 2025 | v1.10 | **✨ SISTEMA AFILIAÇÃO AVANÇADO** - Funcionalidades interativas completas |
+
+### **🆕 v1.10 - Sistema de Afiliação Avançado:**
+- 🔗 **Navegação inteligente** - botão "Ver Afiliados" navega entre seções
+- 📊 **Seleção múltipla dinâmica** - checkboxes funcionais com contagem
+- ⚡ **Ações em massa** - aprovar/reprovar múltiplos afiliados
+- 🎭 **Modal de confirmação** elegante para todas as ações
+- 🛠️ **Dropdown "Mais ações"** com 2 opções funcionais
+- 💰 **Modal Atualizar Comissão** - layout em 2 colunas com pesquisa
+- 🚫 **Modal Blacklist** - adicionar emails à lista negra
+- 🔍 **Drawer de filtros avançados** - 12 tipos de premiação com ícones
+- 🎨 **Interface responsiva** - offcanvas, dropdowns e modais estilizados
+- ⚙️ **Estado gerenciado** para todas as funcionalidades
 
 ### **🆕 v1.9 - Sistema de Afiliação Revolucionário:**
 - 🗂️ **7 seções funcionais** com submenu igual ao Braip
