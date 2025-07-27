@@ -125,6 +125,7 @@ import Completed from "./pages/delivery/Completed";
 import BanksPage from "./pages/banks/Banks";
 import Withdrawals from "./pages/banks/Withdrawals";
 import TeamPage from "./pages/tools/TeamPage";
+import AfterPayPage from "./pages/sales/AfterPayPage";
 
 
 function App() {
@@ -215,6 +216,8 @@ function App() {
         <Route exact path="/frete" element={<FreightPage />} />
         <Route exact path="/webhook" element={<PostbackPage />} />
         <Route exact path="/team" element={<TeamPage />} />
+
+        <Route exact path="/afterpay" element={<AfterPayPage />} />
                 
         <Route exact path="/invoice-preview" element={<InvoicePreviewPage />} />
         <Route exact path="/kanban" element={<KanbanPage />} />
