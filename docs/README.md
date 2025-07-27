@@ -137,6 +137,19 @@ rm -rf node_modules/.cache
 | Jan 2025 | v1.2 | Documentação completa criada |
 | Jan 2025 | v1.3 | **Correções finais ESLint** - 60% menos warnings |
 | Jan 2025 | v1.4 | **🚀 UI/UX Modernizada** - ViewProduct com sistema de abas |
+| Jan 2025 | v1.5 | **🎨 DESIGN PREMIUM** - Modal Novo Plano redesenhado completamente |
+
+### **🆕 v1.5 - Interface Premium Implementada:**
+- ✨ **Modal Novo Plano completamente redesenhado** com visual profissional
+- 🎨 **Header azul** com ícone e título destacado
+- 📊 **Stepper visual** com círculos e ícones das etapas de configuração
+- 📦 **Layout em cards** organizados com sombras e cores específicas
+- 🔄 **Switches LINDOS** (30% maiores + contexto + posicionamento perfeito)
+- 🎯 **Ícones coloridos** para cada seção e campo
+- 💰 **Input groups estilizados** (R$ verde, campos organizados)
+- 🗂️ **6 seções organizadas**: Configurações Gerais, Limites, Upload, Informações, URLs, Fornecedores
+- 📤 **Upload drag & drop** com visual moderno
+- 🎨 **Footer estilizado** com botões bem posicionados
 
 ### **🆕 v1.4 - Modernização de Interface:**
 - ✨ **ViewProduct completamente reestruturado** (modais → sistema de abas)
