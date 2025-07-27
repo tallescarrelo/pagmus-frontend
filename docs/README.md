@@ -149,6 +149,15 @@ rm -rf node_modules/.cache
 | Jan 2025 | v1.6 | **🗂️ SISTEMA DE ABAS COMPLETO** - Modal Novo Plano igual ao Braip |
 | Jan 2025 | v1.7 | **🎨 PADRONIZAÇÃO COMPLETA** - Padrão visual único para todos os modais |
 | Jan 2025 | v1.8 | **🛒 MODAL CHECKOUT COMPLETO** - Sistema de abas igual ao Braip |
+| Jan 2025 | v1.8.1 | **🔍 LISTAGEM CHECKOUT MODERNIZADA** - Pesquisa e edição funcional |
+
+### **🆕 v1.8.1 - Listagem Checkout Otimizada:**
+- 🔍 **Campo de pesquisa funcional** para filtrar checkouts
+- ✏️ **Botão Editar conectado** - abre modal com dados preenchidos
+- 🗑️ **Interface mais limpa** - segundo ícone removido (não necessário)
+- 📊 **Seletor de resultados** (10/25/50 por página)
+- 🎯 **Tooltip de edição** para melhor UX
+- ⚡ **Estado gerenciado** para pesquisa e edição
 
 ### **🆕 v1.8 - Modal Checkout Revolucionário:**
 - 🛒 **Modal Checkout completo** com 6 abas funcionais conforme Braip
