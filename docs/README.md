@@ -138,6 +138,20 @@ rm -rf node_modules/.cache
 | Jan 2025 | v1.3 | **Correções finais ESLint** - 60% menos warnings |
 | Jan 2025 | v1.4 | **🚀 UI/UX Modernizada** - ViewProduct com sistema de abas |
 | Jan 2025 | v1.5 | **🎨 DESIGN PREMIUM** - Modal Novo Plano redesenhado completamente |
+| Jan 2025 | v1.6 | **🗂️ SISTEMA DE ABAS COMPLETO** - Modal Novo Plano igual ao Braip |
+
+### **🆕 v1.6 - Sistema de Abas Revolucionário:**
+- 🚀 **Modal Novo Plano 100% igual ao Braip** com navegação por abas
+- 🗂️ **6 abas funcionais**: Loja, Condições de Pagamentos, Afiliação, Arquivos/Ebooks, Order Bump, Termos e Condições
+- 🎯 **Navegação por pills** com ícones específicos e estados ativos
+- 📋 **Conteúdo dinâmico** para cada aba baseado nas imagens fornecidas
+- 🔄 **Switches melhorados** (30% maiores) em todas as seções
+- 🎨 **Cards organizados** com headers coloridos e ícones contextuais
+- 📤 **Upload de arquivos** com marca d'água automática
+- ⬆️ **Order Bump configurável** com chamadas personalizadas
+- 📋 **Gestão de termos** específicos por plano
+- ✨ **Estados vazios informativos** com ícones e mensagens
+- 💎 **Interface de nível enterprise** profissional
 
 ### **🆕 v1.5 - Interface Premium Implementada:**
 - ✨ **Modal Novo Plano completamente redesenhado** com visual profissional
