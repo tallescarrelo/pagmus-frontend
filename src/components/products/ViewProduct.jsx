@@ -1189,99 +1189,131 @@ const Viewproduct = () => {
 
       {/* Modal Novo Upsell */}
       <Modal show={showNewUpsellModal} onHide={() => setShowNewUpsellModal(false)} size="lg" centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-white">
           <Modal.Title>
             <Icon icon="mdi:trending-up" className="me-2" />
             Configurações do Upsell
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <form>
-            <Row>
-              <Col md={12}>
-                <div className="mb-3">
-                  <label className="form-label">Selecione o Produto que deseja ofertar como Upsell</label>
-                  <select className="form-select">
-                    <option>Selecione</option>
-                    <option>Produto 1</option>
-                    <option>Produto 2</option>
-                  </select>
+        <Modal.Body className="p-4">
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:trending-up" className="me-2 text-success" />
+                    Configuração do Upsell
+                  </h6>
+                  <small className="text-muted">Configure uma oferta adicional para aumentar o ticket médio</small>
                 </div>
-              </Col>
+                <div className="card-body">
+                  <form>
+                    <Row>
+                      <Col md={12}>
+                        <div className="mb-3">
+                          <label className="form-label fw-semibold">
+                            <Icon icon="mdi:package-variant" className="me-1 text-primary" />
+                            Selecione o Produto que deseja ofertar como Upsell
+                          </label>
+                          <select className="form-select form-select-lg">
+                            <option>Selecione um produto...</option>
+                            <option>Produto 1</option>
+                            <option>Produto 2</option>
+                          </select>
+                          <small className="text-muted">Produto que será oferecido como upsell</small>
+                        </div>
+                      </Col>
 
-              <Col md={12}>
-                <div className="mb-3">
-                  <label className="form-label">Selecione o Plano que deseja vender como Upsell</label>
-                  <select className="form-select">
-                    <option>Selecione um produto primeiro</option>
-                  </select>
-                </div>
-              </Col>
+                      <Col md={12}>
+                        <div className="mb-3">
+                          <label className="form-label fw-semibold">
+                            <Icon icon="mdi:clipboard-list" className="me-1 text-info" />
+                            Selecione o Plano que deseja vender como Upsell
+                          </label>
+                          <select className="form-select form-select-lg">
+                            <option>Selecione um produto primeiro</option>
+                          </select>
+                          <small className="text-muted">Plano específico do produto selecionado</small>
+                        </div>
+                      </Col>
 
-              <Col md={6}>
-                <div className="mb-3">
-                  <label className="form-label">Máximo de parcelas no cartão *</label>
-                  <select className="form-select">
-                    <option>Selecione a quantidade</option>
-                    <option>1x</option>
-                    <option>2x</option>
-                    <option>3x</option>
-                    <option>6x</option>
-                    <option>12x</option>
-                  </select>
-                </div>
-              </Col>
+                      <Col md={6}>
+                        <div className="mb-3">
+                          <label className="form-label fw-semibold">
+                            <Icon icon="mdi:credit-card" className="me-1 text-warning" />
+                            Máximo de parcelas no cartão *
+                          </label>
+                          <select className="form-select">
+                            <option>Selecione a quantidade</option>
+                            <option>1x</option>
+                            <option>2x</option>
+                            <option>3x</option>
+                            <option>6x</option>
+                            <option>12x</option>
+                          </select>
+                        </div>
+                      </Col>
 
-              <Col md={6}>
-                <div className="mb-3">
-                  <label className="form-label">
-                    Máximo de parcelas sem juros no cartão *
-                    <Icon icon="mdi:help-circle-outline" className="ms-1" />
-                  </label>
-                  <select className="form-select">
-                    <option>Selecione a quantidade</option>
-                    <option>1x</option>
-                    <option>2x</option>
-                    <option>3x</option>
-                    <option>6x</option>
-                  </select>
-                </div>
-              </Col>
+                      <Col md={6}>
+                        <div className="mb-3">
+                          <label className="form-label fw-semibold">
+                            <Icon icon="mdi:credit-card-check" className="me-1 text-success" />
+                            Máximo de parcelas sem juros no cartão *
+                            <Icon icon="mdi:help-circle-outline" className="ms-1" />
+                          </label>
+                          <select className="form-select">
+                            <option>Selecione a quantidade</option>
+                            <option>1x</option>
+                            <option>2x</option>
+                            <option>3x</option>
+                            <option>6x</option>
+                          </select>
+                        </div>
+                      </Col>
 
-              <Col md={12}>
-                <div className="mb-3">
-                  <label className="form-label">
-                    Checkout Padrão (Quando não conseguir processar a compra com um clique)
-                  </label>
-                  <select className="form-select">
-                    <option>Selecione um checkout</option>
-                    <option>Checkout Padrão</option>
-                    <option>Checkout Customizado</option>
-                  </select>
-                </div>
-              </Col>
+                      <Col md={12}>
+                        <div className="mb-3">
+                          <label className="form-label fw-semibold">
+                            <Icon icon="mdi:cart" className="me-1 text-purple" />
+                            Checkout Padrão (Quando não conseguir processar a compra com um clique)
+                          </label>
+                          <select className="form-select">
+                            <option>Selecione um checkout</option>
+                            <option>Checkout Padrão</option>
+                            <option>Checkout Customizado</option>
+                          </select>
+                          <small className="text-muted">Checkout usado quando o processamento rápido falhar</small>
+                        </div>
+                      </Col>
 
-              <Col md={12}>
-                <div className="mb-3">
-                  <label className="form-label">Comissão para afiliados?</label>
-                  <div className="form-check form-switch">
-                    <input className="form-check-input" type="checkbox" id="comissao-upsell" />
-                    <label className="form-check-label" htmlFor="comissao-upsell">
-                      Habilitar comissão
-                    </label>
-                  </div>
+                      <Col md={12}>
+                        <div className="d-flex align-items-center justify-content-between p-3 bg-success-subtle rounded">
+                          <div>
+                            <label className="form-label mb-1 fw-semibold">Comissão para afiliados?</label>
+                            <small className="text-muted d-block">
+                              Permitir que afiliados ganhem comissão neste upsell
+                            </small>
+                          </div>
+                          <div className="form-check form-switch">
+                            <input className="form-check-input" type="checkbox" id="comissao-upsell" style={{ transform: "scale(1.3)" }} />
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  </form>
                 </div>
-              </Col>
-            </Row>
-          </form>
+              </div>
+            </div>
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowNewUpsellModal(false)}>
+        <Modal.Footer className="bg-light border-top">
+          <Button variant="outline-secondary" onClick={() => setShowNewUpsellModal(false)}>
+            <Icon icon="mdi:close" className="me-2" />
             Cancelar
           </Button>
-          <Button variant="success">
+          <Button variant="success" size="lg">
             <Icon icon="mdi:content-save" className="me-2" />
-            Salvar
+            Salvar Upsell
           </Button>
         </Modal.Footer>
       </Modal>
