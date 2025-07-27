@@ -35,10 +35,11 @@ const Viewproduct = () => {
   const [planModalTab, setPlanModalTab] = useState("loja"); // aba ativa do modal novo plano
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [checkoutModalTab, setCheckoutModalTab] = useState("configuracoes-gerais"); // aba ativa do modal checkout
+  const [checkoutSearchTerm, setCheckoutSearchTerm] = useState(""); // termo de pesquisa para checkouts
 
   const tabs = [
-    { id: "dados-gerais", label: "Dados gerais", icon: "mdi:file-document-outline" },
-    { id: "planos", label: "Planos", icon: "mdi:package-variant", hasSubmenu: true },
+    { id: "dados-gerais", label: "Dados gerais", icon: "mdi:information-outline" },
+    { id: "planos", label: "Planos", icon: "mdi:package-variant" },
     { id: "checkouts", label: "Checkouts", icon: "mdi:cart-outline" },
     { id: "urls", label: "Urls", icon: "mdi:link-variant" },
     { id: "afiliacao", label: "Comissionamento / Afiliação", icon: "mdi:account-group" },
@@ -1213,6 +1214,31 @@ const Viewproduct = () => {
               </Button>
             </div>
             <div className="card-body">
+              {/* Campo de pesquisa */}
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <label className="form-label mb-0">Mostrar:</label>
+                  <select className="form-select form-select-sm" style={{ width: "auto" }}>
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                  </select>
+                  <span className="text-muted">resultados</span>
+                </div>
+                <div className="input-group" style={{ width: "300px" }}>
+                  <span className="input-group-text">
+                    <Icon icon="mdi:magnify" />
+                  </span>
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    placeholder="Pesquisar checkouts..." 
+                    value={checkoutSearchTerm}
+                    onChange={(e) => setCheckoutSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <Table responsive className="align-middle">
                 <thead>
                   <tr>
@@ -1221,7 +1247,7 @@ const Viewproduct = () => {
                     <th>Cor Primária</th>
                     <th>Layout</th>
                     <th>Status</th>
-                    <th width="120">Ações</th>
+                    <th width="80">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1237,14 +1263,14 @@ const Viewproduct = () => {
                     <td>Layout 1</td>
                     <td><span className="badge bg-success-subtle text-success">Ativo</span></td>
                     <td>
-                      <div className="btn-group btn-group-sm">
-                        <Button variant="outline-primary" size="sm">
-                          <Icon icon="mdi:pencil" />
-                        </Button>
-                        <Button variant="outline-secondary" size="sm">
-                          <Icon icon="mdi:link-variant" />
-                        </Button>
-                      </div>
+                      <Button 
+                        variant="outline-primary" 
+                        size="sm"
+                        onClick={() => handleEditCheckout({ name: "Checkout padrão", type: "Clássico" })}
+                        title="Editar checkout"
+                      >
+                        <Icon icon="mdi:pencil" />
+                      </Button>
                     </td>
                   </tr>
                   <tr>
@@ -1259,14 +1285,14 @@ const Viewproduct = () => {
                     <td>Layout 2</td>
                     <td><span className="badge bg-secondary-subtle text-secondary">Inativo</span></td>
                     <td>
-                      <div className="btn-group btn-group-sm">
-                        <Button variant="outline-primary" size="sm">
-                          <Icon icon="mdi:pencil" />
-                        </Button>
-                        <Button variant="outline-secondary" size="sm">
-                          <Icon icon="mdi:link-variant" />
-                        </Button>
-                      </div>
+                      <Button 
+                        variant="outline-primary" 
+                        size="sm"
+                        onClick={() => handleEditCheckout({ name: "Checkout escuro", type: "Customizado" })}
+                        title="Editar checkout"
+                      >
+                        <Icon icon="mdi:pencil" />
+                      </Button>
                     </td>
                   </tr>
                 </tbody>
@@ -1494,6 +1520,12 @@ const Viewproduct = () => {
           </div>
         );
     }
+  };
+
+  const handleEditCheckout = (checkout) => {
+    // Aqui podemos carregar os dados do checkout selecionado
+    setCheckoutModalTab("configuracoes-gerais"); // resetar para primeira aba
+    setShowCheckoutModal(true);
   };
 
   return (
