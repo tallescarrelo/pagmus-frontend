@@ -33,6 +33,8 @@ const Viewproduct = () => {
   const [showNewPlanModal, setShowNewPlanModal] = useState(false);
   const [showNewUpsellModal, setShowNewUpsellModal] = useState(false);
   const [planModalTab, setPlanModalTab] = useState("loja"); // aba ativa do modal novo plano
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [checkoutModalTab, setCheckoutModalTab] = useState("configuracoes-gerais"); // aba ativa do modal checkout
 
   const tabs = [
     { id: "dados-gerais", label: "Dados gerais", icon: "mdi:file-document-outline" },
@@ -60,6 +62,15 @@ const Viewproduct = () => {
     { id: "arquivos", label: "Arquivos/Ebooks", icon: "mdi:file-download" },
     { id: "order-bump", label: "Order Bump", icon: "mdi:trending-up" },
     { id: "termos", label: "Termos e Condições", icon: "mdi:file-document" }
+  ];
+
+  const checkoutModalTabs = [
+    { id: "configuracoes-gerais", label: "Configurações Gerais", icon: "mdi:cog" },
+    { id: "pixel-planos", label: "Pixel e Planos", icon: "mdi:chart-line" },
+    { id: "informacoes-usuario", label: "Informações do Usuário", icon: "mdi:account-circle" },
+    { id: "chat-suporte", label: "Chat e Suporte", icon: "mdi:message-text" },
+    { id: "descontos-promocoes", label: "Descontos e Promoções", icon: "mdi:ticket-percent" },
+    { id: "personalizacao", label: "Personalização", icon: "mdi:palette" }
   ];
 
   const renderPlanModalTabs = () => (
@@ -481,6 +492,384 @@ const Viewproduct = () => {
     }
   };
 
+  const renderCheckoutModalTabs = () => (
+    <div className="card border-0 mb-3">
+      <div className="card-body py-2">
+        <nav className="nav nav-pills nav-fill">
+          {checkoutModalTabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`nav-link d-flex align-items-center gap-2 ${
+                checkoutModalTab === tab.id ? "active" : ""
+              }`}
+              onClick={() => setCheckoutModalTab(tab.id)}
+              style={{
+                backgroundColor: checkoutModalTab === tab.id ? "#0d6efd" : "transparent",
+                color: checkoutModalTab === tab.id ? "white" : "#6c757d",
+                border: "1px solid #dee2e6",
+                margin: "2px",
+                borderRadius: "6px",
+                fontSize: "0.875rem"
+              }}
+            >
+              <Icon icon={tab.icon} />
+              <span className="d-none d-lg-inline">{tab.label}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+
+  const renderCheckoutModalContent = () => {
+    switch (checkoutModalTab) {
+      case "configuracoes-gerais":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:cog" className="me-2 text-primary" />
+                    Configurações Gerais do Checkout
+                  </h6>
+                  <small className="text-muted">Configure as informações básicas e formas de pagamento</small>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">
+                        <Icon icon="mdi:text" className="me-1" />
+                        Descrição *
+                      </label>
+                      <input type="text" className="form-control" placeholder="Digite a descrição do checkout" />
+                    </div>
+
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">
+                        <Icon icon="mdi:credit-card" className="me-1" />
+                        Formas de Pagamento
+                      </label>
+                      <div className="row g-2">
+                        <div className="col-md-4">
+                          <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id="boleto" defaultChecked />
+                            <label className="form-check-label" htmlFor="boleto">
+                              <Icon icon="mdi:file-document" className="me-1" />
+                              Boleto
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id="cartao" defaultChecked />
+                            <label className="form-check-label" htmlFor="cartao">
+                              <Icon icon="mdi:credit-card" className="me-1" />
+                              Cartão de crédito
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id="pix" defaultChecked />
+                            <label className="form-check-label" htmlFor="pix">
+                              <Icon icon="mdi:qrcode" className="me-1" />
+                              Pix
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "pixel-planos":
+        return (
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:chart-line" className="me-2 text-info" />
+                    Configuração de Pixel
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <label className="form-label fw-semibold">Selecione um pixel</label>
+                  <select className="form-select">
+                    <option>Selecione...</option>
+                  </select>
+                  <small className="text-muted mt-2 d-block">
+                    Para adicionar um novo pixel e configurar, <button type="button" className="btn btn-link p-0 text-primary">clique Aqui!</button>
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:package-variant" className="me-2 text-success" />
+                    Vincular com plano e
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <label className="form-label fw-semibold">Selecione os planos</label>
+                  <select className="form-select">
+                    <option>Selecione...</option>
+                  </select>
+                  <small className="text-muted mt-2 d-block">
+                    Para adicionar um novo plano e configurar, <button type="button" className="btn btn-link p-0 text-primary">clique Aqui!</button>
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "informacoes-usuario":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:account-circle" className="me-2 text-warning" />
+                    Informações do Usuário
+                  </h6>
+                  <small className="text-muted">Configure quais informações serão solicitadas no checkout</small>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">
+                            Exigir informações de sexo do comprador?
+                            <Icon icon="mdi:help-circle-outline" className="ms-1" />
+                          </label>
+                          <small className="text-muted d-block">Campo obrigatório no checkout</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Solicitar telefone?</label>
+                          <small className="text-muted d-block">Campo obrigatório de telefone</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Solicitar endereço?</label>
+                          <small className="text-muted d-block">Endereço completo do comprador</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "chat-suporte":
+        return (
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:message-text" className="me-2 text-info" />
+                    Chat
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <label className="form-label fw-semibold">Tipo do Chat</label>
+                  <select className="form-select">
+                    <option>Selecione...</option>
+                    <option>WhatsApp / Chat Zapism / Tawk.io / Zendesk</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:phone" className="me-2 text-success" />
+                    Telefones para Suporte
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-2">
+                    <div className="col-12">
+                      <div className="input-group">
+                        <span className="input-group-text bg-success text-white">
+                          <Icon icon="mdi:whatsapp" />
+                        </span>
+                        <input type="tel" className="form-control" placeholder="Ex: (11) 9999-9999" />
+                      </div>
+                      <small className="text-muted">Telefone para suporte exclusivo para WhatsApp</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "descontos-promocoes":
+        return (
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:ticket-percent" className="me-2 text-warning" />
+                    Cupom de Desconto
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-warning-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Permitir uso de Cupom de desconto?</label>
+                      <small className="text-muted d-block">Habilitar campo de cupom no checkout</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:window-open" className="me-2 text-info" />
+                    Popup de Desconto
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-info-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Usar popup?</label>
+                      <small className="text-muted d-block">Exibir popup promocional no checkout</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "personalizacao":
+        return (
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:palette" className="me-2 text-purple" />
+                    Personalizar Checkout
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Personalizar checkout?</label>
+                      <small className="text-muted d-block">Customizar cores e layout</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:step-forward" className="me-2 text-secondary" />
+                    Configuração de Etapas
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">
+                        Habilitar etapas no checkout?
+                        <Icon icon="mdi:help-circle-outline" className="ms-1" />
+                      </label>
+                      <small className="text-muted d-block">Checkout em múltiplas etapas</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:bell" className="me-2 text-warning" />
+                    Notificações
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-warning-subtle rounded">
+                    <div>
+                      <label className="form-label mb-1 fw-semibold">Usar notificações?</label>
+                      <small className="text-muted d-block">Enviar notificações por email e SMS</small>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="text-center p-4">
+            <p className="text-muted">Conteúdo não encontrado</p>
+          </div>
+        );
+    }
+  };
+
   const renderPlansSubmenu = () => {
     if (activeTab !== "planos") return null;
     
@@ -818,7 +1207,7 @@ const Viewproduct = () => {
                 <h5 className="card-title mb-0">Checkouts</h5>
                 <p className="text-muted mb-0">Configure as páginas de checkout do produto</p>
               </div>
-              <Button variant="primary">
+              <Button variant="primary" onClick={() => setShowCheckoutModal(true)}>
                 <Icon icon="mdi:plus" className="me-2" />
                 Novo Checkout
               </Button>
@@ -1314,6 +1703,33 @@ const Viewproduct = () => {
           <Button variant="success" size="lg">
             <Icon icon="mdi:content-save" className="me-2" />
             Salvar Upsell
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Novo Checkout */}
+      <Modal show={showCheckoutModal} onHide={() => setShowCheckoutModal(false)} size="xl" centered>
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title>
+            <Icon icon="mdi:cart-outline" className="me-2" />
+            Configurações do Checkout
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4">
+          {/* Navigation Tabs */}
+          {renderCheckoutModalTabs()}
+          
+          {/* Tab Content */}
+          {renderCheckoutModalContent()}
+        </Modal.Body>
+        <Modal.Footer className="bg-light border-top">
+          <Button variant="outline-danger" onClick={() => setShowCheckoutModal(false)}>
+            <Icon icon="mdi:close" className="me-2" />
+            Sair da Edição
+          </Button>
+          <Button variant="primary" size="lg">
+            <Icon icon="mdi:content-save" className="me-2" />
+            Salvar Checkout
           </Button>
         </Modal.Footer>
       </Modal>
