@@ -32,6 +32,7 @@ const Viewproduct = () => {
   const [plansSubMenu, setPlansSubMenu] = useState("todos-planos"); // submenu para planos
   const [showNewPlanModal, setShowNewPlanModal] = useState(false);
   const [showNewUpsellModal, setShowNewUpsellModal] = useState(false);
+  const [planModalTab, setPlanModalTab] = useState("loja"); // aba ativa do modal novo plano
 
   const tabs = [
     { id: "dados-gerais", label: "Dados gerais", icon: "mdi:file-document-outline" },
@@ -51,6 +52,434 @@ const Viewproduct = () => {
   if (!product && !affiliate) {
     return <p>Produto não encontrado</p>;
   }
+
+  const planModalTabs = [
+    { id: "loja", label: "Loja", icon: "mdi:store" },
+    { id: "condicoes-pagamento", label: "Condições de Pagamentos", icon: "mdi:credit-card" },
+    { id: "afiliacao", label: "Afiliação", icon: "mdi:account-group" },
+    { id: "arquivos", label: "Arquivos/Ebooks", icon: "mdi:file-download" },
+    { id: "order-bump", label: "Order Bump", icon: "mdi:trending-up" },
+    { id: "termos", label: "Termos e Condições", icon: "mdi:file-document" }
+  ];
+
+  const renderPlanModalTabs = () => (
+    <div className="card border-0 mb-3">
+      <div className="card-body py-2">
+        <nav className="nav nav-pills nav-fill">
+          {planModalTabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`nav-link d-flex align-items-center gap-2 ${
+                planModalTab === tab.id ? "active" : ""
+              }`}
+              onClick={() => setPlanModalTab(tab.id)}
+              style={{
+                backgroundColor: planModalTab === tab.id ? "#0d6efd" : "transparent",
+                color: planModalTab === tab.id ? "white" : "#6c757d",
+                border: "1px solid #dee2e6",
+                margin: "2px",
+                borderRadius: "6px",
+                fontSize: "0.875rem"
+              }}
+            >
+              <Icon icon={tab.icon} />
+              <span className="d-none d-lg-inline">{tab.label}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+
+  const renderPlanModalContent = () => {
+    switch (planModalTab) {
+      case "loja":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:store" className="me-2 text-primary" />
+                    Configurações da Loja
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">
+                        <Icon icon="mdi:tag" className="me-1" />
+                        Nome do Plano *
+                      </label>
+                      <input type="text" className="form-control form-control-lg" placeholder="Ex: Plano Premium" />
+                    </div>
+
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">
+                        <Icon icon="mdi:currency-brl" className="me-1" />
+                        Valor do plano (R$) *
+                      </label>
+                      <div className="input-group input-group-lg">
+                        <span className="input-group-text bg-success text-white">R$</span>
+                        <input type="text" className="form-control" placeholder="0,00" />
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">
+                        <Icon icon="mdi:text" className="me-1" />
+                        Descrição do Plano
+                      </label>
+                      <textarea className="form-control" rows="3" placeholder="Descreva os benefícios do plano..."></textarea>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Disponível para venda?</label>
+                          <small className="text-muted d-block">Permitir que este plano seja vendido</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" defaultChecked style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Plano em destaque?</label>
+                          <small className="text-muted d-block">Destacar este plano na loja</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "condicoes-pagamento":
+        return (
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:credit-card" className="me-2 text-primary" />
+                    Condições de Pagamento
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">Máximo de parcelas no cartão *</label>
+                      <select className="form-select">
+                        <option>12 vezes</option>
+                        <option>6 vezes</option>
+                        <option>3 vezes</option>
+                        <option>1 vez</option>
+                      </select>
+                    </div>
+
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">
+                        Máximo de parcelas sem juros no cartão *
+                        <Icon icon="mdi:help-circle-outline" className="ms-1" />
+                      </label>
+                      <select className="form-select">
+                        <option>Selecione a quantidade</option>
+                        <option>1x</option>
+                        <option>2x</option>
+                        <option>3x</option>
+                        <option>6x</option>
+                      </select>
+                    </div>
+
+                    <div className="col-12">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-warning-subtle rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Desconto por tipo de pagamento?</label>
+                          <small className="text-danger d-block">Obs: Os descontos adicionados serão configurado para todas as moedas</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">
+                        Forma de cobrança
+                        <Icon icon="mdi:help-circle-outline" className="ms-1" />
+                      </label>
+                      <select className="form-select">
+                        <option>Única</option>
+                        <option>Recorrente</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm h-100">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:receipt" className="me-2 text-warning" />
+                    Configuração de Boleto Parcelado
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Ativar boleto parcelado?</label>
+                          <small className="text-muted d-block">Permitir parcelamento via boleto</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-success-subtle rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Avisar comprador sobre vencimento de boletos?</label>
+                          <small className="text-muted d-block">Notificações automáticas de vencimento</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" defaultChecked style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "afiliacao":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:account-group" className="me-2 text-success" />
+                    Configurações de Afiliação
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-4">
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">
+                            Comissão personalizada para Afiliados?
+                            <Icon icon="mdi:help-circle-outline" className="ms-1" />
+                          </label>
+                          <small className="text-muted d-block">Configurar comissão específica para este plano</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Ocultar plano para afiliados?</label>
+                          <small className="text-muted d-block">Este plano não aparecerá para afiliados</small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">Tipo de Comissão</label>
+                      <select className="form-select">
+                        <option>Porcentagem</option>
+                        <option>Valor Fixo</option>
+                      </select>
+                    </div>
+
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">Valor da Comissão</label>
+                      <div className="input-group">
+                        <input type="number" className="form-control" placeholder="0" />
+                        <span className="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "arquivos":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 className="card-title mb-0 d-flex align-items-center">
+                      <Icon icon="mdi:file-download" className="me-2 text-info" />
+                      Arquivos/Ebooks
+                    </h6>
+                  </div>
+                  <Button variant="primary" size="sm">
+                    <Icon icon="mdi:upload" className="me-2" />
+                    Arquivos
+                  </Button>
+                </div>
+                <div className="card-body">
+                  <div className="row g-4">
+                    <div className="col-12">
+                      <h6 className="fw-semibold mb-3">Configuração dos arquivos</h6>
+                      
+                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded mb-3">
+                        <div>
+                          <label className="form-label mb-1 fw-semibold">Adicionar marca d'água nos arquivos em pdf?</label>
+                          <small className="text-muted d-block">
+                            Ao marcar essa configuração será adicionado aos arquivos <strong>.pdf</strong> uma marca d'água na parte central da página com <strong>informações do comprador</strong>. Informações como <strong>nome, e-mail</strong> e <strong>documento</strong> do comprador.
+                          </small>
+                        </div>
+                        <div className="form-check form-switch">
+                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                        </div>
+                      </div>
+
+                      <div className="text-center py-5 border-2 border-dashed rounded">
+                        <Icon icon="mdi:file-outline" className="fs-1 text-muted mb-3" />
+                        <h6 className="text-muted mb-2">Nenhum arquivo foi encontrado</h6>
+                        <div className="d-flex gap-2 justify-content-center">
+                          <span className="badge bg-warning text-dark">
+                            <Icon icon="mdi:alert" className="me-1" />
+                            Arquivos ainda não salvos.
+                          </span>
+                          <span className="badge bg-info text-white">
+                            <Icon icon="mdi:dropbox" className="me-1" />
+                            Arquivos sem marca d'água.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "order-bump":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0 d-flex align-items-center">
+                    <Icon icon="mdi:trending-up" className="me-2 text-warning" />
+                    Chamada Order Bump
+                  </h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">Digite uma chamada para incentivar a compra dos seus clientes</label>
+                      <textarea 
+                        className="form-control" 
+                        rows="3" 
+                        placeholder="Digite uma chamada para incentivar a compra dos seus clientes"
+                        maxLength={100}
+                      ></textarea>
+                      <div className="d-flex justify-content-between mt-1">
+                        <small className="text-muted">Uma frase chamativa para aumentar sua conversão</small>
+                        <small className="text-muted">0/100</small>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">Produto</label>
+                      <select className="form-select">
+                        <option>Selecione...</option>
+                        <option>Produto 1</option>
+                        <option>Produto 2</option>
+                      </select>
+                    </div>
+
+                    <div className="col-md-6">
+                      <label className="form-label fw-semibold">Planos</label>
+                      <select className="form-select">
+                        <option>Selecione...</option>
+                        <option>Plano 1</option>
+                        <option>Plano 2</option>
+                      </select>
+                    </div>
+
+                    <div className="col-12">
+                      <div className="alert alert-info d-flex align-items-center">
+                        <Icon icon="mdi:information" className="me-2" />
+                        <span>Você não possui nenhum order bump ativo para este plano.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "termos":
+        return (
+          <div className="row g-4">
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 className="card-title mb-0 d-flex align-items-center">
+                      <Icon icon="mdi:file-document" className="me-2 text-secondary" />
+                      Termos e Condições
+                    </h6>
+                  </div>
+                  <Button variant="primary" size="sm">
+                    <Icon icon="mdi:plus" className="me-2" />
+                    Adicionar termo
+                  </Button>
+                </div>
+                <div className="card-body">
+                  <div className="text-center py-5">
+                    <Icon icon="mdi:file-document-outline" className="fs-1 text-muted mb-3" />
+                    <h6 className="text-muted mb-2">Nenhum termo adicionado</h6>
+                    <p className="text-muted">Adicione termos e condições específicos para este plano</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="text-center p-4">
+            <p className="text-muted">Conteúdo não encontrado</p>
+          </div>
+        );
+    }
+  };
 
   const renderPlansSubmenu = () => {
     if (activeTab !== "planos") return null;
@@ -740,294 +1169,11 @@ const Viewproduct = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-4">
-          {/* Progress Steps */}
-          <div className="card border-0 bg-light mb-4">
-            <div className="card-body py-3">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center gap-2">
-                  <div className="d-flex align-items-center justify-content-center bg-primary text-white rounded-circle" style={{ width: "32px", height: "32px" }}>
-                    <Icon icon="mdi:cog" className="fs-6" />
-                  </div>
-                  <span className="fw-semibold text-primary">Configurações de Pagamento</span>
-                </div>
-                <Icon icon="mdi:chevron-right" className="text-muted" />
-                <div className="d-flex align-items-center gap-2">
-                  <div className="d-flex align-items-center justify-content-center bg-light border rounded-circle" style={{ width: "32px", height: "32px" }}>
-                    <Icon icon="mdi:account-multiple" className="fs-6 text-muted" />
-                  </div>
-                  <span className="text-muted">Afiliados</span>
-                </div>
-                <Icon icon="mdi:chevron-right" className="text-muted" />
-                <div className="d-flex align-items-center gap-2">
-                  <div className="d-flex align-items-center justify-content-center bg-light border rounded-circle" style={{ width: "32px", height: "32px" }}>
-                    <Icon icon="mdi:eye" className="fs-6 text-muted" />
-                  </div>
-                  <span className="text-muted">Pré-visualização</span>
-                </div>
-                <Icon icon="mdi:chevron-right" className="text-muted" />
-                <div className="d-flex align-items-center gap-2">
-                  <div className="d-flex align-items-center justify-content-center bg-light border rounded-circle" style={{ width: "32px", height: "32px" }}>
-                    <Icon icon="mdi:email" className="fs-6 text-muted" />
-                  </div>
-                  <span className="text-muted">E-mail e Entrega</span>
-                </div>
-                <Icon icon="mdi:chevron-right" className="text-muted" />
-                <div className="d-flex align-items-center gap-2">
-                  <div className="d-flex align-items-center justify-content-center bg-light border rounded-circle" style={{ width: "32px", height: "32px" }}>
-                    <Icon icon="mdi:check-circle" className="fs-6 text-muted" />
-                  </div>
-                  <span className="text-muted">Confirmação</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row g-4">
-            {/* Coluna Esquerda - Configurações */}
-            <div className="col-lg-6">
-              {/* Configurações Gerais */}
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="card-header bg-white border-bottom">
-                  <h6 className="card-title mb-0 d-flex align-items-center">
-                    <Icon icon="mdi:cog-outline" className="me-2 text-primary" />
-                    Configurações Gerais
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <div className="row g-3">
-                    <div className="col-12">
-                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
-                        <div>
-                          <label className="form-label mb-1 fw-semibold">Disponível para venda?</label>
-                          <small className="text-muted d-block">Permitir que este plano seja vendido</small>
-                        </div>
-                        <div className="form-check form-switch">
-                          <input className="form-check-input" type="checkbox" id="disponivel-venda" defaultChecked style={{ transform: "scale(1.3)" }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
-                        <div>
-                          <label className="form-label mb-1 fw-semibold">Ocultar plano para afiliados?</label>
-                          <small className="text-muted d-block">Plano não aparecerá para afiliados</small>
-                        </div>
-                        <div className="form-check form-switch">
-                          <input className="form-check-input" type="checkbox" id="ocultar-afiliados" style={{ transform: "scale(1.3)" }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <div className="d-flex align-items-center justify-content-between p-3 bg-light rounded">
-                        <div>
-                          <label className="form-label mb-1 fw-semibold">Exigir confirmação do e-mail na compra?</label>
-                          <small className="text-muted d-block">Cliente precisará confirmar e-mail</small>
-                        </div>
-                        <div className="form-check form-switch">
-                          <input className="form-check-input" type="checkbox" id="confirmar-email" style={{ transform: "scale(1.3)" }} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Limites e Controles */}
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="card-header bg-white border-bottom">
-                  <h6 className="card-title mb-0 d-flex align-items-center">
-                    <Icon icon="mdi:speedometer" className="me-2 text-warning" />
-                    Limites e Controles
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:cart-outline" className="me-1" />
-                        Limite de vendas por plano
-                      </label>
-                      <input type="number" className="form-control" placeholder="Ilimitado" />
-                      <small className="text-muted">Deixe vazio para ilimitado</small>
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:check-circle-outline" className="me-1" />
-                        Limite por vendas aprovados
-                      </label>
-                      <input type="number" className="form-control" placeholder="Ilimitado" />
-                      <small className="text-muted">Apenas vendas aprovadas</small>
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:file-multiple" className="me-1" />
-                        Arquivo Único *
-                      </label>
-                      <input type="number" className="form-control" defaultValue="0" />
-                      <small className="text-muted">Legal o envio de múltiplos de diferentes arquivos em uma compra.</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Upload de Imagens */}
-              <div className="card border-0 shadow-sm">
-                <div className="card-header bg-white border-bottom">
-                  <h6 className="card-title mb-0 d-flex align-items-center">
-                    <Icon icon="mdi:image-multiple" className="me-2 text-info" />
-                    Imagem do Produto
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <div className="border-2 border-dashed border-primary rounded p-4 text-center bg-primary-subtle">
-                    <Icon icon="mdi:cloud-upload" className="fs-1 text-primary mb-3" />
-                    <h6 className="text-primary mb-2">Arraste e solte os arquivos aqui</h6>
-                    <p className="text-muted mb-3">ou clique para selecionar</p>
-                    <button className="btn btn-outline-primary">
-                      <Icon icon="mdi:folder-open" className="me-2" />
-                      Procurar Arquivos
-                    </button>
-                    <small className="d-block text-muted mt-2">Formatos aceitos: JPG, PNG, GIF (máx. 5MB)</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Coluna Direita - Dados do Plano */}
-            <div className="col-lg-6">
-              {/* Informações Básicas */}
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="card-header bg-white border-bottom">
-                  <h6 className="card-title mb-0 d-flex align-items-center">
-                    <Icon icon="mdi:package-variant" className="me-2 text-success" />
-                    Informações do Plano
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <div className="row g-3">
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:tag" className="me-1" />
-                        Nome do Plano *
-                      </label>
-                      <input type="text" className="form-control form-control-lg" placeholder="Ex: Plano Premium" />
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:currency-brl" className="me-1" />
-                        Valor do plano (R$) *
-                      </label>
-                      <div className="input-group input-group-lg">
-                        <span className="input-group-text bg-success text-white">R$</span>
-                        <input type="text" className="form-control" placeholder="0,00" />
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:counter" className="me-1" />
-                        Quantidade da ficha inclusos no plano *
-                      </label>
-                      <input type="number" className="form-control" defaultValue="1" min="1" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* URLs de Configuração */}
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="card-header bg-white border-bottom">
-                  <h6 className="card-title mb-0 d-flex align-items-center">
-                    <Icon icon="mdi:link-variant" className="me-2 text-purple" />
-                    URLs de Configuração
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <div className="row g-3">
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:check-circle" className="me-1 text-success" />
-                        URL de finalizamento/Obrigado Volta *
-                      </label>
-                      <input type="url" className="form-control" placeholder="https://exemplo.com/obrigado" />
-                      <small className="text-muted">Página mostrada após compra aprovada</small>
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:receipt" className="me-1 text-warning" />
-                        URL de finalizamento para boletos
-                      </label>
-                      <input type="url" className="form-control" placeholder="https://exemplo.com/boleto" />
-                      <small className="text-muted">Específica para pagamentos via boleto</small>
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label fw-semibold">
-                        <Icon icon="mdi:qrcode" className="me-1 text-info" />
-                        URL de finalizamento para PIX
-                      </label>
-                      <input type="url" className="form-control" placeholder="https://exemplo.com/pix" />
-                      <small className="text-muted">Específica para pagamentos via PIX</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fornecedores */}
-              <div className="card border-0 shadow-sm">
-                <div className="card-header bg-white border-bottom">
-                  <h6 className="card-title mb-0 d-flex align-items-center">
-                    <Icon icon="mdi:account-group" className="me-2 text-orange" />
-                    Fornecedores
-                  </h6>
-                  <small className="text-muted">Configure os responsáveis pelos pagamentos</small>
-                </div>
-                <div className="card-body">
-                  {[1, 2, 3].map((num) => (
-                    <div key={num} className="border rounded p-3 mb-3 bg-light">
-                      <h6 className="mb-3 d-flex align-items-center">
-                        <Icon icon="mdi:account" className="me-2" />
-                        Responsável {num}
-                      </h6>
-                      <div className="row g-2">
-                        <div className="col-12">
-                          <label className="form-label fw-medium">Descrição</label>
-                          <input type="text" className="form-control form-control-sm" placeholder="Nome do responsável" />
-                          <small className="text-muted">Pessoa que deve receber quando este responsável...</small>
-                        </div>
-                        <div className="col-6">
-                          <label className="form-label fw-medium">Moeda</label>
-                          <input type="text" className="form-control form-control-sm" placeholder="R$ 0,00" />
-                        </div>
-                        <div className="col-6">
-                          <label className="form-label fw-medium">Valor</label>
-                          <input type="text" className="form-control form-control-sm" placeholder="R$ 5,00" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="d-flex align-items-center justify-content-between p-3 bg-warning-subtle rounded">
-                    <div>
-                      <label className="form-label mb-1 fw-semibold">Assumir impostos de fornecedor?</label>
-                      <small className="text-muted d-block">
-                        Você assume cobrar impostos Bruto e divulgar no fornecedor aos responsáveis
-                      </small>
-                    </div>
-                    <div className="form-check form-switch">
-                      <input className="form-check-input" type="checkbox" id="assumir-imposto" style={{ transform: "scale(1.3)" }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Navigation Tabs */}
+          {renderPlanModalTabs()}
+          
+          {/* Tab Content */}
+          {renderPlanModalContent()}
         </Modal.Body>
         <Modal.Footer className="bg-light border-top">
           <Button variant="outline-danger" onClick={() => setShowNewPlanModal(false)}>
