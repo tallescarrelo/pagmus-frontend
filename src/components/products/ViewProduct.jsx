@@ -37,6 +37,13 @@ const Viewproduct = () => {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [checkoutModalTab, setCheckoutModalTab] = useState("configuracoes-gerais"); // aba ativa do modal checkout
   const [checkoutSearchTerm, setCheckoutSearchTerm] = useState(""); // termo de pesquisa para checkouts
+  const [selectedAffiliates, setSelectedAffiliates] = useState([]); // afiliados selecionados
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [showMoreActionsDropdown, setShowMoreActionsDropdown] = useState(false);
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const [showUpdateCommissionModal, setShowUpdateCommissionModal] = useState(false);
+  const [showBlacklistModal, setShowBlacklistModal] = useState(false);
 
   const tabs = [
     { id: "dados-gerais", label: "Dados gerais", icon: "mdi:information-outline" },
@@ -1084,7 +1091,7 @@ const Viewproduct = () => {
               <div className="alert alert-info d-flex align-items-center gap-2 mb-4">
                 <Icon icon="mdi:information" />
                 <span><strong>Atenção!</strong> As configurações só serão aplicadas para novas afiliações. Caso queira modificar as afiliações já existentes acesse a página de afiliados.</span>
-                <Button variant="info" size="sm" className="ms-auto">
+                <Button variant="info" size="sm" className="ms-auto" onClick={() => setAffiliationSubMenu("afiliados")}>
                   <Icon icon="mdi:account-group" className="me-1" />
                   Ver Afiliados
                 </Button>
@@ -1211,14 +1218,45 @@ const Viewproduct = () => {
                   <Icon icon="mdi:file-excel" className="me-1" />
                   Excel
                 </Button>
-                <Button variant="info" size="sm">
+                <Button variant="info" size="sm" onClick={() => setShowFilterDrawer(true)}>
                   <Icon icon="mdi:filter-variant" className="me-1" />
                   Filtrar
                 </Button>
-                <Button variant="primary" size="sm">
-                  <Icon icon="mdi:dots-horizontal" className="me-1" />
-                  Mais ações
-                </Button>
+                <div className="position-relative">
+                  <Button 
+                    variant="primary" 
+                    size="sm" 
+                    onClick={() => setShowMoreActionsDropdown(!showMoreActionsDropdown)}
+                  >
+                    <Icon icon="mdi:dots-horizontal" className="me-1" />
+                    Mais ações
+                  </Button>
+                  {showMoreActionsDropdown && (
+                    <div className="dropdown-menu show position-absolute top-100 start-0 mt-1" style={{ minWidth: "200px" }}>
+                      <div className="dropdown-header">AÇÕES RÁPIDAS</div>
+                      <button 
+                        className="dropdown-item d-flex align-items-center"
+                        onClick={() => {
+                          setShowUpdateCommissionModal(true);
+                          setShowMoreActionsDropdown(false);
+                        }}
+                      >
+                        <Icon icon="mdi:currency-usd" className="me-2" />
+                        Atualizar Configuração
+                      </button>
+                      <button 
+                        className="dropdown-item d-flex align-items-center"
+                        onClick={() => {
+                          setShowBlacklistModal(true);
+                          setShowMoreActionsDropdown(false);
+                        }}
+                      >
+                        <Icon icon="mdi:block-helper" className="me-2" />
+                        Blacklist de afiliação
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="card-body">
@@ -1253,13 +1291,25 @@ const Viewproduct = () => {
 
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="d-flex align-items-center gap-3">
-                  <span className="text-muted"><strong>0</strong> selecionados de <strong>4</strong> afiliados.</span>
+                  <span className="text-muted">
+                    <strong>{selectedAffiliates.length}</strong> selecionados de <strong>{mockAffiliates.length}</strong> afiliados.
+                  </span>
                   <div className="d-flex gap-2">
-                    <Button variant="outline-danger" size="sm" disabled>
+                    <Button 
+                      variant="outline-danger" 
+                      size="sm" 
+                      disabled={selectedAffiliates.length === 0}
+                      onClick={() => handleApproveReprove('reprovar')}
+                    >
                       <Icon icon="mdi:close" className="me-1" />
                       Reprovar
                     </Button>
-                    <Button variant="outline-success" size="sm" disabled>
+                    <Button 
+                      variant="outline-success" 
+                      size="sm" 
+                      disabled={selectedAffiliates.length === 0}
+                      onClick={() => handleApproveReprove('aprovar')}
+                    >
                       <Icon icon="mdi:check" className="me-1" />
                       Aprovar
                     </Button>
@@ -1277,7 +1327,12 @@ const Viewproduct = () => {
                 <thead>
                   <tr>
                     <th width="30">
-                      <input type="checkbox" className="form-check-input" />
+                      <input 
+                        type="checkbox" 
+                        className="form-check-input" 
+                        checked={selectedAffiliates.length === mockAffiliates.length && mockAffiliates.length > 0}
+                        onChange={handleSelectAllAffiliates}
+                      />
                     </th>
                     <th>Nome/Contato</th>
                     <th>Gerente</th>
@@ -1293,7 +1348,12 @@ const Viewproduct = () => {
                   {mockAffiliates.map((affiliate) => (
                     <tr key={affiliate.id}>
                       <td>
-                        <input type="checkbox" className="form-check-input" />
+                        <input 
+                          type="checkbox" 
+                          className="form-check-input"
+                          checked={selectedAffiliates.includes(affiliate.id)}
+                          onChange={() => handleSelectAffiliate(affiliate.id)}
+                        />
                       </td>
                       <td>
                         <div>
@@ -1326,6 +1386,26 @@ const Viewproduct = () => {
                           <Button variant="outline-info" size="sm" title="Ver detalhes">
                             <Icon icon="mdi:eye" />
                           </Button>
+                          {affiliate.status === 'PENDENTE' && (
+                            <>
+                              <Button 
+                                variant="outline-success" 
+                                size="sm" 
+                                title="Aprovar"
+                                onClick={() => handleApproveReprove('aprovar', affiliate.id)}
+                              >
+                                <Icon icon="mdi:check" />
+                              </Button>
+                              <Button 
+                                variant="outline-danger" 
+                                size="sm" 
+                                title="Reprovar"
+                                onClick={() => handleApproveReprove('reprovar', affiliate.id)}
+                              >
+                                <Icon icon="mdi:close" />
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -2046,6 +2126,40 @@ const Viewproduct = () => {
     setShowCheckoutModal(true);
   };
 
+  // Funções para gerenciar afiliados
+  const handleSelectAffiliate = (affiliateId) => {
+    setSelectedAffiliates(prev => {
+      if (prev.includes(affiliateId)) {
+        return prev.filter(id => id !== affiliateId);
+      } else {
+        return [...prev, affiliateId];
+      }
+    });
+  };
+
+  const handleSelectAllAffiliates = () => {
+    if (selectedAffiliates.length === mockAffiliates.length) {
+      setSelectedAffiliates([]);
+    } else {
+      setSelectedAffiliates(mockAffiliates.map(affiliate => affiliate.id));
+    }
+  };
+
+  const handleApproveReprove = (action, affiliateId = null) => {
+    setConfirmAction({ action, affiliateId });
+    setShowConfirmModal(true);
+  };
+
+  const executeAction = () => {
+    // Aqui executaria a ação real
+    console.log(`Executando ${confirmAction.action} para:`, confirmAction.affiliateId || selectedAffiliates);
+    setShowConfirmModal(false);
+    setConfirmAction(null);
+    if (!confirmAction.affiliateId) {
+      setSelectedAffiliates([]);
+    }
+  };
+
   return (
     <div className="container-fluid">
       {/* Header */}
@@ -2283,6 +2397,291 @@ const Viewproduct = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Modal de Confirmação */}
+      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Icon icon={confirmAction?.action === 'aprovar' ? 'mdi:check-circle' : 'mdi:close-circle'} className="me-2" />
+            Confirmar {confirmAction?.action === 'aprovar' ? 'Aprovação' : 'Reprovação'}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="text-center">
+            <Icon 
+              icon={confirmAction?.action === 'aprovar' ? 'mdi:check-circle' : 'mdi:close-circle'} 
+              className={`fs-1 mb-3 ${confirmAction?.action === 'aprovar' ? 'text-success' : 'text-danger'}`} 
+            />
+            <h5>
+              {confirmAction?.action === 'aprovar' ? 'Aprovar' : 'Reprovar'} {confirmAction?.affiliateId ? 'afiliado' : `${selectedAffiliates.length} afiliados`}?
+            </h5>
+            <p className="text-muted">
+              {confirmAction?.action === 'aprovar' 
+                ? 'O(s) afiliado(s) será(ão) aprovado(s) e poderá(ão) começar a promover este produto.'
+                : 'O(s) afiliado(s) será(ão) reprovado(s) e não poderá(ão) mais promover este produto.'
+              }
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setShowConfirmModal(false)}>
+            Cancelar
+          </Button>
+          <Button 
+            variant={confirmAction?.action === 'aprovar' ? 'success' : 'danger'}
+            onClick={executeAction}
+          >
+            <Icon icon={confirmAction?.action === 'aprovar' ? 'mdi:check' : 'mdi:close'} className="me-2" />
+            {confirmAction?.action === 'aprovar' ? 'Aprovar' : 'Reprovar'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Atualizar Comissão */}
+      <Modal show={showUpdateCommissionModal} onHide={() => setShowUpdateCommissionModal(false)} size="lg" centered>
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title>
+            <Icon icon="mdi:currency-usd" className="me-2" />
+            Alterar configuração das comissões dos afiliados ativos do produto teste
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4">
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom">
+                  <h6 className="card-title mb-0">Configuração</h6>
+                </div>
+                <div className="card-body">
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Tipo de comissão</label>
+                    <div className="d-flex gap-3">
+                      <div className="form-check">
+                        <input className="form-check-input" type="radio" name="commissionTypeModal" id="percentageModal" defaultChecked />
+                        <label className="form-check-label" htmlFor="percentageModal">Porcentagem</label>
+                      </div>
+                      <div className="form-check">
+                        <input className="form-check-input" type="radio" name="commissionTypeModal" id="fixedModal" />
+                        <label className="form-check-label" htmlFor="fixedModal">Valor fixo</label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Valor da comissão</label>
+                    <div className="input-group">
+                      <input type="number" className="form-control" defaultValue="25" />
+                      <span className="input-group-text">%</span>
+                    </div>
+                    <small className="text-muted">Tipo de cálculo - Valor Líquido Valor total da venda - Valor do frete - Taxa da plataforma</small>
+                  </div>
+
+                  <div className="mb-3">
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="selectAllAffiliates" />
+                      <label className="form-check-label" htmlFor="selectAllAffiliates">
+                        Selecionar todos afiliados?
+                      </label>
+                    </div>
+                    <small className="text-muted d-block">Todos afiliados serão selecionados para a nova configuração de comissão.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                  <h6 className="card-title mb-0">Selecione os afiliados do produto</h6>
+                  <div className="input-group" style={{ width: "200px" }}>
+                    <span className="input-group-text">
+                      <Icon icon="mdi:magnify" />
+                    </span>
+                    <input type="text" className="form-control form-control-sm" placeholder="Pesquisar por nome ou email..." />
+                  </div>
+                </div>
+                <div className="card-body p-0">
+                  <div className="table-responsive" style={{ maxHeight: "300px" }}>
+                    <table className="table table-sm mb-0">
+                      <thead className="table-light sticky-top">
+                        <tr>
+                          <th width="30">
+                            <input type="checkbox" className="form-check-input" />
+                          </th>
+                          <th>Nome/E-mail</th>
+                          <th>Vendas</th>
+                          <th>Comissão</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td colSpan="5" className="text-center p-4 text-muted">
+                            Preencha este campo.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="p-3 border-top">
+                    <small className="text-muted">Mostrando de 1 ate 0 de 0 registros</small>
+                    <div className="d-flex justify-content-center mt-2">
+                      <nav>
+                        <ul className="pagination pagination-sm mb-0">
+                          <li className="page-item disabled">
+                            <span className="page-link">«</span>
+                          </li>
+                          <li className="page-item active">
+                            <span className="page-link">1</span>
+                          </li>
+                          <li className="page-item disabled">
+                            <span className="page-link">»</span>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="bg-light border-top">
+          <Button variant="outline-secondary" onClick={() => setShowUpdateCommissionModal(false)}>
+            Fechar
+          </Button>
+          <Button variant="primary">
+            <Icon icon="mdi:content-save" className="me-2" />
+            Salvar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Blacklist */}
+      <Modal show={showBlacklistModal} onHide={() => setShowBlacklistModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Icon icon="mdi:block-helper" className="me-2" />
+            Blacklist de afiliação do produto teste
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <div className="input-group">
+              <input 
+                type="email" 
+                className="form-control" 
+                placeholder="Informe o email..." 
+              />
+              <Button variant="primary">
+                <Icon icon="mdi:plus" className="me-1" />
+                Adicionar
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setShowBlacklistModal(false)}>
+            Fechar
+          </Button>
+          <Button variant="primary">
+            <Icon icon="mdi:content-save" className="me-2" />
+            Salvar blacklist
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Drawer de Filtros */}
+      <div className={`offcanvas offcanvas-end ${showFilterDrawer ? 'show' : ''}`} style={{ visibility: showFilterDrawer ? 'visible' : 'hidden' }}>
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title">
+            <Icon icon="mdi:filter-variant" className="me-2" />
+            Filtro
+          </h5>
+          <button 
+            type="button" 
+            className="btn-close" 
+            onClick={() => setShowFilterDrawer(false)}
+          ></button>
+        </div>
+        <div className="offcanvas-body">
+          <div className="mb-4">
+            <label className="form-label fw-semibold">Código do Afiliado</label>
+            <input type="text" className="form-control" />
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold">Status</label>
+            <select className="form-select">
+              <option value="">Todos</option>
+              <option value="ativo">Ativo</option>
+              <option value="pendente">Pendente</option>
+              <option value="reprovado">Reprovado</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold">Quantidade de vendas</label>
+            <div className="row g-2">
+              <div className="col-6">
+                <label className="form-label small">Mínimo:</label>
+                <input type="number" className="form-control" placeholder="0" />
+              </div>
+              <div className="col-6">
+                <label className="form-label small">Máximo:</label>
+                <input type="number" className="form-control" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold">Premiação</label>
+            <div className="d-flex flex-column gap-2">
+              {[
+                { icon: "mdi:trophy", label: "Cadastro Finalizado!", color: "purple" },
+                { icon: "mdi:star", label: "Primeiro", color: "blue" },
+                { icon: "mdi:account-check", label: "Usuário Beta", color: "danger" },
+                { icon: "mdi:medal", label: "Vendedor(a) | Principiante", color: "warning" },
+                { icon: "mdi:shield-check", label: "Vendedor(a) | Veterano", color: "success" },
+                { icon: "mdi:diamond", label: "Vendedor(a) | Ilustre", color: "info" },
+                { icon: "mdi:crown", label: "Indicação | Veterano", color: "success" },
+                { icon: "mdi:star-circle", label: "Indicação | Ilustre", color: "purple" },
+                { icon: "mdi:heart", label: "Indicação | Amigo Braip", color: "purple" },
+                { icon: "mdi:gem", label: "Ametist", color: "purple" },
+                { icon: "mdi:trophy-award", label: "Gold", color: "warning" },
+                { icon: "mdi:diamond-stone", label: "Diamond", color: "secondary" }
+              ].map((award, index) => (
+                <div key={index} className="form-check">
+                  <input className="form-check-input" type="checkbox" id={`award-${index}`} />
+                  <label className="form-check-label d-flex align-items-center" htmlFor={`award-${index}`}>
+                    <Icon icon={award.icon} className={`me-2 text-${award.color}`} />
+                    {award.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="d-flex gap-2 mt-4">
+            <Button variant="warning" className="flex-fill">
+              <Icon icon="mdi:broom" className="me-2" />
+              Limpar
+            </Button>
+            <Button variant="primary" className="flex-fill">
+              <Icon icon="mdi:magnify" className="me-2" />
+              Buscar
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Backdrop para drawer */}
+      {showFilterDrawer && (
+        <div 
+          className="offcanvas-backdrop fade show" 
+          onClick={() => setShowFilterDrawer(false)}
+        ></div>
+      )}
     </div>
   );
 };
