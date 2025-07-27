@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import MasterLayout from "../../masterLayout/MasterLayout";
 import PerformanceAffiliatesLayer from "../../components/affiliate/PerformanceAffiliatesLayer";

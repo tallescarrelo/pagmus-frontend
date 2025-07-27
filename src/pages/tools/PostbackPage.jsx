@@ -1,8 +1,6 @@
 import React from "react";
 import MasterLayout from "../../masterLayout/MasterLayout";
 import Breadcrumb from "../../components/Breadcrumb";
-import ProductGrid from "../../components/store/ProductGrid";
-import ApiLayer from "../../components/tools/ApiLayer";
 import PostbackLayer from "../../components/tools/PostbackLayer";
 
 

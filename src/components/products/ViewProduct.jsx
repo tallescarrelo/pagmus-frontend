@@ -403,6 +403,12 @@ const Viewproduct = () => {
     </>
   );
 
+      default:
+        return (
+          <div className="text-center p-4">
+            <p className="text-muted">Conteúdo não encontrado</p>
+          </div>
+        );
     }
   })()}
 </Modal.Body>

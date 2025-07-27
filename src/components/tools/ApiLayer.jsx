@@ -32,9 +32,12 @@ const ApiLayer = () => {
             "Assinaturas",
           ].map((tab, index) => (
             <li className="nav-item" key={index}>
-              <a className={`nav-link ${index === 0 ? "active" : "text-muted"}`} href="#">
+              <button 
+                type="button"
+                className={`nav-link border-0 bg-transparent ${index === 0 ? "active" : "text-muted"}`}
+              >
                 <Icon icon="mdi:table" className="me-1" /> {tab}
-              </a>
+              </button>
             </li>
           ))}
         </ul>
