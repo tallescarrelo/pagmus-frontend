@@ -321,6 +321,12 @@ const MasterLayout = ({ children }) => {
                     Indicadores
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink to="/afterpay" className={(navData) => (navData.isActive ? "active-page" : "")}>
+                    <i className="ri-circle-fill circle-icon text-warning-main w-auto" />
+                    After Pay
+                  </NavLink>
+                </li>
               </ul>
             </li>
 

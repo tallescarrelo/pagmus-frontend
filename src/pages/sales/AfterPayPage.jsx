@@ -11,7 +11,7 @@ const AfterPayPage = () => {
       <MasterLayout>
 
         {/* Breadcrumb */}
-        <Breadcrumb title="AfterPayPage" />
+        <Breadcrumb title="After Pay" />
 
         {/* InvoiceListLayer */}
         <AfterPayLayer />
