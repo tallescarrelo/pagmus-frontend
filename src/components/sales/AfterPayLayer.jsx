@@ -2,110 +2,56 @@ import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Icon } from '@iconify/react';
 
-// Componente do Mapa do Brasil
+// Componente do Mapa do Brasil - Imagem SVG simples
 const BrazilMap = ({ data, onRegionClick }) => {
-  const getRegionColor = (regionId) => {
-    const regionData = data.find(d => d.region === regionId);
-    if (!regionData) return '#000000';
-    
-    if (regionData.orders > 1000) return '#87ceeb';
-    if (regionData.orders > 500) return '#4682b4';
-    if (regionData.orders > 200) return '#191970';
-    if (regionData.orders > 100) return '#008b8b';
-    if (regionData.orders > 50) return '#006400';
-    if (regionData.orders > 10) return '#000000';
-    return '#000000';
-  };
-
   return (
-    <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-      <svg width="100%" height="100%" viewBox="0 0 300 200" style={{ maxHeight: '200px' }}>
-        {/* Norte */}
-        <path d="M 120 30 L 150 25 L 180 30 L 150 35 Z" fill={getRegionColor('RR')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'RR', name: 'Roraima' })} />
-        <text x="150" y="32" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>RR</text>
-        
-        <path d="M 80 40 L 120 30 L 150 50 L 120 60 Z" fill={getRegionColor('AM')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'AM', name: 'Amazonas' })} />
-        <text x="120" y="50" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>AM</text>
-        
-        <path d="M 150 50 L 180 45 L 210 60 L 180 70 Z" fill={getRegionColor('PA')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'PA', name: 'Pará' })} />
-        <text x="180" y="60" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>PA</text>
-        
-        <path d="M 120 60 L 150 50 L 180 70 L 150 80 Z" fill={getRegionColor('RO')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'RO', name: 'Rondônia' })} />
-        <text x="150" y="70" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>RO</text>
-        
-        <path d="M 80 60 L 120 50 L 150 70 L 120 80 Z" fill={getRegionColor('AC')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'AC', name: 'Acre' })} />
-        <text x="120" y="70" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>AC</text>
-        
-        <path d="M 210 60 L 240 55 L 270 70 L 240 80 Z" fill={getRegionColor('AP')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'AP', name: 'Amapá' })} />
-        <text x="240" y="70" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>AP</text>
-        
-        {/* Nordeste */}
-        <path d="M 180 80 L 210 75 L 240 90 L 210 100 Z" fill={getRegionColor('TO')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'TO', name: 'Tocantins' })} />
-        <text x="210" y="90" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>TO</text>
-        
-        <path d="M 240 90 L 270 85 L 300 100 L 270 110 Z" fill={getRegionColor('MA')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'MA', name: 'Maranhão' })} />
-        <text x="270" y="100" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>MA</text>
-        
-        <path d="M 270 110 L 300 105 L 330 120 L 300 130 Z" fill={getRegionColor('PI')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'PI', name: 'Piauí' })} />
-        <text x="300" y="120" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>PI</text>
-        
-        <path d="M 300 100 L 330 95 L 360 110 L 330 120 Z" fill={getRegionColor('CE')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'CE', name: 'Ceará' })} />
-        <text x="330" y="110" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>CE</text>
-        
-        <path d="M 330 95 L 360 90 L 390 105 L 360 115 Z" fill={getRegionColor('RN')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'RN', name: 'Rio Grande do Norte' })} />
-        <text x="360" y="105" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>RN</text>
-        
-        <path d="M 360 90 L 390 85 L 420 100 L 390 110 Z" fill={getRegionColor('PB')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'PB', name: 'Paraíba' })} />
-        <text x="390" y="100" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>PB</text>
-        
-        <path d="M 390 85 L 420 80 L 450 95 L 420 105 Z" fill={getRegionColor('PE')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'PE', name: 'Pernambuco' })} />
-        <text x="420" y="95" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>PE</text>
-        
-        <path d="M 420 80 L 450 75 L 480 90 L 450 100 Z" fill={getRegionColor('AL')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'AL', name: 'Alagoas' })} />
-        <text x="450" y="90" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>AL</text>
-        
-        <path d="M 450 75 L 480 70 L 510 85 L 480 95 Z" fill={getRegionColor('SE')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'SE', name: 'Sergipe' })} />
-        <text x="480" y="85" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>SE</text>
-        
-        <path d="M 240 120 L 270 115 L 300 130 L 270 140 Z" fill={getRegionColor('BA')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'BA', name: 'Bahia' })} />
-        <text x="270" y="130" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>BA</text>
-        
-        {/* Centro-Oeste */}
-        <path d="M 150 100 L 180 95 L 210 110 L 180 120 Z" fill={getRegionColor('MT')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'MT', name: 'Mato Grosso' })} />
-        <text x="180" y="110" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>MT</text>
-        
-        <path d="M 180 120 L 210 115 L 240 130 L 210 140 Z" fill={getRegionColor('MS')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'MS', name: 'Mato Grosso do Sul' })} />
-        <text x="210" y="130" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>MS</text>
-        
-        <path d="M 240 130 L 270 125 L 300 140 L 270 150 Z" fill={getRegionColor('GO')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'GO', name: 'Goiás' })} />
-        <text x="270" y="140" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>GO</text>
-        
-        <path d="M 270 140 L 285 138 L 300 142 L 285 145 Z" fill={getRegionColor('DF')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'DF', name: 'Distrito Federal' })} />
-        <text x="285" y="142" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>DF</text>
-        
-        {/* Sudeste */}
-        <path d="M 270 150 L 300 145 L 330 160 L 300 170 Z" fill={getRegionColor('MG')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'MG', name: 'Minas Gerais' })} />
-        <text x="300" y="160" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>MG</text>
-        
-        <path d="M 330 145 L 360 140 L 390 155 L 360 165 Z" fill={getRegionColor('ES')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'ES', name: 'Espírito Santo' })} />
-        <text x="360" y="155" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>ES</text>
-        
-        <path d="M 360 140 L 390 135 L 420 150 L 390 160 Z" fill={getRegionColor('RJ')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'RJ', name: 'Rio de Janeiro' })} />
-        <text x="390" y="150" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>RJ</text>
-        
-        <path d="M 300 170 L 330 165 L 360 180 L 330 190 Z" fill={getRegionColor('SP')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'SP', name: 'São Paulo' })} />
-        <text x="330" y="180" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>SP</text>
-        
-        {/* Sul */}
-        <path d="M 285 190 L 315 185 L 345 200 L 315 210 Z" fill={getRegionColor('PR')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'PR', name: 'Paraná' })} />
-        <text x="315" y="200" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>PR</text>
-        
-        <path d="M 315 210 L 345 205 L 375 220 L 345 230 Z" fill={getRegionColor('SC')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'SC', name: 'Santa Catarina' })} />
-        <text x="345" y="220" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>SC</text>
-        
-        <path d="M 285 230 L 315 225 L 345 240 L 315 250 Z" fill={getRegionColor('RS')} stroke="#333" strokeWidth="0.5" style={{ cursor: 'pointer' }} onClick={() => onRegionClick && onRegionClick({ id: 'RS', name: 'Rio Grande do Sul' })} />
-        <text x="315" y="240" textAnchor="middle" fontSize="6" fill="#fff" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>RS</text>
-      </svg>
+    <div style={{ 
+      width: '100%', 
+      height: '200px', 
+      position: 'relative', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: '20px'
+    }}>
+      <img 
+        src="/assets/images/brazil-map.svg" 
+        alt="Mapa do Brasil" 
+        style={{ 
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          maxWidth: '250px',
+          maxHeight: '180px'
+        }}
+        onError={(e) => {
+          // Fallback se a imagem não carregar
+          e.target.style.display = 'none';
+          const fallback = document.createElement('div');
+          fallback.innerHTML = `
+            <div style="
+              width: 250px; 
+              height: 180px; 
+              background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1e3a8a 100%); 
+              border-radius: 12px; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center; 
+              color: white; 
+              font-weight: bold;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+              border: 2px solid #e5e7eb;
+            ">
+              <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 12px;">🇧🇷</div>
+                <div style="font-size: 1.1rem;">Mapa do Brasil</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 4px;">Compras por região</div>
+              </div>
+            </div>
+          `;
+          e.target.parentNode.appendChild(fallback.firstChild);
+        }}
+      />
     </div>
   );
 };
@@ -259,144 +205,134 @@ const AfterPayLayer = () => {
     { region: 'DF', orders: 200, revenue: 7500 }
   ];
 
-  // Dados do kanban (kanbanColumns)
+  // Dados do kanban (kanbanColumns) - seguindo a segunda imagem
   const kanbanColumns = [
     {
-      id: 'pending',
-      title: 'Pendentes',
+      id: 'reportados',
+      title: 'REPORTADOS',
       color: 'warning',
-      icon: 'mdi:clock-outline',
+      icon: 'mdi:alert-circle',
       cards: [
         {
           id: '1',
-          name: 'João Silva',
-          product: 'Curso de Marketing Digital',
-          status: 'Pendente',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Em análise',
           statusColor: 'warning',
-          date: 'há 2 horas',
-          avatar: '/assets/images/avatar/avatar-1.png'
+          date: '25/03/2025',
+          avatar: '/assets/images/avatar/avatar1.png'
         },
         {
           id: '2',
-          name: 'Maria Santos',
-          product: 'E-book de Vendas',
-          status: 'Pendente',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Em análise',
           statusColor: 'warning',
-          date: 'há 3 horas',
-          avatar: '/assets/images/avatar/avatar-2.png'
-        },
-        {
-          id: '3',
-          name: 'Pedro Oliveira',
-          product: 'Mentoria Online',
-          status: 'Pendente',
-          statusColor: 'warning',
-          date: 'há 4 horas',
-          avatar: '/assets/images/avatar/avatar-3.png'
+          date: '25/03/2025',
+          avatar: '/assets/images/avatar/avatar2.png'
         }
       ]
     },
     {
-      id: 'processing',
-      title: 'Processando',
+      id: 'enviados',
+      title: 'ENVIADOS',
       color: 'info',
-      icon: 'mdi:cog',
+      icon: 'mdi:truck-delivery',
       cards: [
         {
-          id: '4',
-          name: 'Ana Costa',
-          product: 'Curso de Programação',
-          status: 'Processando',
+          id: '3',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Preparando',
           statusColor: 'info',
-          date: 'há 1 hora',
-          avatar: '/assets/images/avatar/avatar-4.png'
+          date: '23/03/2025',
+          avatar: '/assets/images/avatar/avatar-group1.png'
         },
         {
-          id: '5',
-          name: 'Carlos Ferreira',
-          product: 'Workshop de Liderança',
-          status: 'Processando',
+          id: '4',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Preparando',
           statusColor: 'info',
-          date: 'há 2 horas',
-          avatar: '/assets/images/avatar/avatar-5.png'
+          date: '23/03/2025',
+          avatar: '/assets/images/avatar/avatar-group2.png'
         }
       ]
     },
     {
-      id: 'approved',
-      title: 'Aprovados',
+      id: 'agendados',
+      title: 'AGENDADOS PARA ENTREGA',
+      color: 'warning',
+      icon: 'mdi:calendar-clock',
+      cards: [
+        {
+          id: '5',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Agendado',
+          statusColor: 'warning',
+          date: '24/03/2025',
+          avatar: '/assets/images/avatar/avatar-group3.png'
+        }
+      ]
+    },
+    {
+      id: 'correios',
+      title: 'RETIRAR NOS CORREIOS',
+      color: 'success',
+      icon: 'mdi:package-variant',
+      cards: [
+        {
+          id: '6',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Pronto para retirar',
+          statusColor: 'success',
+          date: '23/03/2025',
+          avatar: '/assets/images/avatar/avatar-group4.png'
+        }
+      ]
+    },
+    {
+      id: 'atencao',
+      title: 'REQUER ATENÇÃO',
+      color: 'danger',
+      icon: 'mdi:alert-decagram',
+      cards: [
+        {
+          id: '7',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Atenção exigida',
+          statusColor: 'danger',
+          date: '23/03/2025',
+          avatar: '/assets/images/avatar/avatar-group5.png'
+        }
+      ]
+    },
+    {
+      id: 'entregues',
+      title: 'ENTREGUES',
       color: 'success',
       icon: 'mdi:check-circle',
       cards: [
         {
-          id: '6',
-          name: 'Lucia Rodriguez',
-          product: 'Curso de Design',
-          status: 'Aprovado',
-          statusColor: 'success',
-          date: 'há 30 min',
-          avatar: '/assets/images/avatar/avatar-6.png'
-        },
-        {
-          id: '7',
-          name: 'Roberto Lima',
-          product: 'Consultoria Empresarial',
-          status: 'Aprovado',
-          statusColor: 'success',
-          date: 'há 1 hora',
-          avatar: '/assets/images/avatar/avatar-7.png'
-        },
-        {
           id: '8',
-          name: 'Fernanda Alves',
-          product: 'Treinamento de Vendas',
-          status: 'Aprovado',
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Entregue',
           statusColor: 'success',
-          date: 'há 2 horas',
-          avatar: '/assets/images/avatar/avatar-8.png'
-        }
-      ]
-    },
-    {
-      id: 'completed',
-      title: 'Concluídos',
-      color: 'primary',
-      icon: 'mdi:flag-checkered',
-      cards: [
+          date: '22/03/2025',
+          avatar: '/assets/images/avatar/avatar-group6.png'
+        },
         {
           id: '9',
-          name: 'Gabriel Santos',
-          product: 'Curso de Fotografia',
-          status: 'Concluído',
-          statusColor: 'primary',
-          date: 'ontem',
-          avatar: '/assets/images/avatar/avatar-9.png'
-        },
-        {
-          id: '10',
-          name: 'Isabela Costa',
-          product: 'Workshop de Empreendedorismo',
-          status: 'Concluído',
-          statusColor: 'primary',
-          date: 'há 2 dias',
-          avatar: '/assets/images/avatar/avatar-10.png'
-        }
-      ]
-    },
-    {
-      id: 'cancelled',
-      title: 'Cancelados',
-      color: 'danger',
-      icon: 'mdi:close-circle',
-      cards: [
-        {
-          id: '11',
-          name: 'Rafael Silva',
-          product: 'Curso de Inglês',
-          status: 'Cancelado',
-          statusColor: 'danger',
-          date: 'há 1 dia',
-          avatar: '/assets/images/avatar/avatar-11.png'
+          name: 'Carlos Araújo Martins',
+          product: '03 Pote Angolano + 01 Pote Francês + 03 Pote Angolano + 01 Pote Francês',
+          status: 'Entregue',
+          statusColor: 'success',
+          date: '22/03/2025',
+          avatar: '/assets/images/avatar/avatar-shape1.png'
         }
       ]
     }
@@ -466,24 +402,43 @@ const AfterPayLayer = () => {
             <div className="card-body">
               <div className="d-flex flex-column gap-3">
                 {summaryCards.map((card, index) => (
-                  <div key={index} className="rounded p-2" style={{ backgroundColor: card.bgColor }}>
+                  <div key={index} className="position-relative rounded p-3" style={{ 
+                    backgroundColor: card.bgColor,
+                    borderLeft: `4px solid ${index === 0 ? '#0d6efd' : index === 1 ? '#6f42c1' : '#fd7e14'}`
+                  }}>
                     <div className="d-flex justify-content-between align-items-start">
-                      <div className="flex-grow-1">
-                        <h6 className="text-muted mb-1 small fw-semibold" style={{ fontSize: '0.75rem' }}>{card.title}</h6>
-                        <h5 className="fw-bold mb-1" style={{ fontSize: '1.1rem' }}>{card.value}</h5>
+                                              <div className="flex-grow-1">
+                          <div className="text-muted mb-2" style={{ fontSize: '16px', fontWeight: 'normal', lineHeight: '1.2' }}>{card.title}</div>
+                          <div className="text-dark mb-2" style={{ fontSize: '24px', fontWeight: 'bold', lineHeight: '1.2' }}>{card.value}</div>
                         <div className="d-flex align-items-center gap-1">
-                          <Icon 
-                            icon={card.trend === 'up' ? 'mdi:trending-up' : 'mdi:trending-down'} 
-                            className={`text-${card.color}`} 
-                            style={{ fontSize: '0.875rem' }}
-                          />
-                          <span className={`text-${card.color} fw-semibold`} style={{ fontSize: '0.75rem' }}>
-                            {card.percentage} {card.comparison}
+                          <span className={`badge ${card.trend === 'up' ? 'bg-success' : 'bg-warning'} rounded-pill d-flex align-items-center`} style={{ 
+                            fontSize: '0.75rem', 
+                            padding: '4px 8px',
+                            gap: '2px'
+                          }}>
+                            <Icon 
+                              icon={card.trend === 'up' ? 'mdi:trending-up' : 'mdi:trending-down'} 
+                              style={{ fontSize: '0.875rem' }}
+                            />
+                            {card.percentage}
+                          </span>
+                          <span className="text-muted ms-1" style={{ fontSize: '0.8rem' }}>
+                            {card.comparison}
                           </span>
                         </div>
                       </div>
-                      <div className="d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
-                        <Icon icon={card.icon} className={`text-${card.color}`} style={{ fontSize: '1.25rem' }} />
+                      <div className="d-flex align-items-center justify-content-center rounded-circle" style={{ 
+                        width: '48px', 
+                        height: '48px',
+                        backgroundColor: index === 0 ? '#e3f2fd' : index === 1 ? '#f3e5f5' : '#fff3cd'
+                      }}>
+                        <Icon 
+                          icon={card.icon} 
+                          style={{ 
+                            fontSize: '1.5rem',
+                            color: index === 0 ? '#1976d2' : index === 1 ? '#7b1fa2' : '#f57c00'
+                          }} 
+                        />
                       </div>
                     </div>
                   </div>
@@ -608,45 +563,51 @@ const AfterPayLayer = () => {
                                 {...provided.dragHandleProps}
                                 style={{ 
                                   borderLeft: '4px solid #0d6efd',
-                                  borderRadius: '8px'
+                                  borderRadius: '8px',
+                                  minHeight: '140px'
                                 }}
                               >
                                 <div className="card-body p-3">
-                                  <div className="d-flex align-items-start justify-content-between mb-2">
-                                    <strong className="fw-bold" style={{ fontSize: '0.9rem' }}>{card.name}</strong>
+                                  <div className="d-flex align-items-start justify-content-between mb-3">
+                                    <strong className="fw-bold" style={{ fontSize: '1rem', lineHeight: '1.2' }}>{card.name}</strong>
                                     <img
                                       src={card.avatar}
                                       alt={card.name}
                                       className="rounded-circle"
-                                      width="40"
-                                      height="40"
+                                      width="48"
+                                      height="48"
                                     />
                                   </div>
-                                  <p className="small text-muted mb-2" style={{ fontSize: '0.8rem' }}>{card.product}</p>
-                                  <div className="mb-2">
+                                  <p className="text-muted mb-3" style={{ 
+                                    fontSize: '0.85rem', 
+                                    lineHeight: '1.3',
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden'
+                                  }}>{card.product}</p>
+                                  <div className="mb-3">
                                     <span className="badge rounded-pill" style={{ 
                                       backgroundColor: '#e3f2fd', 
                                       color: '#0d6efd',
-                                      fontSize: '0.75rem'
+                                      fontSize: '0.8rem',
+                                      padding: '6px 12px'
                                     }}>
                                       {card.status}
-                                      {card.subStatus && (
-                                        <span className="ms-1">• {card.subStatus}</span>
-                                      )}
                                     </span>
                                   </div>
                                   <div className="d-flex align-items-center justify-content-between">
-                                    <div className="d-flex align-items-center gap-1">
+                                    <div className="d-flex align-items-center gap-2">
                                       <div className="rounded-circle" style={{ 
                                         width: '8px', 
                                         height: '8px', 
                                         backgroundColor: '#0d6efd' 
                                       }}></div>
-                                      <small className="text-muted" style={{ fontSize: '0.75rem' }}>
+                                      <small className="text-muted" style={{ fontSize: '0.8rem' }}>
                                         Pedido realizado
                                       </small>
                                     </div>
-                                    <small className="text-muted" style={{ fontSize: '0.75rem' }}>
+                                    <small className="text-muted" style={{ fontSize: '0.8rem' }}>
                                       {card.date}
                                     </small>
                                   </div>
