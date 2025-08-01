@@ -1,6 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
-import { ProductValidator, ValidationUtils } from '../../utils/validation';
 import EnhancedFileUpload from './EnhancedFileUpload';
 
 const ProductPlansManager = ({ 
@@ -41,30 +40,22 @@ const ProductPlansManager = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('store'); // store, payment, affiliation, files, terms
 
-  // Validação em tempo real
-  const validateField = useCallback(
-    ValidationUtils.debounce((fieldName, value) => {
-      const fieldValidation = ProductValidator.validateForm({ [fieldName]: value });
-      if (!fieldValidation.isValid) {
-        setErrors(prev => ({
-          ...prev,
-          [fieldName]: fieldValidation.errors[fieldName]
-        }));
-      } else {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[fieldName];
-          return newErrors;
-        });
-      }
-    }, 300),
-    []
-  );
-
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setTouched(prev => ({ ...prev, [field]: true }));
-    validateField(field, value);
+    
+    // Validação simples
+    if (field === 'name' && !value) {
+      setErrors(prev => ({ ...prev, name: 'Nome do plano é obrigatório' }));
+    } else if (field === 'price' && (!value || parseFloat(value) <= 0)) {
+      setErrors(prev => ({ ...prev, price: 'Preço deve ser maior que zero' }));
+    } else {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   const handleAffiliateCommissionChange = (field, value) => {
