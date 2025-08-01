@@ -56,17 +56,17 @@ export const productsAPI = {
 
 // APIs de Planos
 export const plansAPI = {
-  // Obter planos de um produto
-  getByProduct: (productId) => api.get(`/products/${productId}/plans`),
+  // Buscar planos de um produto
+  getByProduct: (productId) => api.get(`/api/products/${productId}/plans`),
   
-  // Criar plano
-  create: (productId, data) => api.post(`/products/${productId}/plans`, data),
+  // Criar novo plano
+  create: (productId, data) => api.post(`/api/products/${productId}/plans`, data),
   
   // Atualizar plano
-  update: (productId, planId, data) => api.put(`/products/${productId}/plans/${planId}`, data),
+  update: (productId, planId, data) => api.put(`/api/products/${productId}/plans/${planId}`, data),
   
-  // Deletar plano
-  delete: (productId, planId) => api.delete(`/products/${productId}/plans/${planId}`),
+  // Excluir plano
+  delete: (productId, planId) => api.delete(`/api/products/${productId}/plans/${planId}`)
 };
 
 // APIs de Checkouts

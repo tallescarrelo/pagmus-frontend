@@ -5,6 +5,7 @@ import MasterLayout from "../../masterLayout/MasterLayout";
 import Breadcrumb from "../../components/Breadcrumb";
 import ProductPlansManager from "../../components/products/ProductPlansManager";
 import { useAuth } from "../../contexts/AuthContext";
+import ProductsServices from "../../services/api/products";
 
 const ProductPlansPage = () => {
   const { productId } = useParams();
@@ -16,53 +17,22 @@ const ProductPlansPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Simular carregamento de dados do produto
+  // Carregar dados reais do produto e planos
   useEffect(() => {
     const loadProductData = async () => {
       try {
         setLoading(true);
         
-        // Simular dados do produto (em produção, seria uma chamada API)
-        const mockProduct = {
-          id: productId || 1,
-          name: "Produto Teste",
-          description: "Descrição do produto teste",
-          price: 99.99,
-          user_id: getUserId()
-        };
-
-        // Simular dados dos planos (em produção, seria uma chamada API)
-        const mockPlans = [
-          {
-            id: 1,
-            name: "Plano Básico",
-            description: "Acesso básico ao conteúdo",
-            price: 49.99,
-            original_price: 99.99,
-            max_installments: 6,
-            is_featured: false,
-            is_active: true,
-            product_id: productId || 1,
-            created_at: "2024-01-15T10:30:00Z",
-            updated_at: "2024-01-15T10:30:00Z"
-          },
-          {
-            id: 2,
-            name: "Plano Premium",
-            description: "Acesso completo com bônus exclusivos",
-            price: 99.99,
-            original_price: 199.99,
-            max_installments: 12,
-            is_featured: true,
-            is_active: true,
-            product_id: productId || 1,
-            created_at: "2024-01-15T10:30:00Z",
-            updated_at: "2024-01-15T10:30:00Z"
-          }
-        ];
-
-        setProduct(mockProduct);
-        setPlans(mockPlans);
+        // Buscar dados do produto
+        const productResponse = await ProductsServices.getProduct(productId);
+        const productData = productResponse.data;
+        
+        // Buscar planos do produto
+        const plansResponse = await ProductsServices.plansAPI.getByProduct(productId);
+        const plansData = plansResponse.data.data;
+        
+        setProduct(productData);
+        setPlans(plansData);
         
       } catch (error) {
         console.error('Erro ao carregar dados do produto:', error);
@@ -72,18 +42,27 @@ const ProductPlansPage = () => {
       }
     };
 
-    loadProductData();
-  }, [productId, getUserId]);
+    if (productId) {
+      loadProductData();
+    }
+  }, [productId]);
 
   const handlePlansUpdate = async (updatedPlans) => {
     try {
-      // Em produção, aqui você faria uma chamada para a API
-      console.log('Planos atualizados:', updatedPlans);
+      // Atualizar planos na API
+      for (const plan of updatedPlans) {
+        if (plan.id) {
+          // Atualizar plano existente
+          await ProductsServices.plansAPI.update(productId, plan.id, plan);
+        } else {
+          // Criar novo plano
+          await ProductsServices.plansAPI.create(productId, plan);
+        }
+      }
       
-      // Simular delay da API
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setPlans(updatedPlans);
+      // Recarregar planos
+      const plansResponse = await ProductsServices.plansAPI.getByProduct(productId);
+      setPlans(plansResponse.data.data);
       
       // Mostrar mensagem de sucesso
       alert('Planos atualizados com sucesso!');
@@ -101,11 +80,13 @@ const ProductPlansPage = () => {
   if (loading) {
     return (
       <MasterLayout>
-        <div className="loading-container">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Carregando...</span>
+        <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Carregando...</span>
+            </div>
+            <p className="mt-3">Carregando dados do produto...</p>
           </div>
-          <p className="mt-3">Carregando dados do produto...</p>
         </div>
       </MasterLayout>
     );
@@ -114,7 +95,7 @@ const ProductPlansPage = () => {
   if (error) {
     return (
       <MasterLayout>
-        <div className="error-container">
+        <div className="container-fluid">
           <div className="alert alert-danger" role="alert">
             <h4 className="alert-heading">Erro!</h4>
             <p>{error}</p>
@@ -134,7 +115,7 @@ const ProductPlansPage = () => {
   if (!product) {
     return (
       <MasterLayout>
-        <div className="not-found-container">
+        <div className="container-fluid">
           <div className="alert alert-warning" role="alert">
             <h4 className="alert-heading">Produto não encontrado</h4>
             <p>O produto que você está procurando não foi encontrado.</p>
@@ -194,7 +175,7 @@ const ProductPlansPage = () => {
         <div className="row">
           <div className="col-12">
             <ProductPlansManager
-              productId={productId || product.id}
+              productId={productId}
               plans={plans}
               onPlansUpdate={handlePlansUpdate}
               className="mt-4"

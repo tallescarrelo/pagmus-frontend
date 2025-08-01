@@ -66,6 +66,10 @@ const Viewproduct = ({ product: propProduct }) => {
   const [realAffiliates, setRealAffiliates] = useState([]);
   const [loadingAffiliates, setLoadingAffiliates] = useState(false);
 
+  // Estado para dados reais dos planos
+  const [realPlans, setRealPlans] = useState([]);
+  const [loadingPlans, setLoadingPlans] = useState(false);
+
   // Carregar afiliados reais do produto
   useEffect(() => {
     const loadAffiliates = async () => {
@@ -83,6 +87,25 @@ const Viewproduct = ({ product: propProduct }) => {
     };
 
     loadAffiliates();
+  }, [product?.id]);
+
+  // Carregar planos reais do produto
+  useEffect(() => {
+    const loadPlans = async () => {
+      if (product?.id) {
+        setLoadingPlans(true);
+        try {
+          const plans = await ProductRelatedServices.getProductPlans(product.id);
+          setRealPlans(plans);
+        } catch (error) {
+          console.error('Erro ao carregar planos:', error);
+        } finally {
+          setLoadingPlans(false);
+        }
+      }
+    };
+
+    loadPlans();
   }, [product?.id]);
 
   const mockInvites = [
@@ -107,7 +130,6 @@ const Viewproduct = ({ product: propProduct }) => {
     { id: "condicoes-pagamento", label: "Condições de Pagamentos", icon: "mdi:credit-card" },
     { id: "afiliacao", label: "Afiliação", icon: "mdi:account-group" },
     { id: "arquivos", label: "Arquivos/Ebooks", icon: "mdi:file-download" },
-    { id: "order-bump", label: "Order Bump", icon: "mdi:trending-up" },
     { id: "termos", label: "Termos e Condições", icon: "mdi:file-document" }
   ];
 
@@ -955,15 +977,11 @@ const Viewproduct = ({ product: propProduct }) => {
             </div>
             <div className="d-flex gap-2">
               <Button 
-                variant="outline-primary" 
+                variant="primary" 
                 onClick={() => window.location.href = `/products/${product?.id || affiliate?.product?.id}/plans`}
               >
-                <Icon icon="mdi:package-variant" className="me-2" />
-                Gerenciar Planos
-              </Button>
-              <Button variant="primary" onClick={() => setShowNewPlanModal(true)}>
-                <Icon icon="mdi:plus" className="me-2" />
-                Novo Plano
+                <Icon icon="mdi:pencil" className="me-2" />
+                Editar Planos
               </Button>
             </div>
           </div>
@@ -982,27 +1000,57 @@ const Viewproduct = ({ product: propProduct }) => {
                 </tr>
               </thead>
               <tbody>
-                {sampleData.map((plan, index) => (
-                  <tr key={index}>
-                    <td><code>{plan.code}</code></td>
-                    <td>{plan.name}</td>
-                    <td>{plan.items}</td>
-                    <td><span className="fw-bold text-success">{plan.price}</span></td>
-                    <td><span className="badge bg-success-subtle text-success">{plan.visible}</span></td>
-                    <td><span className="badge bg-primary-subtle text-primary">{plan.status}</span></td>
-                    <td>{plan.sales}</td>
-                    <td>
-                      <div className="btn-group btn-group-sm">
-                        <Button variant="outline-primary" size="sm" title="Editar">
-                          <Icon icon="mdi:pencil" />
-                        </Button>
-                        <Button variant="outline-danger" size="sm" title="Excluir">
-                          <Icon icon="mdi:delete" />
-                        </Button>
+                {loadingPlans ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-4">
+                      <div className="spinner-border spinner-border-sm text-primary me-2" role="status">
+                        <span className="visually-hidden">Carregando...</span>
                       </div>
+                      Carregando planos...
                     </td>
                   </tr>
-                ))}
+                ) : realPlans.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-4 text-muted">
+                      Nenhum plano encontrado para este produto.
+                    </td>
+                  </tr>
+                ) : (
+                  realPlans.map((plan) => (
+                    <tr key={plan.id}>
+                      <td><code>#{plan.id}</code></td>
+                      <td>{plan.name}</td>
+                      <td>1</td>
+                      <td><span className="fw-bold text-success">{formatCurrency(plan.price)}</span></td>
+                      <td>
+                        <span className={`badge ${plan.available_for_sale ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'}`}>
+                          {plan.available_for_sale ? 'VISÍVEL' : 'OCULTO'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`badge ${plan.status === 'active' ? 'bg-primary-subtle text-primary' : 'bg-secondary-subtle text-secondary'}`}>
+                          {plan.status === 'active' ? 'ATIVO' : 'INATIVO'}
+                        </span>
+                      </td>
+                      <td>0</td>
+                      <td>
+                        <div className="btn-group btn-group-sm">
+                          <Button 
+                            variant="outline-primary" 
+                            size="sm" 
+                            title="Editar"
+                            onClick={() => window.location.href = `/products/${product?.id}/plans`}
+                          >
+                            <Icon icon="mdi:pencil" />
+                          </Button>
+                          <Button variant="outline-danger" size="sm" title="Excluir">
+                            <Icon icon="mdi:delete" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </Table>
           </div>

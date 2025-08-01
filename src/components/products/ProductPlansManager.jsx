@@ -18,26 +18,28 @@ const ProductPlansManager = ({
     original_price: '',
     max_installments: '',
     max_installments_no_interest: '',
-    is_featured: false,
-    is_active: true,
+    featured: false,
+    available_for_sale: true,
     files: [],
-    order_bump: {
-      enabled: false,
-      title: '',
-      description: '',
-      price: '',
-      original_price: ''
-    },
     terms_conditions: '',
     affiliate_commission: {
       type: 'percentage',
       value: ''
-    }
+    },
+    // Configuração da Loja
+    payment_discount_enabled: false,
+    billing_type: 'single',
+    boleto_installments_enabled: false,
+    boleto_notification_enabled: true,
+    custom_commission_enabled: false,
+    hide_from_affiliates: false,
+    watermark_enabled: false
   });
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState('store'); // store, payment, affiliation, files, terms
 
   // Validação em tempo real
   const validateField = useCallback(
@@ -63,13 +65,6 @@ const ProductPlansManager = ({
     setFormData(prev => ({ ...prev, [field]: value }));
     setTouched(prev => ({ ...prev, [field]: true }));
     validateField(field, value);
-  };
-
-  const handleOrderBumpChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      order_bump: { ...prev.order_bump, [field]: value }
-    }));
   };
 
   const handleAffiliateCommissionChange = (field, value) => {
@@ -98,19 +93,15 @@ const ProductPlansManager = ({
     
     if (!formData.name) planErrors.name = 'Nome do plano é obrigatório';
     if (!formData.price) planErrors.price = 'Preço é obrigatório';
-    if (formData.max_installments && (formData.max_installments < 1 || formData.max_installments > 12)) {
-      planErrors.max_installments = 'Parcelas devem ser entre 1 e 12';
-    }
-    if (formData.affiliate_commission.value && !formData.affiliate_commission.value) {
-      planErrors.affiliate_commission_value = 'Valor da comissão é obrigatório';
+    if (formData.price && parseFloat(formData.price) <= 0) {
+      planErrors.price = 'Preço deve ser maior que zero';
     }
     
     setErrors(planErrors);
     return Object.keys(planErrors).length === 0;
   };
 
-  const handleCreatePlan = () => {
-    setEditingPlan(null);
+  const resetForm = () => {
     setFormData({
       name: '',
       description: '',
@@ -118,24 +109,30 @@ const ProductPlansManager = ({
       original_price: '',
       max_installments: '',
       max_installments_no_interest: '',
-      is_featured: false,
-      is_active: true,
+      featured: false,
+      available_for_sale: true,
       files: [],
-      order_bump: {
-        enabled: false,
-        title: '',
-        description: '',
-        price: '',
-        original_price: ''
-      },
       terms_conditions: '',
       affiliate_commission: {
         type: 'percentage',
         value: ''
-      }
+      },
+      payment_discount_enabled: false,
+      billing_type: 'single',
+      boleto_installments_enabled: false,
+      boleto_notification_enabled: true,
+      custom_commission_enabled: false,
+      hide_from_affiliates: false,
+      watermark_enabled: false
     });
     setErrors({});
     setTouched({});
+    setActiveTab('store');
+  };
+
+  const handleCreatePlan = () => {
+    setEditingPlan(null);
+    resetForm();
     setShowCreateModal(true);
   };
 
@@ -144,28 +141,29 @@ const ProductPlansManager = ({
     setFormData({
       name: plan.name || '',
       description: plan.description || '',
-      price: plan.price || '',
-      original_price: plan.original_price || '',
-      max_installments: plan.max_installments || '',
-      max_installments_no_interest: plan.max_installments_no_interest || '',
-      is_featured: plan.is_featured || false,
-      is_active: plan.is_active !== undefined ? plan.is_active : true,
+      price: plan.price ? plan.price.toString() : '',
+      original_price: plan.original_price ? plan.original_price.toString() : '',
+      max_installments: plan.max_installments ? plan.max_installments.toString() : '',
+      max_installments_no_interest: plan.max_installments_no_interest ? plan.max_installments_no_interest.toString() : '',
+      featured: plan.featured || false,
+      available_for_sale: plan.available_for_sale !== false,
       files: plan.files || [],
-      order_bump: plan.order_bump || {
-        enabled: false,
-        title: '',
-        description: '',
-        price: '',
-        original_price: ''
-      },
       terms_conditions: plan.terms_conditions || '',
-      affiliate_commission: plan.affiliate_commission || {
+      affiliate_commission: {
         type: 'percentage',
-        value: ''
-      }
+        value: plan.commission_rate ? plan.commission_rate.toString() : ''
+      },
+      payment_discount_enabled: plan.payment_discount_enabled || false,
+      billing_type: plan.billing_type || 'single',
+      boleto_installments_enabled: plan.boleto_installments_enabled || false,
+      boleto_notification_enabled: plan.boleto_notification_enabled !== false,
+      custom_commission_enabled: plan.custom_commission_enabled || false,
+      hide_from_affiliates: plan.hide_from_affiliates || false,
+      watermark_enabled: plan.watermark_enabled || false
     });
     setErrors({});
     setTouched({});
+    setActiveTab('store');
     setShowCreateModal(true);
   };
 
@@ -183,412 +181,507 @@ const ProductPlansManager = ({
     
     try {
       const planData = {
-        ...formData,
-        id: editingPlan ? editingPlan.id : Date.now(),
-        product_id: productId,
-        created_at: editingPlan ? editingPlan.created_at : new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        name: formData.name,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        original_price: formData.original_price ? parseFloat(formData.original_price) : null,
+        commission_rate: formData.affiliate_commission.value ? parseFloat(formData.affiliate_commission.value) : 0,
+        featured: formData.featured,
+        available_for_sale: formData.available_for_sale,
+        max_installments: formData.max_installments ? parseInt(formData.max_installments) : 12,
+        max_installments_no_interest: formData.max_installments_no_interest ? parseInt(formData.max_installments_no_interest) : 1,
+        payment_discount_enabled: formData.payment_discount_enabled,
+        billing_type: formData.billing_type,
+        boleto_installments_enabled: formData.boleto_installments_enabled,
+        boleto_notification_enabled: formData.boleto_notification_enabled,
+        custom_commission_enabled: formData.custom_commission_enabled,
+        hide_from_affiliates: formData.hide_from_affiliates,
+        terms_conditions: formData.terms_conditions,
+        watermark_enabled: formData.watermark_enabled
       };
 
       let updatedPlans;
+      
       if (editingPlan) {
-        // Editar plano existente
+        // Atualizar plano existente
         updatedPlans = plans.map(plan => 
-          plan.id === editingPlan.id ? planData : plan
+          plan.id === editingPlan.id ? { ...plan, ...planData } : plan
         );
       } else {
         // Criar novo plano
-        updatedPlans = [...plans, planData];
+        const newPlan = {
+          id: Date.now(), // ID temporário
+          ...planData,
+          product_id: productId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        updatedPlans = [...plans, newPlan];
       }
-
+      
       await onPlansUpdate(updatedPlans);
       setShowCreateModal(false);
-      setEditingPlan(null);
+      resetForm();
       
     } catch (error) {
       console.error('Erro ao salvar plano:', error);
-      setErrors({ submit: 'Erro ao salvar plano. Tente novamente.' });
+      alert('Erro ao salvar plano. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const getFieldError = (fieldName) => {
-    return touched[fieldName] && errors[fieldName];
+    return errors[fieldName] && touched[fieldName] ? errors[fieldName] : '';
   };
 
   const isFieldValid = (fieldName) => {
-    return touched[fieldName] && !errors[fieldName] && formData[fieldName];
+    return touched[fieldName] && !errors[fieldName];
   };
 
   const formatCurrency = (value) => {
     if (!value) return '';
-    const numericValue = parseFloat(value);
-    if (isNaN(numericValue)) return value;
-    return numericValue.toLocaleString('pt-BR', {
+    return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
-    });
+    }).format(value);
   };
 
   const handleCurrencyInput = (value) => {
-    const numericValue = value.replace(/[^\d,]/g, '').replace(',', '.');
-    const floatValue = parseFloat(numericValue);
-    
-    if (!isNaN(floatValue)) {
-      return formatCurrency(floatValue);
-    }
-    return value;
+    // Remover caracteres não numéricos exceto vírgula e ponto
+    const cleanValue = value.replace(/[^\d,.]/g, '');
+    // Converter vírgula para ponto
+    const normalizedValue = cleanValue.replace(',', '.');
+    return normalizedValue;
   };
 
   const renderPlanCard = (plan) => (
-    <div key={plan.id} className="plan-card">
-      <div className="plan-header">
-        <div className="plan-info">
-          <h5 className="plan-name">{plan.name}</h5>
-          <div className="plan-price">
-            <span className="current-price">{formatCurrency(plan.price)}</span>
-            {plan.original_price && plan.original_price > plan.price && (
-              <span className="original-price">{formatCurrency(plan.original_price)}</span>
-            )}
+    <div key={plan.id} className="col-md-6 col-lg-4 mb-4">
+      <div className="card h-100">
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <h6 className="card-title mb-0">{plan.name}</h6>
+          <div className="btn-group btn-group-sm">
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => handleEditPlan(plan)}
+              title="Editar"
+            >
+              <Icon icon="mdi:pencil" />
+            </button>
+            <button
+              className="btn btn-outline-danger"
+              onClick={() => handleDeletePlan(plan.id)}
+              title="Excluir"
+            >
+              <Icon icon="mdi:delete" />
+            </button>
           </div>
         </div>
-        <div className="plan-actions">
-          <button
-            className="btn btn-sm btn-outline-primary"
-            onClick={() => handleEditPlan(plan)}
-          >
-            <Icon icon="mdi:pencil" />
-          </button>
-          <button
-            className="btn btn-sm btn-outline-danger"
-            onClick={() => handleDeletePlan(plan.id)}
-          >
-            <Icon icon="mdi:delete" />
-          </button>
+        <div className="card-body">
+          <p className="card-text text-muted">{plan.description}</p>
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <strong className="text-success">{formatCurrency(plan.price)}</strong>
+              {plan.original_price && plan.original_price > plan.price && (
+                <small className="text-muted text-decoration-line-through ms-2">
+                  {formatCurrency(plan.original_price)}
+                </small>
+              )}
+            </div>
+            <span className={`badge ${plan.featured ? 'bg-warning' : 'bg-secondary'}`}>
+              {plan.featured ? 'Destaque' : 'Padrão'}
+            </span>
+          </div>
+          <div className="mt-2">
+            <small className="text-muted">
+              Parcelas: até {plan.max_installments || 12}x
+            </small>
+          </div>
         </div>
-      </div>
-      
-      <div className="plan-details">
-        {plan.description && (
-          <p className="plan-description">{plan.description}</p>
-        )}
-        
-        <div className="plan-features">
-          {plan.max_installments && (
-            <span className="feature">
-              <Icon icon="mdi:credit-card" />
-              Até {plan.max_installments}x
-            </span>
-          )}
-          
-          {plan.is_featured && (
-            <span className="feature featured">
-              <Icon icon="mdi:star" />
-              Destaque
-            </span>
-          )}
-          
-          <span className={`feature status ${plan.is_active ? 'active' : 'inactive'}`}>
-            <Icon icon={plan.is_active ? "mdi:check-circle" : "mdi:cancel"} />
-            {plan.is_active ? 'Ativo' : 'Inativo'}
-          </span>
+        <div className="card-footer">
+          <small className={`text-${plan.available_for_sale ? 'success' : 'danger'}`}>
+            {plan.available_for_sale ? 'Disponível' : 'Indisponível'}
+          </small>
         </div>
       </div>
     </div>
   );
 
   const renderModal = () => (
-    <div className={`plan-modal ${showCreateModal ? 'show' : ''}`}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h4 className="modal-title">
-            <Icon icon="mdi:package-variant" />
-            {editingPlan ? 'Editar Plano' : 'Novo Plano'}
-          </h4>
-          <button
-            className="btn-close"
-            onClick={() => setShowCreateModal(false)}
-          >
-            <Icon icon="mdi:close" />
-          </button>
-        </div>
-        
-        <div className="modal-body">
-          <div className="form-section">
-            <h5 className="section-title">Informações Básicas</h5>
-            
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="form-label">
-                    Nome do Plano *
-                    {isFieldValid('name') && (
-                      <Icon icon="mdi:check-circle" className="valid-icon" />
-                    )}
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${getFieldError('name') ? 'is-invalid' : ''} ${isFieldValid('name') ? 'is-valid' : ''}`}
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    placeholder="Digite o nome do plano"
-                  />
-                  {getFieldError('name') && (
-                    <div className="invalid-feedback">{getFieldError('name')}</div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="form-label">
-                    Preço *
-                    {isFieldValid('price') && (
-                      <Icon icon="mdi:check-circle" className="valid-icon" />
-                    )}
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${getFieldError('price') ? 'is-invalid' : ''} ${isFieldValid('price') ? 'is-valid' : ''}`}
-                    value={formData.price}
-                    onChange={(e) => handleInputChange('price', handleCurrencyInput(e.target.value))}
-                    placeholder="R$ 0,00"
-                  />
-                  {getFieldError('price') && (
-                    <div className="invalid-feedback">{getFieldError('price')}</div>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            <div className="form-group">
-              <label className="form-label">Descrição</label>
-              <textarea
-                className="form-control"
-                value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Descreva os benefícios do plano"
-                rows={3}
-              />
-            </div>
-            
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="form-label">Preço Original</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={formData.original_price}
-                    onChange={(e) => handleInputChange('original_price', handleCurrencyInput(e.target.value))}
-                    placeholder="R$ 0,00"
-                  />
-                  <div className="form-text">
-                    Preço riscado para mostrar desconto
-                  </div>
-                </div>
-              </div>
-              
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="form-label">Máximo de Parcelas</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={formData.max_installments}
-                    onChange={(e) => handleInputChange('max_installments', e.target.value)}
-                    placeholder="12"
-                    min="1"
-                    max="12"
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div className="form-group">
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="is_featured"
-                  checked={formData.is_featured}
-                  onChange={(e) => handleInputChange('is_featured', e.target.checked)}
-                />
-                <label className="form-check-label" htmlFor="is_featured">
-                  Plano em destaque
-                </label>
-              </div>
-            </div>
-            
-            <div className="form-group">
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="is_active"
-                  checked={formData.is_active}
-                  onChange={(e) => handleInputChange('is_active', e.target.checked)}
-                />
-                <label className="form-check-label" htmlFor="is_active">
-                  Plano ativo
-                </label>
-              </div>
-            </div>
+    <div className={`modal fade ${showCreateModal ? 'show' : ''}`} 
+         style={{ display: showCreateModal ? 'block' : 'none' }}
+         tabIndex="-1">
+      <div className="modal-dialog modal-xl">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">
+              {editingPlan ? 'Editar Plano' : 'Criar Novo Plano'}
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={() => setShowCreateModal(false)}
+            />
           </div>
-          
-          <div className="form-section">
-            <h5 className="section-title">Order Bump</h5>
-            
-            <div className="form-group">
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="order_bump_enabled"
-                  checked={formData.order_bump.enabled}
-                  onChange={(e) => handleOrderBumpChange('enabled', e.target.checked)}
-                />
-                <label className="form-check-label" htmlFor="order_bump_enabled">
-                  Ativar Order Bump
-                </label>
-              </div>
-            </div>
-            
-            {formData.order_bump.enabled && (
-              <div className="order-bump-fields">
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="form-group">
-                      <label className="form-label">Título do Order Bump</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={formData.order_bump.title}
-                        onChange={(e) => handleOrderBumpChange('title', e.target.value)}
-                        placeholder="Título do produto adicional"
-                      />
+          <div className="modal-body">
+            {/* Tabs de Navegação */}
+            <ul className="nav nav-tabs mb-3">
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${activeTab === 'store' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('store')}
+                >
+                  <Icon icon="mdi:store" />
+                  Configuração da Loja
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${activeTab === 'payment' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('payment')}
+                >
+                  <Icon icon="mdi:credit-card" />
+                  Condições de Pagamento
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${activeTab === 'affiliation' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('affiliation')}
+                >
+                  <Icon icon="mdi:account-group" />
+                  Afiliação
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${activeTab === 'files' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('files')}
+                >
+                  <Icon icon="mdi:file-document" />
+                  Arquivos e Ebooks
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${activeTab === 'terms' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('terms')}
+                >
+                  <Icon icon="mdi:file-document-edit" />
+                  Termos
+                </button>
+              </li>
+            </ul>
+
+            {/* Conteúdo das Tabs */}
+            <div className="tab-content">
+              {/* Configuração da Loja */}
+              {activeTab === 'store' && (
+                <div className="tab-pane active">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Nome do Plano *</label>
+                        <input
+                          type="text"
+                          className={`form-control ${getFieldError('name') ? 'is-invalid' : isFieldValid('name') ? 'is-valid' : ''}`}
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          placeholder="Ex: Plano Básico"
+                        />
+                        {getFieldError('name') && (
+                          <div className="invalid-feedback">{getFieldError('name')}</div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Preço *</label>
+                        <input
+                          type="text"
+                          className={`form-control ${getFieldError('price') ? 'is-invalid' : isFieldValid('price') ? 'is-valid' : ''}`}
+                          value={formData.price}
+                          onChange={(e) => handleInputChange('price', handleCurrencyInput(e.target.value))}
+                          placeholder="0,00"
+                        />
+                        {getFieldError('price') && (
+                          <div className="invalid-feedback">{getFieldError('price')}</div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="col-md-6">
-                    <div className="form-group">
-                      <label className="form-label">Preço do Order Bump</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={formData.order_bump.price}
-                        onChange={(e) => handleOrderBumpChange('price', handleCurrencyInput(e.target.value))}
-                        placeholder="R$ 0,00"
-                      />
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Preço Original</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={formData.original_price}
+                          onChange={(e) => handleInputChange('original_price', handleCurrencyInput(e.target.value))}
+                          placeholder="0,00"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Descrição</label>
+                        <textarea
+                          className="form-control"
+                          value={formData.description}
+                          onChange={(e) => handleInputChange('description', e.target.value)}
+                          rows="3"
+                          placeholder="Descreva os benefícios do plano..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.featured}
+                            onChange={(e) => handleInputChange('featured', e.target.checked)}
+                          />
+                          <label className="form-check-label">Plano em Destaque</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.available_for_sale}
+                            onChange={(e) => handleInputChange('available_for_sale', e.target.checked)}
+                          />
+                          <label className="form-check-label">Disponível para Venda</label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                
-                <div className="form-group">
-                  <label className="form-label">Descrição do Order Bump</label>
-                  <textarea
-                    className="form-control"
-                    value={formData.order_bump.description}
-                    onChange={(e) => handleOrderBumpChange('description', e.target.value)}
-                    placeholder="Descrição do produto adicional"
-                    rows={2}
-                  />
+              )}
+
+              {/* Condições de Pagamento */}
+              {activeTab === 'payment' && (
+                <div className="tab-pane active">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Máximo de Parcelas</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={formData.max_installments}
+                          onChange={(e) => handleInputChange('max_installments', e.target.value)}
+                          min="1"
+                          max="24"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Parcelas sem Juros</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={formData.max_installments_no_interest}
+                          onChange={(e) => handleInputChange('max_installments_no_interest', e.target.value)}
+                          min="1"
+                          max="12"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Tipo de Cobrança</label>
+                        <select
+                          className="form-select"
+                          value={formData.billing_type}
+                          onChange={(e) => handleInputChange('billing_type', e.target.value)}
+                        >
+                          <option value="single">Pagamento Único</option>
+                          <option value="recurring">Recorrente</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.payment_discount_enabled}
+                            onChange={(e) => handleInputChange('payment_discount_enabled', e.target.checked)}
+                          />
+                          <label className="form-check-label">Habilitar Desconto no Pagamento</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.boleto_installments_enabled}
+                            onChange={(e) => handleInputChange('boleto_installments_enabled', e.target.checked)}
+                          />
+                          <label className="form-check-label">Parcelamento no Boleto</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.boleto_notification_enabled}
+                            onChange={(e) => handleInputChange('boleto_notification_enabled', e.target.checked)}
+                          />
+                          <label className="form-check-label">Notificação de Boleto</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-          
-          <div className="form-section">
-            <h5 className="section-title">Comissionamento de Afiliados</h5>
-            
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="form-label">Tipo de Comissão</label>
-                  <select
-                    className="form-control"
-                    value={formData.affiliate_commission.type}
-                    onChange={(e) => handleAffiliateCommissionChange('type', e.target.value)}
-                  >
-                    <option value="percentage">Porcentagem (%)</option>
-                    <option value="fixed">Valor Fixo (R$)</option>
-                  </select>
+              )}
+
+              {/* Afiliação */}
+              {activeTab === 'affiliation' && (
+                <div className="tab-pane active">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Taxa de Comissão (%)</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={formData.affiliate_commission.value}
+                          onChange={(e) => handleAffiliateCommissionChange('value', e.target.value)}
+                          min="0"
+                          max="100"
+                          step="0.01"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.custom_commission_enabled}
+                            onChange={(e) => handleInputChange('custom_commission_enabled', e.target.checked)}
+                          />
+                          <label className="form-check-label">Comissão Personalizada</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.hide_from_affiliates}
+                            onChange={(e) => handleInputChange('hide_from_affiliates', e.target.checked)}
+                          />
+                          <label className="form-check-label">Ocultar dos Afiliados</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={formData.watermark_enabled}
+                            onChange={(e) => handleInputChange('watermark_enabled', e.target.checked)}
+                          />
+                          <label className="form-check-label">Habilitar Watermark</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="form-label">Valor da Comissão</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={formData.affiliate_commission.value}
-                    onChange={(e) => handleAffiliateCommissionChange('value', e.target.value)}
-                    placeholder={formData.affiliate_commission.type === 'percentage' ? '25' : 'R$ 50,00'}
-                  />
+              )}
+
+              {/* Arquivos e Ebooks */}
+              {activeTab === 'files' && (
+                <div className="tab-pane active">
+                  <div className="mb-3">
+                    <label className="form-label">Arquivos do Plano</label>
+                    <EnhancedFileUpload
+                      onFileUpload={handleFileUpload}
+                      onFileRemove={handleFileRemove}
+                      files={formData.files}
+                      accept=".pdf,.doc,.docx,.zip,.rar"
+                      maxFiles={10}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Termos */}
+              {activeTab === 'terms' && (
+                <div className="tab-pane active">
+                  <div className="mb-3">
+                    <label className="form-label">Termos e Condições</label>
+                    <textarea
+                      className="form-control"
+                      value={formData.terms_conditions}
+                      onChange={(e) => handleInputChange('terms_conditions', e.target.value)}
+                      rows="8"
+                      placeholder="Digite os termos e condições específicos deste plano..."
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          
-          <div className="form-section">
-            <h5 className="section-title">Arquivos do Plano</h5>
-            
-            <EnhancedFileUpload
-              onFileUpload={handleFileUpload}
-              onFileRemove={handleFileRemove}
-              accept="image/*,.pdf,.doc,.docx,.zip,.rar"
-              maxSize={50 * 1024 * 1024}
-              maxFiles={10}
-              multiple={true}
-              showPreview={true}
-            />
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setShowCreateModal(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" />
+                  Salvando...
+                </>
+              ) : (
+                editingPlan ? 'Atualizar Plano' : 'Criar Plano'
+              )}
+            </button>
           </div>
-          
-          <div className="form-section">
-            <h5 className="section-title">Termos e Condições</h5>
-            
-            <div className="form-group">
-              <textarea
-                className="form-control"
-                value={formData.terms_conditions}
-                onChange={(e) => handleInputChange('terms_conditions', e.target.value)}
-                placeholder="Termos e condições específicos deste plano"
-                rows={4}
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => setShowCreateModal(false)}
-            disabled={isSubmitting}
-          >
-            Cancelar
-          </button>
-          
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Icon icon="mdi:loading" className="spinning" />
-                Salvando...
-              </>
-            ) : (
-              <>
-                <Icon icon="mdi:content-save" />
-                {editingPlan ? 'Atualizar' : 'Criar'} Plano
-              </>
-            )}
-          </button>
         </div>
       </div>
     </div>
@@ -596,38 +689,46 @@ const ProductPlansManager = ({
 
   return (
     <div className={`product-plans-manager ${className}`}>
-      <div className="plans-header">
-        <div className="plans-title">
-          <h4>
-            <Icon icon="mdi:package-variant" />
-            Planos do Produto
-          </h4>
-          <p className="text-muted">
-            Gerencie os planos e ofertas do seu produto
+      {/* Header */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h4 className="mb-1">Planos do Produto</h4>
+          <p className="text-muted mb-0">
+            Gerencie os planos e ofertas disponíveis para este produto
           </p>
         </div>
-        
         <button
           className="btn btn-primary"
           onClick={handleCreatePlan}
         >
           <Icon icon="mdi:plus" />
-          Novo Plano
+          Criar Novo Plano
         </button>
       </div>
-      
-      <div className="plans-grid">
-        {plans.length === 0 ? (
-          <div className="empty-state">
-            <Icon icon="mdi:package-variant-outline" className="empty-icon" />
-            <h5>Nenhum plano criado</h5>
-            <p>Clique em "Novo Plano" para criar o primeiro plano do seu produto.</p>
-          </div>
-        ) : (
-          plans.map(renderPlanCard)
-        )}
-      </div>
-      
+
+      {/* Lista de Planos */}
+      {plans.length === 0 ? (
+        <div className="text-center py-5">
+          <Icon icon="mdi:package-variant" size="3rem" className="text-muted mb-3" />
+          <h5 className="text-muted">Nenhum plano criado</h5>
+          <p className="text-muted">
+            Crie o primeiro plano para este produto
+          </p>
+          <button
+            className="btn btn-primary"
+            onClick={handleCreatePlan}
+          >
+            <Icon icon="mdi:plus" />
+            Criar Primeiro Plano
+          </button>
+        </div>
+      ) : (
+        <div className="row">
+          {plans.map(renderPlanCard)}
+        </div>
+      )}
+
+      {/* Modal */}
       {renderModal()}
     </div>
   );
