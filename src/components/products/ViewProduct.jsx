@@ -49,6 +49,23 @@ const Viewproduct = ({ product: propProduct }) => {
   const [editingPlan, setEditingPlan] = useState(null);
   const [showDeletePlanModal, setShowDeletePlanModal] = useState(false);
   const [planToDelete, setPlanToDelete] = useState(null);
+  const [planFormData, setPlanFormData] = useState({
+    name: '',
+    price: '',
+    description: '',
+    available_for_sale: true,
+    featured: false,
+    max_installments: 12,
+    max_installments_no_interest: 1,
+    payment_discount_enabled: false,
+    billing_type: 'single',
+    boleto_installments_enabled: false,
+    boleto_notification_enabled: true,
+    custom_commission_enabled: false,
+    hide_from_affiliates: false,
+    watermark_enabled: false,
+    terms_conditions: ''
+  });
 
   const tabs = [
     { id: "dados-gerais", label: "Dados gerais", icon: "mdi:information-outline" },
@@ -194,7 +211,13 @@ const Viewproduct = ({ product: propProduct }) => {
                         <Icon icon="mdi:tag" className="me-1" />
                         Nome do Plano *
                       </label>
-                      <input type="text" className="form-control form-control-lg" placeholder="Ex: Plano Premium" />
+                      <input 
+                        type="text" 
+                        className="form-control form-control-lg" 
+                        placeholder="Ex: Plano Premium"
+                        value={planFormData.name}
+                        onChange={(e) => setPlanFormData(prev => ({ ...prev, name: e.target.value }))}
+                      />
                     </div>
 
                     <div className="col-md-6">
@@ -204,7 +227,13 @@ const Viewproduct = ({ product: propProduct }) => {
                       </label>
                       <div className="input-group input-group-lg">
                         <span className="input-group-text bg-success text-white">R$</span>
-                        <input type="text" className="form-control" placeholder="0,00" />
+                        <input 
+                          type="text" 
+                          className="form-control" 
+                          placeholder="0,00"
+                          value={planFormData.price}
+                          onChange={(e) => setPlanFormData(prev => ({ ...prev, price: e.target.value }))}
+                        />
                       </div>
                     </div>
 
@@ -213,7 +242,13 @@ const Viewproduct = ({ product: propProduct }) => {
                         <Icon icon="mdi:text" className="me-1" />
                         Descrição do Plano
                       </label>
-                      <textarea className="form-control" rows="3" placeholder="Descreva os benefícios do plano..."></textarea>
+                      <textarea 
+                        className="form-control" 
+                        rows="3" 
+                        placeholder="Descreva os benefícios do plano..."
+                        value={planFormData.description}
+                        onChange={(e) => setPlanFormData(prev => ({ ...prev, description: e.target.value }))}
+                      ></textarea>
                     </div>
 
                     <div className="col-md-6">
@@ -223,7 +258,13 @@ const Viewproduct = ({ product: propProduct }) => {
                           <small className="text-muted d-block">Permitir que este plano seja vendido</small>
                         </div>
                         <div className="form-check form-switch">
-                          <input className="form-check-input" type="checkbox" defaultChecked style={{ transform: "scale(1.3)" }} />
+                          <input 
+                            className="form-check-input" 
+                            type="checkbox" 
+                            checked={planFormData.available_for_sale}
+                            onChange={(e) => setPlanFormData(prev => ({ ...prev, available_for_sale: e.target.checked }))}
+                            style={{ transform: "scale(1.3)" }} 
+                          />
                         </div>
                       </div>
                     </div>
@@ -235,7 +276,13 @@ const Viewproduct = ({ product: propProduct }) => {
                           <small className="text-muted d-block">Destacar este plano na loja</small>
                         </div>
                         <div className="form-check form-switch">
-                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                          <input 
+                            className="form-check-input" 
+                            type="checkbox"
+                            checked={planFormData.featured}
+                            onChange={(e) => setPlanFormData(prev => ({ ...prev, featured: e.target.checked }))}
+                            style={{ transform: "scale(1.3)" }} 
+                          />
                         </div>
                       </div>
                     </div>
@@ -261,11 +308,15 @@ const Viewproduct = ({ product: propProduct }) => {
                   <div className="row g-3">
                     <div className="col-12">
                       <label className="form-label fw-semibold">Máximo de parcelas no cartão *</label>
-                      <select className="form-select">
-                        <option>12 vezes</option>
-                        <option>6 vezes</option>
-                        <option>3 vezes</option>
-                        <option>1 vez</option>
+                      <select 
+                        className="form-select"
+                        value={planFormData.max_installments}
+                        onChange={(e) => setPlanFormData(prev => ({ ...prev, max_installments: parseInt(e.target.value) }))}
+                      >
+                        <option value={12}>12 vezes</option>
+                        <option value={6}>6 vezes</option>
+                        <option value={3}>3 vezes</option>
+                        <option value={1}>1 vez</option>
                       </select>
                     </div>
 
@@ -274,12 +325,15 @@ const Viewproduct = ({ product: propProduct }) => {
                         Máximo de parcelas sem juros no cartão *
                         <Icon icon="mdi:help-circle-outline" className="ms-1" />
                       </label>
-                      <select className="form-select">
-                        <option>Selecione a quantidade</option>
-                        <option>1x</option>
-                        <option>2x</option>
-                        <option>3x</option>
-                        <option>6x</option>
+                      <select 
+                        className="form-select"
+                        value={planFormData.max_installments_no_interest}
+                        onChange={(e) => setPlanFormData(prev => ({ ...prev, max_installments_no_interest: parseInt(e.target.value) }))}
+                      >
+                        <option value={1}>1x</option>
+                        <option value={2}>2x</option>
+                        <option value={3}>3x</option>
+                        <option value={6}>6x</option>
                       </select>
                     </div>
 
@@ -290,7 +344,13 @@ const Viewproduct = ({ product: propProduct }) => {
                           <small className="text-danger d-block">Obs: Os descontos adicionados serão configurado para todas as moedas</small>
                         </div>
                         <div className="form-check form-switch">
-                          <input className="form-check-input" type="checkbox" style={{ transform: "scale(1.3)" }} />
+                          <input 
+                            className="form-check-input" 
+                            type="checkbox" 
+                            checked={planFormData.payment_discount_enabled}
+                            onChange={(e) => setPlanFormData(prev => ({ ...prev, payment_discount_enabled: e.target.checked }))}
+                            style={{ transform: "scale(1.3)" }} 
+                          />
                         </div>
                       </div>
                     </div>
@@ -300,9 +360,13 @@ const Viewproduct = ({ product: propProduct }) => {
                         Forma de cobrança
                         <Icon icon="mdi:help-circle-outline" className="ms-1" />
                       </label>
-                      <select className="form-select">
-                        <option>Única</option>
-                        <option>Recorrente</option>
+                      <select 
+                        className="form-select"
+                        value={planFormData.billing_type}
+                        onChange={(e) => setPlanFormData(prev => ({ ...prev, billing_type: e.target.value }))}
+                      >
+                        <option value="single">Única</option>
+                        <option value="recurring">Recorrente</option>
                       </select>
                     </div>
                   </div>
@@ -2218,6 +2282,26 @@ const Viewproduct = ({ product: propProduct }) => {
   const handleEditPlan = (plan) => {
     setEditingPlan(plan);
     setPlanModalTab("loja"); // resetar para primeira aba
+    
+    // Popular o formulário com os dados do plano
+    setPlanFormData({
+      name: plan.name || '',
+      price: plan.price ? plan.price.toString() : '',
+      description: plan.description || '',
+      available_for_sale: plan.available_for_sale || false,
+      featured: plan.featured || false,
+      max_installments: plan.max_installments || 12,
+      max_installments_no_interest: plan.max_installments_no_interest || 1,
+      payment_discount_enabled: plan.payment_discount_enabled || false,
+      billing_type: plan.billing_type || 'single',
+      boleto_installments_enabled: plan.boleto_installments_enabled || false,
+      boleto_notification_enabled: plan.boleto_notification_enabled || true,
+      custom_commission_enabled: plan.custom_commission_enabled || false,
+      hide_from_affiliates: plan.hide_from_affiliates || false,
+      watermark_enabled: plan.watermark_enabled || false,
+      terms_conditions: plan.terms_conditions || ''
+    });
+    
     setShowNewPlanModal(true);
   };
 
@@ -2239,6 +2323,55 @@ const Viewproduct = ({ product: propProduct }) => {
         console.error('Erro ao deletar plano:', error);
         alert('Erro ao deletar plano');
       }
+    }
+  };
+
+  const handleSavePlan = async () => {
+    if (!product?.id) return;
+
+    try {
+      const planData = {
+        ...planFormData,
+        price: parseFloat(planFormData.price) || 0,
+        max_installments: parseInt(planFormData.max_installments) || 12,
+        max_installments_no_interest: parseInt(planFormData.max_installments_no_interest) || 1
+      };
+
+      if (editingPlan) {
+        // Atualizar plano existente
+        await ProductRelatedServices.updateProductPlan(product.id, editingPlan.id, planData);
+      } else {
+        // Criar novo plano
+        await ProductRelatedServices.createProductPlan(product.id, planData);
+      }
+
+      // Recarregar planos
+      const updatedPlans = await ProductRelatedServices.getProductPlans(product.id);
+      setRealPlans(updatedPlans);
+
+      // Limpar formulário e fechar modal
+      setPlanFormData({
+        name: '',
+        price: '',
+        description: '',
+        available_for_sale: true,
+        featured: false,
+        max_installments: 12,
+        max_installments_no_interest: 1,
+        payment_discount_enabled: false,
+        billing_type: 'single',
+        boleto_installments_enabled: false,
+        boleto_notification_enabled: true,
+        custom_commission_enabled: false,
+        hide_from_affiliates: false,
+        watermark_enabled: false,
+        terms_conditions: ''
+      });
+      setEditingPlan(null);
+      setShowNewPlanModal(false);
+    } catch (error) {
+      console.error('Erro ao salvar plano:', error);
+      alert('Erro ao salvar plano');
     }
   };
 
@@ -2355,9 +2488,9 @@ const Viewproduct = ({ product: propProduct }) => {
             <Icon icon="mdi:close" className="me-2" />
             Sair da Edição
           </Button>
-          <Button variant="primary" size="lg">
+          <Button variant="primary" size="lg" onClick={handleSavePlan}>
             <Icon icon="mdi:content-save" className="me-2" />
-            Salvar Plano
+            {editingPlan ? 'Atualizar Plano' : 'Salvar Plano'}
           </Button>
         </Modal.Footer>
       </Modal>

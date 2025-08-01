@@ -108,6 +108,28 @@ const ProductRelatedServices = {
     }
   },
 
+  // Criar um novo plano para um produto
+  createProductPlan: async (productId, planData) => {
+    try {
+      const response = await api.post(`/api/products/${productId}/plans`, planData);
+      return response.data;
+    } catch (error) {
+      console.error("Error in createProductPlan:", error);
+      throw error;
+    }
+  },
+
+  // Atualizar um plano existente
+  updateProductPlan: async (productId, planId, planData) => {
+    try {
+      const response = await api.put(`/api/products/${productId}/plans/${planId}`, planData);
+      return response.data;
+    } catch (error) {
+      console.error("Error in updateProductPlan:", error);
+      throw error;
+    }
+  },
+
   // Deletar um plano de um produto
   deleteProductPlan: async (productId, planId) => {
     try {
