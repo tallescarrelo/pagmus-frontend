@@ -1,6 +1,11 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import RouteScrollToTop from "./helper/RouteScrollToTop";
+import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
+import { AffiliateProvider } from "./contexts/AffiliateContext";
+import { ReportsProvider } from "./contexts/ReportsContext";
+import { ProductProvider } from "./contexts/ProductContext";
 
 // Páginas de autenticação
 import SignInPage from "./pages/SignInPage";
@@ -17,6 +22,7 @@ import ViewProfilePage from "./pages/ViewProfilePage";
 import MyProductsPage from "./pages/products/MyProductsPage";
 import RegisterProductPage from "./pages/products/RegisterProduct";
 import ViewProductPage from "./pages/products/ViewProductPage";
+import ProductPlansPage from "./pages/products/ProductPlansPage";
 
 // Páginas de loja
 import ProductGridPage from "./pages/store/ProductGridPage";
@@ -53,6 +59,16 @@ import TeamPage from "./pages/tools/TeamPage";
 // Páginas de integração
 import IntegrationPage from "./pages/integration/IntegrationPage";
 
+// Páginas de checkout
+import CheckoutPage from "./components/checkout/CheckoutPage";
+import CheckoutSuccessPage from "./pages/checkout/CheckoutSuccessPage";
+
+// Páginas de afiliados
+import AffiliateMainPage from "./pages/affiliate/AffiliateMainPage";
+
+// Páginas de relatórios
+import ReportsMainPage from "./pages/reports/ReportsMainPage";
+
 // Páginas de erro e acesso
 import ErrorPage from "./pages/ErrorPage";
 import AccessDeniedPage from "./pages/AccessDeniedPage";
@@ -60,10 +76,15 @@ import MaintenancePage from "./pages/MaintenancePage";
 import ComingSoonPage from "./pages/ComingSoonPage";
 
 function App() {
-  return (
-    <HashRouter future={{ v7_relativeSplatPath: true }}>
-      <RouteScrollToTop />
-      <Routes>
+      return (
+              <AuthProvider>
+          <ProductProvider>
+            <CartProvider>
+              <AffiliateProvider>
+                <ReportsProvider>
+              <HashRouter future={{ v7_relativeSplatPath: true }}>
+              <RouteScrollToTop />
+              <Routes>
         {/* Rotas Públicas de Autenticação */}
         <Route exact path="/" element={<SignInPage />} />
         <Route exact path="/sign-up" element={<SignUpPage />} />
@@ -117,10 +138,19 @@ function App() {
         />
         <Route
           exact
-          path="/products/view-product"
+          path="/products/:productId"
           element={
             <PrivateRoute>
               <ViewProductPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/products/:productId/plans"
+          element={
+            <PrivateRoute>
+              <ProductPlansPage />
             </PrivateRoute>
           }
         />
@@ -328,10 +358,57 @@ function App() {
           }
         />
 
+        {/* Checkout */}
+        <Route
+          exact
+          path="/checkout"
+          element={
+            <PrivateRoute>
+              <CheckoutPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/checkout/success"
+          element={
+            <PrivateRoute>
+              <CheckoutSuccessPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Sistema de Afiliados */}
+        <Route
+          exact
+          path="/affiliate"
+          element={
+            <PrivateRoute>
+              <AffiliateMainPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Sistema de Relatórios */}
+        <Route
+          exact
+          path="/reports"
+          element={
+            <PrivateRoute>
+              <ReportsMainPage />
+            </PrivateRoute>
+          }
+        />
+
         {/* Rota 404 */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-    </HashRouter>
+                    </HashRouter>
+              </ReportsProvider>
+            </AffiliateProvider>
+          </CartProvider>
+        </ProductProvider>
+        </AuthProvider>
   );
 }
 

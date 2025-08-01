@@ -1,15 +1,12 @@
-import apiService from "..";
+import apiService from "../index";
 
-const ProductsServices = {
+const ProductsServicesSimple = {
   getProducts: async () => {
     try {
-      console.log("🔍 ProductsService - Iniciando requisição...");
       const response = await apiService.get("/api/products");
-      console.log("✅ ProductsService - Resposta recebida:", response.data);
-      return response.data.data; // Retorna apenas os dados do array
+      return response.data.data;
     } catch (error) {
-      console.error("❌ Error in getProducts:", error);
-      console.error("❌ Error details:", error.response?.data);
+      console.error("Error in ProductsServiceSimple.getProducts:", error);
       throw error;
     }
   },
@@ -17,9 +14,9 @@ const ProductsServices = {
   getProductById: async (id) => {
     try {
       const response = await apiService.get(`/api/products/${id}`);
-      return response.data.data; // Retorna apenas os dados do produto
+      return response.data.data;
     } catch (error) {
-      console.error("Error in getProductById:", error);
+      console.error("Error in ProductsServiceSimple.getProductById:", error);
       throw error;
     }
   },
@@ -29,7 +26,7 @@ const ProductsServices = {
       const response = await apiService.post("/api/products", payload);
       return response.data;
     } catch (error) {
-      console.error("Error in registerProduct:", error);
+      console.error("Error in ProductsServiceSimple.registerProduct:", error);
       throw error;
     }
   },
@@ -39,7 +36,7 @@ const ProductsServices = {
       const response = await apiService.put(`/api/products/${id}`, payload);
       return response.data;
     } catch (error) {
-      console.error("Error in updateProduct:", error);
+      console.error("Error in ProductsServiceSimple.updateProduct:", error);
       throw error;
     }
   },
@@ -49,10 +46,10 @@ const ProductsServices = {
       const response = await apiService.delete(`/api/products/${id}`);
       return response.data;
     } catch (error) {
-      console.error("Error in deleteProduct:", error);
+      console.error("Error in ProductsServiceSimple.deleteProduct:", error);
       throw error;
     }
   },
 };
 
-export default ProductsServices;
+export default ProductsServicesSimple; 

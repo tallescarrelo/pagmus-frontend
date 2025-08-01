@@ -1,279 +1,281 @@
 # 📚 Documentação do Projeto Pagmus Dash
 
-Esta pasta contém toda a documentação relacionada à **limpeza e reestruturação** do projeto Pagmus Dash, realizada em Janeiro de 2025.
+## 🚀 Visão Geral
 
-## 📑 **Índice de Documentos:**
+O **Pagmus Dash** é um sistema completo de gestão de afiliados e produtos digitais, desenvolvido com React (frontend) e Node.js/Express (backend), conectado a um banco PostgreSQL hospedado no Railway.
 
-### 🧹 **[LIMPEZA_PROJETO.md](./LIMPEZA_PROJETO.md)**
-**Documento principal** com visão geral completa da limpeza:
-- ✅ Motivação e objetivos
-- ✅ Estrutura final (o que foi mantido)
-- ✅ Problemas encontrados e soluções
-- ✅ Métricas de impacto
-- ✅ Como reverter mudanças
-- ✅ Próximos passos recomendados
+## 🏗️ Arquitetura
 
-### 📄 **[ARQUIVOS_REMOVIDOS.md](./ARQUIVOS_REMOVIDOS.md)**
-**Lista completa** de todos os 382 arquivos removidos:
-- 🗂️ Páginas removidas (src/pages/)
-- 🧩 Componentes removidos (src/components/)
-- 🖼️ Assets/imagens removidos (public/assets/)
-- 📊 Estatísticas por categoria
-
-### 🛣️ **[ESTRUTURA_ROTAS.md](./ESTRUTURA_ROTAS.md)**
-**Comparação detalhada** da estrutura de rotas:
-- ❌ Rotas removidas (~150+ rotas de template)
-- ✅ Rotas mantidas (35 rotas core business)
-- 🏗️ Estrutura de proteção
-- 📊 Comparação de complexidade antes/depois
-
-### ⚠️ **[ESLINT_WARNINGS.md](./ESLINT_WARNINGS.md)**
-**Análise dos warnings** restantes após a limpeza:
-- 🔍 Lista detalhada de todos os warnings
-- 🎯 Estratégia de resolução por prioridade
-- 📝 Comandos para correção rápida
-- ✅ Status: não-críticos, não afetam funcionamento
-
-### 🎨 **[PADRAO_MODAIS.md](./PADRAO_MODAIS.md)**
-**Padrão visual único** para todos os modais da aplicação:
-- 🔵 Template base com header azul e footer estilizado
-- 🔄 Componentes padronizados (switches, labels, botões)
-- 🎯 Guia de cores e ícones por contexto
-- 📋 Checklist completo de implementação
-- 🏆 Exemplos implementados (Novo Plano, Novo Upsell)
-
----
-
-## 🎯 **Resumo Executivo:**
-
-### **📊 Números da Limpeza:**
-- **382 arquivos removidos** 
-- **27.976 linhas de código eliminadas**
-- **87% de redução** no código desnecessário
-- **77% menos rotas** (de ~150 para 35)
-- **Bundle size reduzido** em ~20%
-- **60% menos warnings ESLint** (40+ → 15)
-
-### **✅ Status Atual:**
-- 🟢 **Aplicação funcionando** perfeitamente
-- 🟢 **Core business preservado** 100%
-- 🟢 **Performance melhorada** significativamente
-- 🟢 **Manutenção simplificada** drasticamente
-- 🟢 **Backup seguro** disponível para reversão
-- 🟢 **Qualidade de código melhorada** (warnings críticos resolvidos)
-- 🟢 **UI/UX modernizada** (ViewProduct + Checkout + Afiliação com sistemas de abas)
-
-### **🎯 Core Business Mantido:**
+### Estrutura do Projeto
 ```
-✅ Sistema de Autenticação
-✅ Dashboard Principal
-✅ Gestão de Produtos (Cadastro, Lista, Visualização + Checkout + Afiliação MODERNIZADOS)
-✅ Sistema de Vendas e Relatórios
-✅ Gestão de Afiliados
-✅ Controle de Entregas
-✅ Módulos Financeiros (Bancos, Saques)
-✅ Ferramentas (API, Fretes, Postback, Equipe)
-✅ Sistema de Integrações
+pagmus-monorepo/
+├── frontend/          # Aplicação React
+├── backend/           # API Node.js/Express
+└── docs/             # Documentação
 ```
 
----
+### Tecnologias Utilizadas
 
-## 🔄 **Como Usar Esta Documentação:**
+**Frontend:**
+- React 18
+- React Router DOM
+- Bootstrap (React-Bootstrap)
+- Iconify
+- Drag and Drop (@hello-pangea/dnd)
 
-### **📚 Para Desenvolvedores:**
-1. **Leia primeiro:** `LIMPEZA_PROJETO.md` para contexto geral
-2. **Para entender o que foi removido:** `ARQUIVOS_REMOVIDOS.md`
-3. **Para navegar no projeto:** `ESTRUTURA_ROTAS.md`
-4. **Para corrigir warnings:** `ESLINT_WARNINGS.md`
+**Backend:**
+- Node.js
+- Express.js
+- PostgreSQL (Railway)
+- JWT (JSON Web Tokens)
+- bcrypt (hash de senhas)
 
-### **👥 Para Gestores/Product Owners:**
-1. **Foque em:** `LIMPEZA_PROJETO.md` seções:
-   - Motivação
-   - Estrutura Final
-   - Métricas de Impacto
-   - Conclusão
+**Infraestrutura:**
+- Railway (hosting e banco de dados)
+- Git (versionamento)
 
-### **🆘 Para Emergências:**
-- **Reverter tudo:** Veja seção "Como Reverter" em `LIMPEZA_PROJETO.md`
-- **Problemas específicos:** Consulte "Problemas Encontrados e Soluções"
+## 📋 Pré-requisitos
 
----
+- Node.js 18+ 
+- npm ou yarn
+- Conta no Railway (para banco de dados)
 
-## 🛠️ **Comandos Rápidos:**
+## 🛠️ Instalação e Configuração
 
-### **📦 Build e Teste:**
+### 1. Clone do Repositório
 ```bash
-# Testar aplicação
+git clone https://github.com/tallescarrelo/pagmus.git
+cd pagmus-monorepo
+```
+
+### 2. Configuração do Backend
+
+```bash
+cd backend
+npm install
+```
+
+**Variáveis de Ambiente (.env):**
+```env
+PORT=3333
+HOST=0.0.0.0
+NODE_ENV=development
+APP_KEY=sample-app-key-for-development-only
+DRIVE_DISK=local
+SESSION_DRIVER=cookie
+
+# Database - Railway PostgreSQL
+DB_CONNECTION=pg
+DB_HOST=yamabiko.proxy.rlwy.net
+DB_PORT=15425
+DB_USER=postgres
+DB_PASSWORD=uqsKOLzANexZdKgZGMeaCGJRUEZwaNCz
+DB_DATABASE=railway
+
+# CORS
+CORS_ENABLED=true
+CORS_ORIGIN=*
+CORS_METHODS=GET,HEAD,PUT,PATCH,POST,DELETE
+CORS_HEADERS=Content-Type,Authorization
+
+# Auth
+JWT_SECRET=sample-jwt-secret-for-development
+```
+
+### 3. Configuração do Frontend
+
+```bash
+cd ../frontend
+npm install
+```
+
+**Variáveis de Ambiente (.env):**
+```env
+REACT_APP_API_URL=http://localhost:3333
+REACT_APP_API_VERSION=v1
+```
+
+### 4. Executar as Migrations
+
+```bash
+cd backend
+node run-migrations.js
+node seed-data.js
+```
+
+### 5. Iniciar os Servidores
+
+**Backend:**
+```bash
+cd backend
+npm run dev:simple
+```
+
+**Frontend:**
+```bash
+cd frontend
 npm start
-
-# Build de produção
-npm run build
-
-# Verificar warnings ESLint
-npm run lint
 ```
 
-### **🔄 Git e Branches:**
+## 🗄️ Estrutura do Banco de Dados
+
+### Tabelas Principais
+
+**users**
+- `id` (SERIAL PRIMARY KEY)
+- `email` (VARCHAR UNIQUE)
+- `password` (VARCHAR - hash bcrypt)
+- `name` (VARCHAR)
+- `role` (ENUM: 'admin', 'seller', 'affiliate')
+- `status` (ENUM: 'active', 'inactive', 'suspended')
+- `phone`, `document`, `avatar` (VARCHAR)
+- `created_at`, `updated_at` (TIMESTAMP)
+
+**products**
+- `id` (SERIAL PRIMARY KEY)
+- `user_id` (FOREIGN KEY -> users)
+- `name`, `description` (VARCHAR, TEXT)
+- `price` (DECIMAL)
+- `commission_type` (ENUM: 'percentage', 'fixed')
+- `commission_rate` (DECIMAL)
+- `status` (ENUM: 'active', 'inactive', 'draft')
+- `product_url`, `checkout_url`, `image_url` (VARCHAR)
+- `created_at`, `updated_at` (TIMESTAMP)
+
+**affiliates**
+- `id` (SERIAL PRIMARY KEY)
+- `user_id` (FOREIGN KEY -> users)
+- `product_id` (FOREIGN KEY -> products)
+- `commission_rate` (DECIMAL)
+- `status` (ENUM: 'pending', 'approved', 'rejected', 'suspended')
+- `is_blacklisted` (BOOLEAN)
+- `custom_commission_rate` (DECIMAL)
+- `total_sales`, `total_commission` (INTEGER, DECIMAL)
+- `created_at`, `updated_at` (TIMESTAMP)
+
+**sales**
+- `id` (SERIAL PRIMARY KEY)
+- `product_id` (FOREIGN KEY -> products)
+- `user_id` (FOREIGN KEY -> users)
+- `affiliate_id` (FOREIGN KEY -> users)
+- `transaction_id` (VARCHAR UNIQUE)
+- `amount`, `commission_amount` (DECIMAL)
+- `payment_gateway` (VARCHAR)
+- `payment_status` (ENUM: 'pending', 'paid', 'failed', 'refunded')
+- `customer_email`, `customer_name` (VARCHAR)
+- `created_at`, `updated_at` (TIMESTAMP)
+
+**coupons**
+- `id` (SERIAL PRIMARY KEY)
+- `product_id` (FOREIGN KEY -> products)
+- `code` (VARCHAR UNIQUE)
+- `discount_type` (ENUM: 'percentage', 'fixed')
+- `discount_value` (DECIMAL)
+- `max_uses`, `used_count` (INTEGER)
+- `valid_from`, `valid_until` (TIMESTAMP)
+- `status` (ENUM: 'active', 'inactive', 'expired')
+- `created_at`, `updated_at` (TIMESTAMP)
+
+**commission_settings**
+- `id` (SERIAL PRIMARY KEY)
+- `product_id` (FOREIGN KEY -> products)
+- `affiliate_id` (FOREIGN KEY -> users)
+- `commission_rate` (DECIMAL)
+- `is_active` (BOOLEAN)
+- `created_at`, `updated_at` (TIMESTAMP)
+
+## 🔌 APIs
+
+### Autenticação
+```
+POST /api/auth/login
+POST /api/auth/register
+POST /api/auth/verify
+POST /api/auth/logout
+```
+
+### Produtos
+```
+GET    /api/products
+GET    /api/products/:id
+POST   /api/products
+PUT    /api/products/:id
+DELETE /api/products/:id
+```
+
+### Afiliados
+```
+GET    /api/affiliates
+GET    /api/affiliates/:id
+POST   /api/affiliates
+PUT    /api/affiliates/:id
+PUT    /api/affiliates/:id/approve-reject
+DELETE /api/affiliates/:id
+```
+
+## 👥 Usuários de Teste
+
+**Admin:**
+- Email: `admin@pagmus.com`
+- Senha: `123456`
+
+**Vendedor:**
+- Email: `vendedor@pagmus.com`
+- Senha: `123456`
+
+**Afiliados:**
+- Email: `afiliado1@pagmus.com` / Senha: `123456`
+- Email: `afiliado2@pagmus.com` / Senha: `123456`
+- Email: `afiliado3@pagmus.com` / Senha: `123456`
+
+## 🚀 Deploy
+
+### Railway (Backend)
+1. Conectar repositório no Railway
+2. Configurar variáveis de ambiente
+3. Deploy automático
+
+### Frontend
+1. Build: `npm run build`
+2. Deploy em qualquer serviço (Vercel, Netlify, etc.)
+
+## 📝 Scripts Úteis
+
+**Backend:**
 ```bash
-# Ver histórico da limpeza
-git log --oneline backup-before-cleanup
-
-# Voltar ao estado anterior (se necessário)
-git checkout feat/estrutura-telas-menus-sidebar
-
-# Ver mudanças realizadas
-git diff HEAD~6 --stat
+npm run dev:simple    # Iniciar servidor
+node run-migrations.js # Executar migrations
+node seed-data.js     # Inserir dados de teste
 ```
 
-### **🧹 Limpeza Adicional:**
+**Frontend:**
 ```bash
-# Limpar warnings ESLint automaticamente
-npx eslint src/ --fix
-
-# Limpar cache do Webpack (se problemas)
-rm -rf node_modules/.cache
+npm start             # Iniciar em desenvolvimento
+npm run build         # Build para produção
 ```
 
----
+## 🔧 Troubleshooting
 
-## 📅 **Histórico de Versões:**
+### Problemas Comuns
 
-| Data | Versão | Descrição |
-|------|--------|-----------|
-| Jan 2025 | v1.0 | Limpeza inicial completa - 382 arquivos removidos |
-| Jan 2025 | v1.1 | Correções de imports quebrados |
-| Jan 2025 | v1.2 | Documentação completa criada |
-| Jan 2025 | v1.3 | **Correções finais ESLint** - 60% menos warnings |
-| Jan 2025 | v1.4 | **🚀 UI/UX Modernizada** - ViewProduct com sistema de abas |
-| Jan 2025 | v1.5 | **🎨 DESIGN PREMIUM** - Modal Novo Plano redesenhado completamente |
-| Jan 2025 | v1.6 | **🗂️ SISTEMA DE ABAS COMPLETO** - Modal Novo Plano igual ao Braip |
-| Jan 2025 | v1.7 | **🎨 PADRONIZAÇÃO COMPLETA** - Padrão visual único para todos os modais |
-| Jan 2025 | v1.8 | **🛒 MODAL CHECKOUT COMPLETO** - Sistema de abas igual ao Braip |
-| Jan 2025 | v1.8.1 | **🔍 LISTAGEM CHECKOUT MODERNIZADA** - Pesquisa e edição funcional |
-| Jan 2025 | v1.9 | **🤝 SISTEMA AFILIAÇÃO COMPLETO** - 7 seções com dados fictícios igual ao Braip |
-| Jan 2025 | v1.10 | **✨ SISTEMA AFILIAÇÃO AVANÇADO** - Funcionalidades interativas completas |
+1. **Erro de conexão com banco:**
+   - Verificar credenciais do Railway
+   - Verificar se o banco está ativo
 
-### **🆕 v1.10 - Sistema de Afiliação Avançado:**
-- 🔗 **Navegação inteligente** - botão "Ver Afiliados" navega entre seções
-- 📊 **Seleção múltipla dinâmica** - checkboxes funcionais com contagem
-- ⚡ **Ações em massa** - aprovar/reprovar múltiplos afiliados
-- 🎭 **Modal de confirmação** elegante para todas as ações
-- 🛠️ **Dropdown "Mais ações"** com 2 opções funcionais
-- 💰 **Modal Atualizar Comissão** - layout em 2 colunas com pesquisa
-- 🚫 **Modal Blacklist** - adicionar emails à lista negra
-- 🔍 **Drawer de filtros avançados** - 12 tipos de premiação com ícones
-- 🎨 **Interface responsiva** - offcanvas, dropdowns e modais estilizados
-- ⚙️ **Estado gerenciado** para todas as funcionalidades
+2. **Erro de CORS:**
+   - Verificar configuração CORS no backend
+   - Verificar URL da API no frontend
 
-### **🆕 v1.9 - Sistema de Afiliação Revolucionário:**
-- 🗂️ **7 seções funcionais** com submenu igual ao Braip
-- ⚙️ **Configurações** - switches para programa de afiliados
-- 👥 **Afiliados** - listagem com 4 afiliados fictícios completos
-- 📝 **Merchan** - editor de conteúdo para informações de vendas
-- 📋 **Termos de uso** - editor de regras para afiliados
-- 🤝 **Coprodução/Comissionamento** - área para parcerias
-- 📧 **Convites Afiliados** - tabela com 3 tipos de convite
-- 🎯 **Metas** - sistema de gamificação (Bronze, Prata, Ouro, Diamante)
-- 📊 **Dados fictícios** em todas as tabelas para demonstração
-- 🎨 **Interface profissional** seguindo padrões estabelecidos
+3. **Token JWT inválido:**
+   - Verificar JWT_SECRET no backend
+   - Verificar expiração do token
 
-### **🆕 v1.8.1 - Listagem Checkout Otimizada:**
-- 🔍 **Campo de pesquisa funcional** para filtrar checkouts
-- ✏️ **Botão Editar conectado** - abre modal com dados preenchidos
-- 🗑️ **Interface mais limpa** - segundo ícone removido (não necessário)
-- 📊 **Seletor de resultados** (10/25/50 por página)
-- 🎯 **Tooltip de edição** para melhor UX
-- ⚡ **Estado gerenciado** para pesquisa e edição
+## 📞 Suporte
 
-### **🆕 v1.8 - Modal Checkout Revolucionário:**
-- 🛒 **Modal Checkout completo** com 6 abas funcionais conforme Braip
-- ⚙️ **Configurações Gerais** - descrição + formas de pagamento (Boleto, Cartão, PIX)  
-- 📊 **Pixel e Planos** - configuração de pixel + vinculação de planos
-- 👤 **Informações do Usuário** - campos obrigatórios (sexo, telefone, endereço)
-- 💬 **Chat e Suporte** - configuração de chat + telefones WhatsApp
-- 🎫 **Descontos e Promoções** - cupons de desconto + popup promocional
-- 🎨 **Personalização** - customização visual, etapas e notificações
-- 🔵 **Header azul consistente** seguindo padrão visual estabelecido
-- 🔄 **Switches melhorados** (30% maiores) em todas as seções
-- 📦 **Cards organizados** com headers específicos por contexto
-- ✅ **Acessibilidade corrigida** (links convertidos para botões)
-
-### **🆕 v1.7 - Padronização de Interface:**
-- 🎨 **Padrão visual único** aplicado em todos os modais
-- 🔵 **Header azul consistente** com ícones e títulos
-- 📦 **Body organizado** em cards com shadows e padding adequado
-- 🎨 **Footer estilizado** com fundo claro e botões bem posicionados
-- 🔄 **Switches melhorados** (30% maiores) em toda aplicação
-- 🏷️ **Labels com ícones** contextuais e coloridos
-- 📋 **Documentação completa** do padrão criada (`PADRAO_MODAIS.md`)
-- ✅ **Template reutilizável** para futuros modais
-- 🎯 **Guia de cores** e ícones por contexto
-- 📝 **Checklist de implementação** para desenvolvedores
-- 🏆 **Exemplos implementados**: Modal Novo Plano + Modal Novo Upsell
-
-### **🆕 v1.6 - Sistema de Abas Revolucionário:**
-- 🚀 **Modal Novo Plano 100% igual ao Braip** com navegação por abas
-- 🗂️ **6 abas funcionais**: Loja, Condições de Pagamentos, Afiliação, Arquivos/Ebooks, Order Bump, Termos e Condições
-- 🎯 **Navegação por pills** com ícones específicos e estados ativos
-- 📋 **Conteúdo dinâmico** para cada aba baseado nas imagens fornecidas
-- 🔄 **Switches melhorados** (30% maiores) em todas as seções
-- 🎨 **Cards organizados** com headers coloridos e ícones contextuais
-- 📤 **Upload de arquivos** com marca d'água automática
-- ⬆️ **Order Bump configurável** com chamadas personalizadas
-- 📋 **Gestão de termos** específicos por plano
-- ✨ **Estados vazios informativos** com ícones e mensagens
-- 💎 **Interface de nível enterprise** profissional
-
-### **🆕 v1.5 - Interface Premium Implementada:**
-- ✨ **Modal Novo Plano completamente redesenhado** com visual profissional
-- 🎨 **Header azul** com ícone e título destacado
-- 📊 **Stepper visual** com círculos e ícones das etapas de configuração
-- 📦 **Layout em cards** organizados com sombras e cores específicas
-- 🔄 **Switches LINDOS** (30% maiores + contexto + posicionamento perfeito)
-- 🎯 **Ícones coloridos** para cada seção e campo
-- 💰 **Input groups estilizados** (R$ verde, campos organizados)
-- 🗂️ **6 seções organizadas**: Configurações Gerais, Limites, Upload, Informações, URLs, Fornecedores
-- 📤 **Upload drag & drop** com visual moderno
-- 🎨 **Footer estilizado** com botões bem posicionados
-
-### **🆕 v1.4 - Modernização de Interface:**
-- ✨ **ViewProduct completamente reestruturado** (modais → sistema de abas)
-- 🎨 **Interface moderna inspirada no Braip**
-- 🗂️ **7 abas organizadas**: Dados gerais, Planos, Checkouts, URLs, Afiliação, Cupons, Componentes
-- 📱 **Layout responsivo e intuitivo**
-- ⚡ **Navegação mais fluida** (sem modais)
-- 🎯 **UX/UI profissional** para gestão de produtos
-
-### **🆕 v1.3 - Melhorias de Qualidade:**
-- ✅ **Problema de acessibilidade resolvido** (`href` → `button`)
-- ✅ **Default case adicionado** no switch (ViewProduct.jsx)
-- ✅ **25+ imports não utilizados removidos**
-- ✅ **Imports incorretos corrigidos** (delivery, sales, tools)
-- ✅ **60% redução nos warnings** (40+ → 15)
+Para dúvidas ou problemas, abra uma issue no repositório ou entre em contato com a equipe de desenvolvimento.
 
 ---
 
-## 🤝 **Contribuição:**
-
-Para **manter a documentação atualizada**:
-
-1. **Ao fazer mudanças** no core business, atualize `LIMPEZA_PROJETO.md`
-2. **Ao corrigir warnings**, atualize `ESLINT_WARNINGS.md`
-3. **Ao adicionar rotas**, atualize `ESTRUTURA_ROTAS.md`
-4. **Mantenha o README** sempre sincronizado
-
----
-
-## 🎉 **Conclusão:**
-
-A limpeza foi um **sucesso completo**! O projeto agora está:
-- 🎯 **100% focado** no negócio da Pagmus
-- ⚡ **Significativamente mais rápido**
-- 🧹 **Muito mais fácil de manter**
-- 📈 **Pronto para crescimento sustentável**
-- 🔧 **Qualidade de código profissional**
-- 🎨 **Interface moderna e intuitiva**
-
-**Esta documentação garante que todo o conhecimento da limpeza seja preservado para a equipe.** 
-
-Para dúvidas ou sugestões sobre a documentação, consulte a equipe de desenvolvimento. 
+**Versão:** 1.0.0  
+**Última atualização:** Agosto 2025  
+**Desenvolvido por:** Talles Carrelo 

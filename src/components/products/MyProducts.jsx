@@ -6,7 +6,7 @@ const MyProducts = ({ myProducts }) => {
   const navigate = useNavigate();
 
   const handleClick = (product) => {
-    navigate("/products/view-product", { state: { product } });
+    navigate(`/products/${product.id}`);
   };
 
   return (
@@ -23,7 +23,7 @@ const MyProducts = ({ myProducts }) => {
                 />
                 <div className="ps-16 pb-16 pe-16 text-center mt--50">
                   <img
-                    src={product?.image_url}
+                    src={product?.image || "/assets/images/product/default-product.png"}
                     alt=""
                     className="border br-white border-width-2-px w-100-px h-100-px rounded-circle object-fit-cover"
                   />

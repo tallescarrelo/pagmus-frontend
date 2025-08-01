@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Button, Table, Modal, Row, Col } from "react-bootstrap";
+import ProductRelatedServices from "../../services/api/product-related";
 
 const formatCurrency = (value) => {
   const numericValue = Number(value);
@@ -23,9 +24,9 @@ const formatCommissionValue = (value, type) => {
   return formatCurrency(value);
 };
 
-const Viewproduct = () => {
+const Viewproduct = ({ product: propProduct }) => {
   const location = useLocation();
-  const product = location.state?.product;
+  const product = propProduct || location.state?.product;
   const affiliate = location.state?.affiliate;
 
   const [activeTab, setActiveTab] = useState("dados-gerais");
@@ -61,14 +62,28 @@ const Viewproduct = () => {
     { code: "#plav84xr", name: "Plano teste", items: 1, price: "R$ 50,00", visible: "VISÍVEL", status: "ATIVO", sales: 0 },
   ];
 
-  // Dados fictícios para afiliação
-  const mockAffiliates = [
-    { id: 1, name: "João Silva", email: "joao@email.com", manager: "Carlos Mendes", since: "15/01/2024", sales: 25, commission: "R$ 1.250,00", status: "ATIVO", awards: 3 },
-    { id: 2, name: "Maria Santos", email: "maria@email.com", manager: "Ana Costa", since: "20/02/2024", sales: 18, commission: "R$ 900,00", status: "PENDENTE", awards: 1 },
-    { id: 3, name: "Pedro Oliveira", email: "pedro@email.com", manager: "Lucas Lima", since: "10/12/2023", sales: 42, commission: "R$ 2.100,00", status: "PENDENTE", awards: 5 },
-    { id: 4, name: "Ana Rodriguez", email: "ana@email.com", manager: "Felipe Rocha", since: "05/03/2024", sales: 8, commission: "R$ 400,00", status: "PENDENTE", awards: 0 },
-    { id: 5, name: "Carlos Ferreira", email: "carlos@email.com", manager: "João Silva", since: "12/04/2024", sales: 15, commission: "R$ 750,00", status: "PENDENTE", awards: 2 },
-  ];
+  // Estado para dados reais dos afiliados
+  const [realAffiliates, setRealAffiliates] = useState([]);
+  const [loadingAffiliates, setLoadingAffiliates] = useState(false);
+
+  // Carregar afiliados reais do produto
+  useEffect(() => {
+    const loadAffiliates = async () => {
+      if (product?.id) {
+        setLoadingAffiliates(true);
+        try {
+          const affiliates = await ProductRelatedServices.getProductAffiliates(product.id);
+          setRealAffiliates(affiliates);
+        } catch (error) {
+          console.error('Erro ao carregar afiliados:', error);
+        } finally {
+          setLoadingAffiliates(false);
+        }
+      }
+    };
+
+    loadAffiliates();
+  }, [product?.id]);
 
   const mockInvites = [
     { id: 1, name: "Comissão Padrão", type: "Porcentagem", value: "25%", status: "ATIVO", affiliates: 15 },
@@ -938,10 +953,19 @@ const Viewproduct = () => {
               <h5 className="card-title mb-0">Todos os Planos</h5>
               <p className="text-muted mb-0">Gerencie todos os planos do produto</p>
             </div>
-            <Button variant="primary" onClick={() => setShowNewPlanModal(true)}>
-              <Icon icon="mdi:plus" className="me-2" />
-              Novo Plano
-            </Button>
+            <div className="d-flex gap-2">
+              <Button 
+                variant="outline-primary" 
+                onClick={() => window.location.href = `/products/${product?.id || affiliate?.product?.id}/plans`}
+              >
+                <Icon icon="mdi:package-variant" className="me-2" />
+                Gerenciar Planos
+              </Button>
+              <Button variant="primary" onClick={() => setShowNewPlanModal(true)}>
+                <Icon icon="mdi:plus" className="me-2" />
+                Novo Plano
+              </Button>
+            </div>
           </div>
           <div className="card-body">
             <Table responsive className="align-middle">
@@ -1294,7 +1318,7 @@ const Viewproduct = () => {
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="d-flex align-items-center gap-3">
                   <span className="text-muted">
-                    <strong>{selectedAffiliates.length}</strong> selecionados de <strong>{mockAffiliates.length}</strong> afiliados.
+                    <strong>{selectedAffiliates.length}</strong> selecionados de <strong>{realAffiliates.length}</strong> afiliados.
                   </span>
                   <div className="d-flex gap-2">
                     <Button 
@@ -1332,7 +1356,7 @@ const Viewproduct = () => {
                       <input 
                         type="checkbox" 
                         className="form-check-input" 
-                        checked={selectedAffiliates.length === mockAffiliates.length && mockAffiliates.length > 0}
+                        checked={selectedAffiliates.length === realAffiliates.length && realAffiliates.length > 0}
                         onChange={handleSelectAllAffiliates}
                       />
                     </th>
@@ -1347,7 +1371,23 @@ const Viewproduct = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockAffiliates.map((affiliate) => (
+                  {loadingAffiliates ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-4">
+                      <div className="spinner-border spinner-border-sm text-primary me-2" role="status">
+                        <span className="visually-hidden">Carregando...</span>
+                      </div>
+                      Carregando afiliados...
+                    </td>
+                  </tr>
+                ) : realAffiliates.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-4 text-muted">
+                      Nenhum afiliado encontrado para este produto.
+                    </td>
+                  </tr>
+                ) : (
+                  realAffiliates.map((affiliate) => (
                     <tr key={affiliate.id}>
                       <td>
                         <input 
@@ -1403,7 +1443,7 @@ const Viewproduct = () => {
                         )}
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
               </Table>
             </div>
@@ -2132,11 +2172,11 @@ const Viewproduct = () => {
   };
 
   const handleSelectAllAffiliates = () => {
-    if (selectedAffiliates.length === mockAffiliates.length) {
-      setSelectedAffiliates([]);
-    } else {
-      setSelectedAffiliates(mockAffiliates.map(affiliate => affiliate.id));
-    }
+          if (selectedAffiliates.length === realAffiliates.length) {
+        setSelectedAffiliates([]);
+      } else {
+        setSelectedAffiliates(realAffiliates.map(affiliate => affiliate.id));
+      }
   };
 
   const handleApproveReprove = (action, affiliateId = null) => {

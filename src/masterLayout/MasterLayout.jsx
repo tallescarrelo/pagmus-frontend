@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
+import CartWidget from "../components/checkout/CartWidget";
 import { logout } from "../redux/reducers/userReducer";
 
 const MasterLayout = ({ children }) => {
@@ -417,6 +418,7 @@ const MasterLayout = ({ children }) => {
             </div>
             <div className="col-auto">
               <div className="d-flex flex-wrap align-items-center gap-3">
+                <CartWidget />
                 <ThemeToggleButton />
 
                 <div className="dropdown">
