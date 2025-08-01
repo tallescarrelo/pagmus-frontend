@@ -3,7 +3,7 @@ import axios from "axios";
 class ApiService {
   constructor() {
     this.api = axios.create({
-      baseURL: "https://syspay-production.up.railway.app",
+      baseURL: process.env.REACT_APP_API_URL || "http://localhost:3001",
     });
 
     this.api.interceptors.request.use(

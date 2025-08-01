@@ -31,25 +31,33 @@ const TopCustomer = ({ affiliates }) => {
                 </tr>
               </thead>
               <tbody>
-                {affiliates?.map((affiliates) => (
-                  <tr key={affiliates?.id}>
-                    <td>
-                      <span className="text-secondary-light">
-                        {affiliates?.id}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        {affiliates.product.name}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        {affiliates.product.comission_value}
-                      </span>
+                {Array.isArray(affiliates) && affiliates.length > 0 ? (
+                  affiliates.map((affiliate) => (
+                    <tr key={affiliate?.id}>
+                      <td>
+                        <span className="text-secondary-light">
+                          {affiliate?.id}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          {affiliate?.product?.name || 'Produto'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          {affiliate?.product?.comission_value || '0'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center text-muted">
+                      Nenhum produto afiliado encontrado
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

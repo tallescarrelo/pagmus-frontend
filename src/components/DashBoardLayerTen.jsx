@@ -17,9 +17,9 @@ const DashBoardLayerTen = () => {
   const dispatch = useDispatch();
   const myProducts = useSelector(selectProducts);
 
-  const [affiliates, setAffiliates] = useState();
-  const [affiliatesPending, setAffiliatesPending] = useState();
-  const [recentSales, setRecentSales] = useState();
+  const [affiliates, setAffiliates] = useState([]);
+  const [affiliatesPending, setAffiliatesPending] = useState([]);
+  const [recentSales, setRecentSales] = useState([]);
 
   const getProducts = useCallback(async () => {
     try {

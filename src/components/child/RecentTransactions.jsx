@@ -35,38 +35,46 @@ const RecentTransactions = ({ recentSales }) => {
                 </tr>
               </thead>
               <tbody>
-                {recentSales?.map((sales) => (
-                  <tr key={sales.id}>
-                    <td>
-                      <span className="text-secondary-light">{sales.id}</span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        {sales.product.name}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        {formatDateBR(sales.created_at)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        {sales.payment_type}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        R$ {sales.product.price}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-success-main fw-medium text-md">
-                        {sales.status}
-                      </span>
+                {Array.isArray(recentSales) && recentSales.length > 0 ? (
+                  recentSales.map((sales) => (
+                    <tr key={sales.id}>
+                      <td>
+                        <span className="text-secondary-light">{sales.id}</span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          {sales.product?.name || 'Produto'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          {formatDateBR(sales.created_at)}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          {sales.payment_type || 'N/A'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          R$ {sales.product?.price || '0'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-success-main fw-medium text-md">
+                          {sales.status || 'Pendente'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center text-muted">
+                      Nenhuma venda recente encontrada
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

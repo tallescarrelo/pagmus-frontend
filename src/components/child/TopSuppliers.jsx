@@ -31,25 +31,33 @@ const TopSuppliers = ({ myProducts }) => {
                 </tr>
               </thead>
               <tbody>
-                {myProducts.map((products) => (
+                {Array.isArray(myProducts) && myProducts.length > 0 ? (
+                  myProducts.map((products) => (
+                    <tr key={products.id}>
+                      <td>
+                        <span className="text-secondary-light">
+                          {products.id}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          {products.name}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-secondary-light">
+                          R$ {products.price}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
                   <tr>
-                    <td>
-                      <span className="text-secondary-light">
-                        {products.id}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        {products.name}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-secondary-light">
-                        R$ {products.price}
-                      </span>
+                    <td colSpan="3" className="text-center text-muted">
+                      Nenhum produto encontrado
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

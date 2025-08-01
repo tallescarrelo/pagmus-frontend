@@ -19,12 +19,11 @@ const SignInPage = () => {
       const response = await AccountService.login(credentials);
       console.log("response", response);
 
-      if (response?.access_token) {
-        dispatch(setToken(response.access_token));
-        localStorage.setItem("token", response.access_token);
+      if (response?.success && response?.token) {
+        dispatch(setToken(response.token));
+        localStorage.setItem("token", response.token);
 
-        const { access_token, ...userData } = response;
-        dispatch(setUser(userData));
+        dispatch(setUser(response.user));
       }
 
       navigate("/Dashboard");
