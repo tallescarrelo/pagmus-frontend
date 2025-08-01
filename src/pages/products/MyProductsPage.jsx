@@ -3,6 +3,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import MyProducts from "../../components/products/MyProducts";
 import MasterLayout from "../../masterLayout/MasterLayout";
 import { useProduct } from "../../contexts/ProductContext";
+import DebugLogin from "../../components/DebugLogin";
 
 const MyProductsPage = () => {
   const { products: myProducts, loading, error } = useProduct();
@@ -35,6 +36,9 @@ const MyProductsPage = () => {
           </div>
         )}
 
+        {/* Debug Login */}
+        <DebugLogin />
+        
         {/* MyProducts */}
         {!loading && !error && <MyProducts myProducts={myProducts} />}
       </MasterLayout>
