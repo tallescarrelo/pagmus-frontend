@@ -46,6 +46,9 @@ const Viewproduct = ({ product: propProduct }) => {
   const [showUpdateCommissionModal, setShowUpdateCommissionModal] = useState(false);
   const [showBlacklistModal, setShowBlacklistModal] = useState(false);
   const [showNewCouponModal, setShowNewCouponModal] = useState(false);
+  const [editingPlan, setEditingPlan] = useState(null);
+  const [showDeletePlanModal, setShowDeletePlanModal] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState(null);
 
   const tabs = [
     { id: "dados-gerais", label: "Dados gerais", icon: "mdi:information-outline" },
@@ -1043,11 +1046,16 @@ const Viewproduct = ({ product: propProduct }) => {
                             variant="outline-primary" 
                             size="sm" 
                             title="Editar"
-                            onClick={() => window.location.href = `/products/${product?.id}/plans`}
+                            onClick={() => handleEditPlan(plan)}
                           >
                             <Icon icon="mdi:pencil" />
                           </Button>
-                          <Button variant="outline-danger" size="sm" title="Excluir">
+                          <Button 
+                            variant="outline-danger" 
+                            size="sm" 
+                            title="Excluir"
+                            onClick={() => handleDeletePlan(plan)}
+                          >
                             <Icon icon="mdi:delete" />
                           </Button>
                         </div>
@@ -2206,6 +2214,34 @@ const Viewproduct = ({ product: propProduct }) => {
     }
   };
 
+  // Funções para gerenciar planos
+  const handleEditPlan = (plan) => {
+    setEditingPlan(plan);
+    setPlanModalTab("loja"); // resetar para primeira aba
+    setShowNewPlanModal(true);
+  };
+
+  const handleDeletePlan = (plan) => {
+    setPlanToDelete(plan);
+    setShowDeletePlanModal(true);
+  };
+
+  const confirmDeletePlan = async () => {
+    if (planToDelete && product?.id) {
+      try {
+        await ProductRelatedServices.deleteProductPlan(product.id, planToDelete.id);
+        // Recarregar planos após deletar
+        const updatedPlans = await ProductRelatedServices.getProductPlans(product.id);
+        setRealPlans(updatedPlans);
+        setShowDeletePlanModal(false);
+        setPlanToDelete(null);
+      } catch (error) {
+        console.error('Erro ao deletar plano:', error);
+        alert('Erro ao deletar plano');
+      }
+    }
+  };
+
   const handleEditCheckout = (checkout) => {
     // Aqui podemos carregar os dados do checkout selecionado
     setCheckoutModalTab("configuracoes-gerais"); // resetar para primeira aba
@@ -2964,6 +3000,37 @@ const Viewproduct = ({ product: propProduct }) => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Confirmação de Exclusão de Plano */}
+      <Modal show={showDeletePlanModal} onHide={() => setShowDeletePlanModal(false)} centered>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>
+            <Icon icon="mdi:delete" className="me-2" />
+            Confirmar Exclusão
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4">
+          <div className="text-center">
+            <Icon icon="mdi:alert-circle" className="text-danger" style={{ fontSize: '3rem' }} />
+            <h5 className="mt-3">Tem certeza que deseja excluir este plano?</h5>
+            <p className="text-muted">
+              O plano <strong>"{planToDelete?.name}"</strong> será removido permanentemente.
+              <br />
+              Esta ação não pode ser desfeita.
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="bg-light border-top">
+          <Button variant="outline-secondary" onClick={() => setShowDeletePlanModal(false)}>
+            <Icon icon="mdi:close" className="me-2" />
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={confirmDeletePlan}>
+            <Icon icon="mdi:delete" className="me-2" />
+            Confirmar Exclusão
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Backdrop para drawer */}
       {showFilterDrawer && (

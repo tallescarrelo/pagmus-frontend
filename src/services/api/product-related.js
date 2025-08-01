@@ -108,6 +108,26 @@ const ProductRelatedServices = {
     }
   },
 
+  // Deletar um plano de um produto
+  deleteProductPlan: async (productId, planId) => {
+    try {
+      const response = await api.delete(`/api/products/${productId}/plans/${planId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error in deleteProductPlan:", error);
+      throw error;
+    }
+  },
+  getProductGoals: async (productId) => {
+    try {
+      const response = await api.get(`/api/products/${productId}/goals`);
+      return response.data.data;
+    } catch (error) {
+      console.error("Error in getProductGoals:", error);
+      throw error;
+    }
+  },
+
   // Buscar componentes de um produto
   getProductComponents: async (productId) => {
     try {
