@@ -977,11 +977,15 @@ const Viewproduct = ({ product: propProduct }) => {
             </div>
             <div className="d-flex gap-2">
               <Button 
-                variant="primary" 
+                variant="outline-primary" 
                 onClick={() => window.location.href = `/products/${product?.id || affiliate?.product?.id}/plans`}
               >
-                <Icon icon="mdi:pencil" className="me-2" />
-                Editar Planos
+                <Icon icon="mdi:package-variant" className="me-2" />
+                Gerenciar Planos
+              </Button>
+              <Button variant="primary" onClick={() => setShowNewPlanModal(true)}>
+                <Icon icon="mdi:plus" className="me-2" />
+                Novo Plano
               </Button>
             </div>
           </div>
