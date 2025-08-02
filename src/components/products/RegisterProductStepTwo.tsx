@@ -1,14 +1,40 @@
 import { useState } from "react";
 
-const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
-  const [errors, setErrors] = useState({});
+interface Dimensions {
+  height: string;
+  width: string;
+  length: string;
+  weight: string;
+}
 
-  const handleChange = (e) => {
+interface ProductData {
+  is_available: string;
+  warranty_time: string;
+  salesPageUrl: string;
+  thanksPageUrl: string;
+  complaintUrl: string;
+  supportEmail: string;
+  dimensions: Dimensions;
+  packageType: string;
+  [key: string]: any;
+}
+
+interface RegisterProductStepTwoProps {
+  onBack: () => void;
+  onNext: () => void;
+  data: ProductData;
+  updateData: (data: Partial<ProductData>) => void;
+}
+
+const RegisterProductStepTwo: React.FC<RegisterProductStepTwoProps> = ({ onBack, onNext, data, updateData }) => {
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     updateData({ [name]: value });
   };
 
-  const handleDimensionsChange = (e) => {
+  const handleDimensionsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     updateData({
       dimensions: {
@@ -18,8 +44,8 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
     });
   };
 
-  const validateFields = () => {
-    const newErrors = {};
+  const validateFields = (): boolean => {
+    const newErrors: Record<string, boolean> = {};
     if (!data.is_available) newErrors.is_available = true;
     if (!data.warranty_time) newErrors.warranty_time = true;
     if (!data.salesPageUrl) newErrors.salesPageUrl = true;
@@ -34,7 +60,7 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (validateFields()) onNext();
   };
 
@@ -103,7 +129,7 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
           </div>
 
           <div className="row mb-24 gy-3 align-items-center">
-            <label className="form-label mb-0 col-sm-3">URL da página de obrigado *</label>
+            <label className="form-label mb-0 col-sm-3">URL da página de agradecimento *</label>
             <div className="col-sm-9">
               <input
                 type="url"
@@ -111,13 +137,13 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
                 value={data.thanksPageUrl}
                 onChange={handleChange}
                 className={`form-control ${errors.thanksPageUrl ? "is-invalid" : ""}`}
-                placeholder="Digite a URL da página de obrigado"
+                placeholder="Digite a URL da página de agradecimento"
               />
             </div>
           </div>
 
           <div className="row mb-24 gy-3 align-items-center">
-            <label className="form-label mb-0 col-sm-3">URL do Reclame Aqui *</label>
+            <label className="form-label mb-0 col-sm-3">URL de reclamações *</label>
             <div className="col-sm-9">
               <input
                 type="url"
@@ -125,13 +151,13 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
                 value={data.complaintUrl}
                 onChange={handleChange}
                 className={`form-control ${errors.complaintUrl ? "is-invalid" : ""}`}
-                placeholder="Digite a URL do Reclame Aqui"
+                placeholder="Digite a URL de reclamações"
               />
             </div>
           </div>
 
           <div className="row mb-24 gy-3 align-items-center">
-            <label className="form-label mb-0 col-sm-3">E-mail de suporte *</label>
+            <label className="form-label mb-0 col-sm-3">Email de suporte *</label>
             <div className="col-sm-9">
               <input
                 type="email"
@@ -139,41 +165,83 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
                 value={data.supportEmail}
                 onChange={handleChange}
                 className={`form-control ${errors.supportEmail ? "is-invalid" : ""}`}
-                placeholder="Digite o e-mail de suporte"
+                placeholder="Digite o email de suporte"
               />
             </div>
           </div>
 
-          <div className="row gy-3">
-            {[
-              { label: "Altura (A)*", name: "height", helper: "Em cm. Máx: 105cm / Mín: 2cm." },
-              { label: "Largura (L)*", name: "width", helper: "Em cm. Máx: 105cm / Mín: 16cm." },
-              { label: "Comprimento (C)*", name: "length", helper: "Em cm. Máx: 105cm / Mín: 11cm." },
-              { label: "Peso (Kg)*", name: "weight", helper: "Entre 0.010Kg e 30.000Kg." },
-            ].map(({ label, name, helper }) => (
-              <div className="col-md-6" key={name}>
-                <div className="mb-24">
-                  <label className="form-label">{label}</label>
-                  <input
-                    type="number"
-                    name={name}
-                    value={data.dimensions[name]}
-                    onChange={handleDimensionsChange}
-                    className={`form-control ${errors[name] ? "is-invalid" : ""}`}
-                    placeholder={`Digite ${label.toLowerCase()}`}
-                  />
-                  <small className="text-muted">{helper}</small>
-                </div>
-              </div>
-            ))}
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label mb-0 col-sm-3">Tipo de embalagem</label>
+            <div className="col-sm-9">
+              <select
+                className="form-select"
+                name="packageType"
+                value={data.packageType}
+                onChange={handleChange}
+              >
+                <option value="">Selecione o tipo de embalagem</option>
+                <option value="box">Caixa</option>
+                <option value="envelope">Envelope</option>
+                <option value="plastic">Plástico</option>
+                <option value="other">Outro</option>
+              </select>
+            </div>
           </div>
 
-          <div className="d-flex justify-content-end gap-3 mt-4">
-            <button onClick={onBack} className="btn btn-outline-secondary" type="button">
-              Voltar
+          <div className="row mb-24 gy-3 align-items-center">
+            <label className="form-label mb-0 col-sm-3">Dimensões *</label>
+            <div className="col-sm-9">
+              <div className="row">
+                <div className="col-md-3">
+                  <input
+                    type="text"
+                    name="height"
+                    value={data.dimensions?.height || ""}
+                    onChange={handleDimensionsChange}
+                    className={`form-control ${errors.height ? "is-invalid" : ""}`}
+                    placeholder="Altura (cm)"
+                  />
+                </div>
+                <div className="col-md-3">
+                  <input
+                    type="text"
+                    name="width"
+                    value={data.dimensions?.width || ""}
+                    onChange={handleDimensionsChange}
+                    className={`form-control ${errors.width ? "is-invalid" : ""}`}
+                    placeholder="Largura (cm)"
+                  />
+                </div>
+                <div className="col-md-3">
+                  <input
+                    type="text"
+                    name="length"
+                    value={data.dimensions?.length || ""}
+                    onChange={handleDimensionsChange}
+                    className={`form-control ${errors.length ? "is-invalid" : ""}`}
+                    placeholder="Comprimento (cm)"
+                  />
+                </div>
+                <div className="col-md-3">
+                  <input
+                    type="text"
+                    name="weight"
+                    value={data.dimensions?.weight || ""}
+                    onChange={handleDimensionsChange}
+                    className={`form-control ${errors.weight ? "is-invalid" : ""}`}
+                    placeholder="Peso (kg)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-between">
+            <button onClick={onBack} className="btn btn-secondary">
+              Anterior
             </button>
-            <button onClick={handleNext} className="btn btn-primary-600" type="button">
-              Continuar
+            <button onClick={handleNext} className="btn btn-primary">
+              Próximo
             </button>
           </div>
         </div>
@@ -182,4 +250,4 @@ const RegisterProductStepTwo = ({ onBack, onNext, data, updateData }) => {
   );
 };
 
-export default RegisterProductStepTwo;
+export default RegisterProductStepTwo; 

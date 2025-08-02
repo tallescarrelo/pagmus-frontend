@@ -1,23 +1,39 @@
 import { useState } from "react";
 import { Upload } from "lucide-react";
 
-const RegisterProductStepThree = ({ onBack, onNext, data, updateData }) => {
-  const [errors, setErrors] = useState({});
+interface ProductData {
+  originZipCode: string;
+  shippingType: string;
+  freePac: string;
+  acceptsSedex: string;
+  defaultShippingValue: string;
+  [key: string]: any;
+}
 
-  const handleChange = (e) => {
+interface RegisterProductStepThreeProps {
+  onBack: () => void;
+  onNext: () => void;
+  data: ProductData;
+  updateData: (data: Partial<ProductData>) => void;
+}
+
+const RegisterProductStepThree: React.FC<RegisterProductStepThreeProps> = ({ onBack, onNext, data, updateData }) => {
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     updateData({ [name]: value });
   };
 
-  const validateFields = () => {
-    const newErrors = {};
+  const validateFields = (): boolean => {
+    const newErrors: Record<string, boolean> = {};
     if (!data.originZipCode) newErrors.originZipCode = true;
     if (!data.shippingType) newErrors.shippingType = true;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (validateFields()) onNext();
   };
 
@@ -101,7 +117,7 @@ const RegisterProductStepThree = ({ onBack, onNext, data, updateData }) => {
                 onChange={handleChange}
                 className="form-select"
               >
-                <option value="">Aceita sedex?</option>
+                <option value="">Aceita Sedex?</option>
                 <option value="fixed">Sim</option>
                 <option value="variable">Não</option>
               </select>
@@ -113,33 +129,24 @@ const RegisterProductStepThree = ({ onBack, onNext, data, updateData }) => {
             <label className="form-label col-sm-3 mb-0">Valor padrão do frete</label>
             <div className="col-sm-9">
               <input
+                type="text"
                 name="defaultShippingValue"
                 value={data.defaultShippingValue}
                 onChange={handleChange}
                 placeholder="Digite o valor padrão do frete"
                 className="form-control"
               />
-              <small className="text-muted">
-                Para evitar perder vendas quando o cálculo de frete dos Correios falhar, defina um valor padrão.
-              </small>
+              <small className="text-muted">Deixe em branco se o frete for grátis</small>
             </div>
           </div>
 
-          {/* Botões */}
-          <div className="d-flex justify-content-end gap-3 mt-4">
-            <button
-              onClick={onBack}
-              className="btn btn-outline-secondary"
-              type="button"
-            >
-              Voltar
+          {/* Botões de navegação */}
+          <div className="d-flex justify-content-between">
+            <button onClick={onBack} className="btn btn-secondary">
+              Anterior
             </button>
-            <button
-              onClick={handleNext}
-              className="btn btn-primary-600"
-              type="button"
-            >
-              Continuar
+            <button onClick={handleNext} className="btn btn-primary">
+              Próximo
             </button>
           </div>
         </div>
@@ -148,4 +155,4 @@ const RegisterProductStepThree = ({ onBack, onNext, data, updateData }) => {
   );
 };
 
-export default RegisterProductStepThree;
+export default RegisterProductStepThree; 
