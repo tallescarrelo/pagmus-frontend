@@ -3,10 +3,11 @@ import { Icon } from '@iconify/react';
 import { useCart } from '../../contexts/CartContext';
 
 const CartWidget = () => {
-  const { getItemCount, isEmpty } = useCart();
+  const { getItemCount, isEmpty, getTotal } = useCart();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const itemCount = getItemCount();
+  const total = getTotal();
 
   return (
     <div className="cart-widget position-relative">
@@ -45,7 +46,7 @@ const CartWidget = () => {
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <span className="fw-semibold">Total:</span>
                     <span className="fw-bold text-primary">
-                      R$ {useCart().getTotal().toFixed(2)}
+                      R$ {total.toFixed(2)}
                     </span>
                   </div>
                   <button className="btn btn-primary w-100">
