@@ -2,10 +2,28 @@ import { Icon } from "@iconify/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ViewProductAffiliate = ({ affiliatesProducts }) => {
+interface Product {
+  id: number;
+  name: string;
+  image_url?: string;
+  category?: string;
+  [key: string]: any;
+}
+
+interface Affiliate {
+  id: number;
+  product: Product;
+  [key: string]: any;
+}
+
+interface ViewProductAffiliateProps {
+  affiliatesProducts: Affiliate[];
+}
+
+const ViewProductAffiliate: React.FC<ViewProductAffiliateProps> = ({ affiliatesProducts }) => {
   const navigate = useNavigate();
 
-  const handleClick = (affiliate) => {
+  const handleClick = (affiliate: Affiliate): void => {
     navigate("/products/view-product", { state: { affiliate } });
   };
 
@@ -54,4 +72,4 @@ const ViewProductAffiliate = ({ affiliatesProducts }) => {
   );
 };
 
-export default ViewProductAffiliate;
+export default ViewProductAffiliate; 
