@@ -1,16 +1,38 @@
 #!/bin/bash
 
-# Script para commit e push automático dos repositórios
-# Uso: ./commit-and-push.sh "mensagem do commit"
+# ========================================
+# SCRIPT DE COMMIT E PUSH AUTOMÁTICO
+# ========================================
 # 
-# Para usar com token, configure a variável de ambiente:
-# export GITHUB_TOKEN="seu_token_aqui"
+# USO: ./commit-and-push.sh "mensagem do commit"
+# 
+# CONFIGURAÇÃO DO TOKEN (OBRIGATÓRIA):
+# Para evitar erros 403, configure o token do GitHub:
+# 
+# 1. TEMPORÁRIO (só para esta sessão):
+#    export GITHUB_TOKEN="ghp_seu_token_aqui"
+# 
+# 2. PERMANENTE (adicione no ~/.zshrc ou ~/.bashrc):
+#    echo 'export GITHUB_TOKEN="ghp_seu_token_aqui"' >> ~/.zshrc
+#    source ~/.zshrc
+# 
+# 3. GERAR NOVO TOKEN:
+#    GitHub.com → Settings → Developer settings → Personal access tokens → Tokens (classic)
+#    Generate new token → Selecione: repo, workflow
+# 
+# ========================================
 
 # Verificar se o token está configurado
 if [ -z "$GITHUB_TOKEN" ]; then
-    echo "⚠️  GITHUB_TOKEN não configurado"
-    echo "Configure com: export GITHUB_TOKEN=\"seu_token_aqui\""
-    echo "Ou adicione no ~/.bashrc ou ~/.zshrc"
+    echo "⚠️  GITHUB_TOKEN não configurado!"
+    echo ""
+    echo "📝 CONFIGURAÇÃO NECESSÁRIA:"
+    echo "1. Temporário: export GITHUB_TOKEN=\"ghp_seu_token_aqui\""
+    echo "2. Permanente: echo 'export GITHUB_TOKEN=\"ghp_seu_token_aqui\"' >> ~/.zshrc"
+    echo "3. Recarregar: source ~/.zshrc"
+    echo ""
+    echo "🔗 Gerar token: GitHub.com → Settings → Developer settings → Personal access tokens"
+    echo ""
 fi
 
 if [ -z "$1" ]; then
