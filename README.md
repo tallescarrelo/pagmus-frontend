@@ -1,13 +1,13 @@
 # 🚀 Pagmus - Sistema Completo
 
-Sistema de gerenciamento Pagmus com frontend React e backend AdonisJS.
+Sistema de gerenciamento Pagmus com frontend React e backend Express.js.
 
 ## 📁 Estrutura do Projeto
 
 ```
 pagmus/
 ├── frontend/          # Dashboard React
-├── backend/           # API AdonisJS
+├── backend/           # API Express.js
 ├── README.md
 └── .gitignore
 ```
@@ -21,7 +21,7 @@ pagmus/
 - **Axios** - Cliente HTTP
 
 ### Backend
-- **AdonisJS 5** - Framework Node.js
+- **Express.js** - Framework Node.js
 - **TypeScript** - Linguagem principal
 - **PostgreSQL** - Banco de dados
 - **JWT** - Autenticação
