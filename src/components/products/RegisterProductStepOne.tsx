@@ -2,14 +2,33 @@ import { Upload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 
-const RegisterProductStepOne = ({ onNext, data, updateData }) => {
-  const [errors, setErrors] = useState({});
+interface ProductData {
+  name: string;
+  description: string;
+  category: string;
+  tags: string[];
+  format: string;
+  image: File | null;
+  price: number;
+  url_slug: string;
+  product_type: 'physical' | 'digital';
+  [key: string]: any;
+}
+
+interface RegisterProductStepOneProps {
+  onNext: () => void;
+  data: ProductData;
+  updateData: (data: Partial<ProductData>) => void;
+}
+
+const RegisterProductStepOne: React.FC<RegisterProductStepOneProps> = ({ onNext, data, updateData }) => {
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (files) => updateData({ image: files[0] }),
+    onDrop: (files: File[]) => updateData({ image: files[0] }),
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     if (name === "price") {
       const formatted = value.replace(/[^0-9]/g, "");
@@ -19,8 +38,8 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
     }
   };
 
-  const validateFields = () => {
-    const newErrors = {};
+  const validateFields = (): boolean => {
+    const newErrors: Record<string, boolean> = {};
     if (!data.name) newErrors.name = true;
     if (!data.description) newErrors.description = true;
     if (!data.category) newErrors.category = true;
@@ -32,7 +51,7 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (validateFields()) onNext();
   };
 
@@ -98,25 +117,20 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
                 <option value="24">Jurídico</option>
                 <option value="25">Literatura e Poesia</option>
                 <option value="26">Marketing de Rede</option>
-                <option value="27">Marketing e Comunicação</option>
-                <option value="28">Meio Ambiente</option>
-                <option value="29">Música, Bandas e Shows</option>
-                <option value="30">Paquera, Sedução e Relacionamentos</option>
-                <option value="31">Plugins, Widgets e Extensões</option>
-                <option value="32">Produtividade e Organização Pessoal</option>
-                <option value="33">Relatórios, Artigos e Pesquisas</option>
-                <option value="34">Religião e Crenças</option>
-                <option value="35">Romances, Dramas, Estórias e Contos</option>
-                <option value="36">RPG e Jogos de Mesa</option>
-                <option value="37">Saúde, Bem-estar e Beleza</option>
-                <option value="38">Scripts</option>
-                <option value="39">Segurança do Trabalho</option>
-                <option value="40">Sexologia e Sexualidade</option>
-                <option value="41">Snippets (Trechos de Vídeo)</option>
-                <option value="42">Turismo</option>
-                <option value="43">Pessoas com deficiência</option>
-                <option value="44">Moda e vestuário</option>
-                <option value="45">Produtos infantis</option>
+                <option value="27">Medicina e Saúde</option>
+                <option value="28">Música</option>
+                <option value="29">Negócios Online</option>
+                <option value="30">Notícias e Política</option>
+                <option value="31">Parenting e Família</option>
+                <option value="32">Pessoas e Sociedade</option>
+                <option value="33">Pets e Animais</option>
+                <option value="34">Produtos Digitais</option>
+                <option value="35">Religião e Espiritualidade</option>
+                <option value="36">Saúde e Fitness</option>
+                <option value="37">Tecnologia</option>
+                <option value="38">Turismo e Viagem</option>
+                <option value="39">Vídeos e Filmes</option>
+                <option value="40">Web Design</option>
               </select>
             </div>
           </div>
@@ -124,7 +138,7 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
           <div className="row mb-24 gy-3 align-items-center">
             <label className="form-label mb-0 col-sm-3">Tags *</label>
             <div className="col-sm-9">
-              <input type="text" name="tags" value={data.tags} onChange={handleChange} className={`form-control ${errors.tags ? "is-invalid" : ""}`} placeholder="Digite as tags do produto" />
+              <input type="text" name="tags" value={data.tags.join(', ')} onChange={handleChange} className={`form-control ${errors.tags ? "is-invalid" : ""}`} placeholder="Digite as tags separadas por vírgula" />
             </div>
           </div>
 
@@ -132,8 +146,9 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
             <label className="form-label mb-0 col-sm-3">Formato *</label>
             <div className="col-sm-9">
               <select name="format" value={data.format} onChange={handleChange} className={`form-select ${errors.format ? "is-invalid" : ""}`}>
-                <option value="physical-product">Produto Físico</option>
-                <option value="digital-product">Produto Digital</option>
+                <option disabled value="">Selecione o formato</option>
+                <option value="digital">Digital</option>
+                <option value="physical">Físico</option>
               </select>
             </div>
           </div>
@@ -141,43 +156,26 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
           <div className="row mb-24 gy-3 align-items-center">
             <label className="form-label mb-0 col-sm-3">Preço *</label>
             <div className="col-sm-9">
-              <input
-                type="text"
-                name="price"
-                value={data.price ? `R$ ${parseFloat(data.price / 100).toFixed(2).replace('.', ',')}` : ""}
-                onChange={handleChange}
-                placeholder="Digite o preço do produto"
-                className={`form-control ${errors.price ? "is-invalid" : ""}`}
-              />
+              <input type="text" name="price" value={data.price} onChange={handleChange} className={`form-control ${errors.price ? "is-invalid" : ""}`} placeholder="Digite o preço" />
             </div>
           </div>
 
           <div className="row mb-24 gy-3 align-items-center">
-            <label className="form-label mb-0 col-sm-3">URL Slug</label>
+            <label className="form-label mb-0 col-sm-3">Imagem *</label>
             <div className="col-sm-9">
-              <input type="text" name="url_slug" value={data.url_slug} onChange={handleChange} placeholder="Digite o slug da URL (opcional)" className="form-control" />
-              <small className="text-muted d-block mt-1">Se não preenchido, será gerado automaticamente a partir do nome</small>
-            </div>
-          </div>
-
-          <div className="row mb-24 gy-3 align-items-center">
-            <label className="form-label mb-0 col-sm-3">Imagem do Produto *</label>
-            <div className="col-sm-9">
-              <div {...getRootProps()} className={`border border-dashed rounded-3 p-4 text-center cursor-pointer ${errors.image ? "border-danger" : "border-gray-400"} bg-light`}>
+              <div {...getRootProps()} className={`dropzone ${errors.image ? "is-invalid" : ""}`}>
                 <input {...getInputProps()} />
-                <Upload className="text-primary mb-2" />
-                <p className="mb-1 text-primary">Clique aqui ou arraste o arquivo</p>
-                <p className="text-muted small">SVG, PNG, JPG ou GIF (máx. 800x400px)</p>
+                <div className="text-center">
+                  <Upload className="mb-2" />
+                  <p>Arraste e solte uma imagem aqui, ou clique para selecionar</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="d-flex justify-content-end gap-3 mt-4">
-            <button type="button" className="btn btn-outline-secondary">
-              Cancelar
-            </button>
-            <button type="button" onClick={handleNext} className="btn btn-primary-600">
-              Continuar
+          <div className="d-flex justify-content-end">
+            <button onClick={handleNext} className="btn btn-primary">
+              Próximo
             </button>
           </div>
         </div>
@@ -186,4 +184,4 @@ const RegisterProductStepOne = ({ onNext, data, updateData }) => {
   );
 };
 
-export default RegisterProductStepOne;
+export default RegisterProductStepOne; 
