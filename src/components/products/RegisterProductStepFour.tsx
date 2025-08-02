@@ -1,16 +1,40 @@
 import { useState } from "react";
 
-const RegisterProductStepFour = ({ onBack, data, updateData, onSubmit }) => {
-  const [isOn, setIsOn] = useState(false);
-  const [storeVisible, setStoreVisible] = useState(false);
-  const [autoAprove, setAutoAprove] = useState(false);
-  const [acessBuyerData, setAcessBuyerData] = useState(false);
+interface AffiliateProgram {
+  enabled: boolean;
+  storeVisible: boolean;
+  autoApprove: boolean;
+  buyerDataAccess: boolean;
+  cookieTime: string;
+  cookieValue: string;
+  comission_type: 'percentage' | 'fixed';
+  comission_value: number;
+  [key: string]: any;
+}
 
-  const handleSubmit = async () => {
+interface ProductData {
+  affiliateProgram: AffiliateProgram;
+  [key: string]: any;
+}
+
+interface RegisterProductStepFourProps {
+  onBack: () => void;
+  data: ProductData;
+  updateData: (data: Partial<ProductData>) => void;
+  onSubmit: () => Promise<void>;
+}
+
+const RegisterProductStepFour: React.FC<RegisterProductStepFourProps> = ({ onBack, data, updateData, onSubmit }) => {
+  const [isOn, setIsOn] = useState<boolean>(false);
+  const [storeVisible, setStoreVisible] = useState<boolean>(false);
+  const [autoAprove, setAutoAprove] = useState<boolean>(false);
+  const [acessBuyerData, setAcessBuyerData] = useState<boolean>(false);
+
+  const handleSubmit = async (): Promise<void> => {
     await onSubmit();
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     updateData({
       affiliateProgram: {
@@ -108,81 +132,61 @@ const RegisterProductStepFour = ({ onBack, data, updateData, onSubmit }) => {
                 </div>
               ))}
 
-              {/* Tempo do Cookie */}
-              <div className="row mb-24 align-items-center">
-                <label className="form-label col-sm-3 mb-0">Tempo do Cookie*</label>
-                <div className="col-sm-9">
-                  <select
-                    name="cookieTime"
-                    value={data.affiliateProgram.cookieTime}
-                    onChange={handleChange}
-                    className="form-select"
-                  >
-                    <option disabled value="">Selecione o tempo dos cookies</option>
-                    <option value="forever">Eterno</option>
-                    <option value="30days">30 dias</option>
-                    <option value="60days">60 dias</option>
-                    <option value="90days">90 dias</option>
-                    <option value="120days">120 dias</option>
-                    <option value="other">Outro</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Valor do Cookie */}
-              <div className="row mb-24 align-items-center">
-                <label className="form-label col-sm-3 mb-0">Valor do Cookie</label>
+              {/* Tempo do cookie */}
+              <div className="row mb-24 gy-3 align-items-center">
+                <label className="form-label mb-0 col-sm-3">Tempo do cookie</label>
                 <div className="col-sm-9">
                   <input
-                    name="cookieValue"
-                    value={data.affiliateProgram.cookieValue}
+                    type="text"
+                    name="cookieTime"
+                    value={data.affiliateProgram?.cookieTime || ""}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="Digite o valor do tempo de Cookie"
+                    placeholder="Digite o tempo do cookie"
                   />
                 </div>
               </div>
 
-              {/* Tipo de comissionamento */}
-              <div className="row mb-24 align-items-center">
-                <label className="form-label col-sm-3 mb-0">Tipo de comissionamento</label>
+              {/* Valor do cookie */}
+              <div className="row mb-24 gy-3 align-items-center">
+                <label className="form-label mb-0 col-sm-3">Valor do cookie</label>
                 <div className="col-sm-9">
-                  <select
-                    name="commissionType"
-                    value={data.affiliateProgram.commissionType}
+                  <input
+                    type="text"
+                    name="cookieValue"
+                    value={data.affiliateProgram?.cookieValue || ""}
                     onChange={handleChange}
-                    className="form-select"
-                  >
-                    <option disabled value="">Selecione o tipo de comissionamento</option>
-                    <option value="firstClick">Primeiro Clique</option>
-                    <option value="lastClick">Último Clique</option>
-                  </select>
+                    className="form-control"
+                    placeholder="Digite o valor do cookie"
+                  />
                 </div>
               </div>
 
               {/* Tipo de comissão */}
-              <div className="row mb-24 align-items-center">
-                <label className="form-label col-sm-3 mb-0">Tipo de comissão</label>
+              <div className="row mb-24 gy-3 align-items-center">
+                <label className="form-label mb-0 col-sm-3">Tipo de comissão</label>
                 <div className="col-sm-9">
                   <select
                     name="comission_type"
-                    value={data.affiliateProgram.comission_type}
+                    value={data.affiliateProgram?.comission_type || ""}
                     onChange={handleChange}
                     className="form-select"
                   >
-                    <option value="fix-percentage">Porcentagem</option>
-                    <option value="fix-value">Valor fixo</option>
+                    <option value="">Selecione o tipo de comissão</option>
+                    <option value="percentage">Porcentagem</option>
+                    <option value="fixed">Valor fixo</option>
                   </select>
                 </div>
               </div>
 
               {/* Valor da comissão */}
-              <div className="row mb-24 align-items-center">
-                <label className="form-label col-sm-3 mb-0">Valor da comissão</label>
+              <div className="row mb-24 gy-3 align-items-center">
+                <label className="form-label mb-0 col-sm-3">Valor da comissão</label>
                 <div className="col-sm-9">
                   <input
+                    type="number"
                     name="comission_value"
-                    value={data.affiliateProgram.comission_value}
+                    value={data.affiliateProgram?.comission_value || ""}
                     onChange={handleChange}
                     className="form-control"
                     placeholder="Digite o valor da comissão"
@@ -192,12 +196,12 @@ const RegisterProductStepFour = ({ onBack, data, updateData, onSubmit }) => {
             </>
           )}
 
-          {/* Botões */}
-          <div className="d-flex justify-content-end gap-3 mt-4">
-            <button onClick={onBack} className="btn btn-outline-secondary" type="button">
-              Voltar
+          {/* Botões de navegação */}
+          <div className="d-flex justify-content-between">
+            <button onClick={onBack} className="btn btn-secondary">
+              Anterior
             </button>
-            <button onClick={handleSubmit} className="btn btn-primary-600" type="button">
+            <button onClick={handleSubmit} className="btn btn-primary">
               Finalizar Cadastro
             </button>
           </div>
@@ -207,4 +211,4 @@ const RegisterProductStepFour = ({ onBack, data, updateData, onSubmit }) => {
   );
 };
 
-export default RegisterProductStepFour;
+export default RegisterProductStepFour; 
