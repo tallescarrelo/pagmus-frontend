@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useCart } from '../../contexts/CartContext';
 
-const CartWidget = () => {
+const CartWidget: React.FC = () => {
   const { getItemCount, isEmpty, getTotal } = useCart();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   const itemCount = getItemCount();
   const total = getTotal();
@@ -64,7 +64,7 @@ const CartWidget = () => {
 };
 
 // Componente interno para mostrar os itens do carrinho
-const CartItems = () => {
+const CartItems: React.FC = () => {
   const { cart, removeFromCart, updateQuantity } = useCart();
 
   return (

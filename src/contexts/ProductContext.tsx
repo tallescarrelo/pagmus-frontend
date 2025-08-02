@@ -1,12 +1,46 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import ProductsServices from '../services/api/products-stable.js';
 import { useAuth } from './AuthContext';
 
+// Tipos
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image?: string;
+  status: 'active' | 'inactive';
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+  [key: string]: any;
+}
 
+interface ProductData {
+  name: string;
+  description: string;
+  price: number;
+  image?: string;
+  [key: string]: any;
+}
 
-const ProductContext = createContext();
+interface ProductContextType {
+  products: Product[];
+  currentProduct: Product | null;
+  loading: boolean;
+  error: string | null;
+  loadProducts: () => Promise<void>;
+  loadProductById: (productId: number) => Promise<Product>;
+  createProduct: (productData: ProductData) => Promise<any>;
+  updateProduct: (productId: number, updateData: Partial<ProductData>) => Promise<any>;
+  deleteProduct: (productId: number) => Promise<void>;
+  clearCurrentProduct: () => void;
+  clearError: () => void;
+}
 
-export const useProduct = () => {
+const ProductContext = createContext<ProductContextType | undefined>(undefined);
+
+export const useProduct = (): ProductContextType => {
   const context = useContext(ProductContext);
   if (!context) {
     throw new Error('useProduct deve ser usado dentro de um ProductProvider');
@@ -14,15 +48,19 @@ export const useProduct = () => {
   return context;
 };
 
-export const ProductProvider = ({ children }) => {
+interface ProductProviderProps {
+  children: ReactNode;
+}
+
+export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  const [products, setProducts] = useState([]);
-  const [currentProduct, setCurrentProduct] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Carregar todos os produtos do usuário
-  const loadProducts = async () => {
+  const loadProducts = async (): Promise<void> => {
     setLoading(true);
     setError(null);
     try {
@@ -37,7 +75,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Carregar produto específico por ID
-  const loadProductById = async (productId) => {
+  const loadProductById = async (productId: number): Promise<Product> => {
     setLoading(true);
     setError(null);
     try {
@@ -54,7 +92,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Criar novo produto
-  const createProduct = async (productData) => {
+  const createProduct = async (productData: ProductData): Promise<any> => {
     setLoading(true);
     setError(null);
     try {
@@ -71,7 +109,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Atualizar produto
-  const updateProduct = async (productId, updateData) => {
+  const updateProduct = async (productId: number, updateData: Partial<ProductData>): Promise<any> => {
     setLoading(true);
     setError(null);
     try {
@@ -95,7 +133,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Deletar produto
-  const deleteProduct = async (productId) => {
+  const deleteProduct = async (productId: number): Promise<void> => {
     setLoading(true);
     setError(null);
     try {
@@ -114,18 +152,23 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Limpar produto atual
-  const clearCurrentProduct = () => {
+  const clearCurrentProduct = (): void => {
     setCurrentProduct(null);
   };
 
-  // Carregar produtos na inicialização apenas se autenticado
+  // Limpar erro
+  const clearError = (): void => {
+    setError(null);
+  };
+
+  // Carregar produtos quando autenticado
   useEffect(() => {
     if (isAuthenticated) {
       loadProducts();
     }
   }, [isAuthenticated]);
 
-  const value = {
+  const value: ProductContextType = {
     products,
     currentProduct,
     loading,
@@ -135,7 +178,8 @@ export const ProductProvider = ({ children }) => {
     createProduct,
     updateProduct,
     deleteProduct,
-    clearCurrentProduct
+    clearCurrentProduct,
+    clearError
   };
 
   return (
@@ -143,6 +187,4 @@ export const ProductProvider = ({ children }) => {
       {children}
     </ProductContext.Provider>
   );
-};
-
-export default ProductContext; 
+}; 
