@@ -1,9 +1,35 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import apiService from '../services/api';
 
-const AuthContext = createContext();
+// Tipos
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  [key: string]: any;
+}
 
-export const useAuth = () => {
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; user: User }>;
+  logout: () => void;
+  register: (userData: any) => Promise<{ success: boolean; user: User }>;
+  updateUser: (userData: Partial<User>) => void;
+  getUserId: () => number | null;
+  getUserRole: () => string | null;
+  isAdmin: () => boolean;
+  getToken: () => string | null;
+  saveToken: (token: string) => void;
+  clearAuthData: () => void;
+  checkAuth: () => boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth deve ser usado dentro de um AuthProvider');
@@ -11,10 +37,14 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   // Verificação de autenticação
   useEffect(() => {
@@ -25,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         const savedUser = localStorage.getItem('user_data');
         
         if (token && savedUser) {
-          const userData = JSON.parse(savedUser);
+          const userData: User = JSON.parse(savedUser);
           setUser(userData);
           setIsAuthenticated(true);
         }
@@ -42,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; user: User }> => {
     try {
       const response = await apiService.post('/api/auth/login', {
         email,
@@ -69,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (): void => {
     // Limpar dados
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_data');
@@ -78,7 +108,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const register = async (userData) => {
+  const register = async (userData: any): Promise<{ success: boolean; user: User }> => {
     try {
       const response = await apiService.post('/api/auth/register', userData);
 
@@ -102,25 +132,47 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = (userData) => {
-    const updatedUser = { ...user, ...userData };
-    setUser(updatedUser);
-    localStorage.setItem('user_data', JSON.stringify(updatedUser));
+  const updateUser = (userData: Partial<User>): void => {
+    if (user) {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('user_data', JSON.stringify(updatedUser));
+    }
   };
 
-  const getUserId = () => {
+  const getUserId = (): number | null => {
     return user?.id || null;
   };
 
-  const getUserRole = () => {
-    return user?.role || 'guest';
+  const getUserRole = (): string | null => {
+    return user?.role || null;
   };
 
-  const isAdmin = () => {
-    return getUserRole() === 'admin';
+  const isAdmin = (): boolean => {
+    return user?.role === 'admin';
   };
 
-  const value = {
+  const getToken = (): string | null => {
+    return localStorage.getItem('auth_token');
+  };
+
+  const saveToken = (token: string): void => {
+    localStorage.setItem('auth_token', token);
+  };
+
+  const clearAuthData = (): void => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_data');
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+
+  const checkAuth = (): boolean => {
+    const token = localStorage.getItem('auth_token');
+    return !!token;
+  };
+
+  const value: AuthContextType = {
     user,
     loading,
     isAuthenticated,
@@ -130,7 +182,11 @@ export const AuthProvider = ({ children }) => {
     updateUser,
     getUserId,
     getUserRole,
-    isAdmin
+    isAdmin,
+    getToken,
+    saveToken,
+    clearAuthData,
+    checkAuth
   };
 
   return (
@@ -138,6 +194,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export default AuthContext; 
+}; 
