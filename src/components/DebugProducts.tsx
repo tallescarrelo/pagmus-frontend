@@ -1,16 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const DebugProducts = () => {
-  const [debugInfo, setDebugInfo] = useState({});
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+interface DebugInfo {
+  token: string;
+  user: string;
+  tokenLength: number;
+  userInfo: any;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  [key: string]: any;
+}
+
+const DebugProducts: React.FC = () => {
+  const [debugInfo, setDebugInfo] = useState<DebugInfo>({
+    token: '',
+    user: '',
+    tokenLength: 0,
+    userInfo: null
+  });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     checkDebugInfo();
   }, []);
 
-  const checkDebugInfo = () => {
+  const checkDebugInfo = (): void => {
     const token = localStorage.getItem('auth_token') || localStorage.getItem('token');
     const user = localStorage.getItem('user');
     
@@ -22,7 +41,7 @@ const DebugProducts = () => {
     });
   };
 
-  const testAPI = async () => {
+  const testAPI = async (): Promise<void> => {
     setLoading(true);
     try {
       const token = localStorage.getItem('auth_token') || localStorage.getItem('token');
