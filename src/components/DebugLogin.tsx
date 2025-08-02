@@ -2,11 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
-const DebugLogin = () => {
-  const [loginStatus, setLoginStatus] = useState('Não logado');
-  const [token, setToken] = useState(null);
+interface LoginResponse {
+  success: boolean;
+  token?: string;
+  user?: any;
+  message?: string;
+}
 
-  const doLogin = async () => {
+const DebugLogin: React.FC = () => {
+  const [loginStatus, setLoginStatus] = useState<string>('Não logado');
+  const [token, setToken] = useState<string | null>(null);
+
+  const doLogin = async (): Promise<void> => {
     try {
       const response = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
@@ -19,23 +26,24 @@ const DebugLogin = () => {
         })
       });
 
-      const data = await response.json();
+      const data: LoginResponse = await response.json();
       
       if (data.success) {
-        localStorage.setItem('auth_token', data.token);
+        localStorage.setItem('auth_token', data.token || '');
         localStorage.setItem('user', JSON.stringify(data.user));
-        setToken(data.token);
+        setToken(data.token || null);
         setLoginStatus('Logado com sucesso!');
         console.log('Login realizado:', data);
       } else {
-        setLoginStatus('Erro no login: ' + data.message);
+        setLoginStatus('Erro no login: ' + (data.message || 'Erro desconhecido'));
       }
     } catch (error) {
-      setLoginStatus('Erro: ' + error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      setLoginStatus('Erro: ' + errorMessage);
     }
   };
 
-  const checkToken = () => {
+  const checkToken = (): void => {
     const storedToken = localStorage.getItem('auth_token');
     if (storedToken) {
       setToken(storedToken);
