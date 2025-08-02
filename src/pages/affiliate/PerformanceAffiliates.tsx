@@ -3,8 +3,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import MasterLayout from "../../masterLayout/MasterLayout";
 import PerformanceAffiliatesLayer from "../../components/affiliate/PerformanceAffiliatesLayer";
 
-const PerformanceAffiliates = () => {
-
+const PerformanceAffiliates: React.FC = () => {
   return (
     <>
       {/* MasterLayout */}
@@ -14,11 +13,9 @@ const PerformanceAffiliates = () => {
 
         {/* Perfomance Affiliate */}
         <PerformanceAffiliatesLayer />
-
-        
       </MasterLayout>
     </>
   );
 };
 
-export default PerformanceAffiliates;
+export default PerformanceAffiliates; 

@@ -4,9 +4,22 @@ import ViewProductAffiliate from "../../components/products/ViewProductAffiliate
 import MasterLayout from "../../masterLayout/MasterLayout";
 import AffiliatesServices from "../../services/api/affiliates";
 
-const ProductsAffiliates = () => {
-  const [affiliatesProducts, setAffiliatesProducts] = useState();
-  const getAffiliatesProducts = async () => {
+interface AffiliateProduct {
+  id: number;
+  product: {
+    id: number;
+    name: string;
+    image_url?: string;
+    category?: string;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
+const ProductsAffiliates: React.FC = () => {
+  const [affiliatesProducts, setAffiliatesProducts] = useState<AffiliateProduct[]>();
+
+  const getAffiliatesProducts = async (): Promise<void> => {
     try {
       const response = await AffiliatesServices.getAffiliates();
       setAffiliatesProducts(response);
@@ -33,4 +46,4 @@ const ProductsAffiliates = () => {
   );
 };
 
-export default ProductsAffiliates;
+export default ProductsAffiliates; 
